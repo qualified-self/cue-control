@@ -23,26 +23,30 @@ final int BT_FAILURE = 2;
 void setup() {
   size(800, 600);
   frameRate(10);
-  
+
   // start oscP5, listening for incoming messages.
   oscP5 = new OscP5(this, OSC_RECV_PORT);
-  
+
   // location to send OSC messages
   remoteLocation = new NetAddress("127.0.0.1", OSC_SEND_PORT);
-  
+
   minim = new Minim(this);
-  
+
   board.put("test", 0);
   board.put("test2", 10);
-  
-  root = new ParallelNode("Play sound and show", true, true) 
-                  .addChild(new SoundCueNode("rational_youth_silesia.mp3", 1, 0).setDecorator(new GuardDecorator(new NotCondition(new KeyCondition(' ')))))
+
+  root = new ParallelNode("Play sound and show", true, true)
+                  .addChild(new SoundCueNode("123go.mp3", 1, 0)
+                                .setDecorator(new GuardDecorator(new NotCondition(new KeyCondition(' ')))))
                   .addChild(new SequentialNode()
                     .addChild(new OscCueNode("/curtain/on", 0, 2, 1))
                     .addChild(new OscCueNode("/lights/on", 1, 2, 1))
                     .addChild(new SelectorNode(false)
-                      .addChild(new OscCueNode("/show/start", 0, 3, 1).setDecorator(new GuardDecorator(new BlackboardCondition("[test] > 0"))))
-                      .addChild(new OscCueNode("/show/startagain", 0, 2, 1)))
+                      .addChild(new OscCueNode("/show/start", 0, 3, 1)
+                                  .setDecorator(new GuardDecorator(new BlackboardCondition("[test] > 0"))))
+                      .addChild(new ParallelNode()
+                        .addChild(new SoundCueNode("error.mp3", 1, 0))
+                        .addChild(new OscCueNode("/show/startagain", 0, 2, 1))))
                     .addChild(new ParallelNode()
                       .addChild(new OscCueNode("/curtain/off", 1, 2, 1))
                       .addChild(new OscCueNode("/lights/off", 0, 2, 1))));
@@ -52,12 +56,12 @@ int rootState = BT_RUNNING;
 
 void draw() {
   background(0);
-  
+
     rootState = root.execute(board);
 /*  if (rootState == BT_RUNNING) {
     rootState = root.execute(board);
   }
-  */ 
+  */
   drawTree(root, INDENT, NODE_HEIGHT);
 }
 
@@ -80,7 +84,7 @@ int drawTree(BaseNode node, int x, int y)
       y = drawTree(child, x+INDENT, y);
     }
   }
-  
+
   return y;
 }
 
@@ -90,5 +94,5 @@ color stateToColor(int state) {
   else if (state == BT_SUCCESS)
     return color(#73FC74);
   else
-    return color(#E33535);  
+    return color(#E33535);
 }
