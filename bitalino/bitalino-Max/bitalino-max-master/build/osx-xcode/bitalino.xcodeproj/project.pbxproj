@@ -1,0 +1,252 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		318530E11C21E6150042B19E /* bitalino-max.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 318530D91C21E3250042B19E /* bitalino-max.cpp */; };
+		31E0808C1D0A1DA100885445 /* bitalino.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 31E0808A1D0A1DA100885445 /* bitalino.cpp */; };
+		31E0808D1D0A1DA100885445 /* bitalino.h in Headers */ = {isa = PBXBuildFile; fileRef = 31E0808B1D0A1DA100885445 /* bitalino.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		318530D91C21E3250042B19E /* bitalino-max.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "bitalino-max.cpp"; path = "../../src/bitalino-max.cpp"; sourceTree = "<group>"; };
+		318530E91C21E6150042B19E /* bitalino.mxo */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bitalino.mxo; sourceTree = BUILT_PRODUCTS_DIR; };
+		31E0808A1D0A1DA100885445 /* bitalino.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bitalino.cpp; path = "../../src/cpp-api/bitalino.cpp"; sourceTree = "<group>"; };
+		31E0808B1D0A1DA100885445 /* bitalino.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bitalino.h; path = "../../src/cpp-api/bitalino.h"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		318530E31C21E6150042B19E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* iterator */ = {
+			isa = PBXGroup;
+			children = (
+				318530D91C21E3250042B19E /* bitalino-max.cpp */,
+				31E0808A1D0A1DA100885445 /* bitalino.cpp */,
+				31E0808B1D0A1DA100885445 /* bitalino.h */,
+				19C28FB4FE9D528D11CA2CBB /* Products */,
+			);
+			name = iterator;
+			sourceTree = "<group>";
+		};
+		19C28FB4FE9D528D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				318530E91C21E6150042B19E /* bitalino.mxo */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		318530DC1C21E6150042B19E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31E0808D1D0A1DA100885445 /* bitalino.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		318530DB1C21E6150042B19E /* bitalino-max */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 318530E61C21E6150042B19E /* Build configuration list for PBXNativeTarget "bitalino-max" */;
+			buildPhases = (
+				318530DC1C21E6150042B19E /* Headers */,
+				318530DE1C21E6150042B19E /* Resources */,
+				318530DF1C21E6150042B19E /* Sources */,
+				318530E31C21E6150042B19E /* Frameworks */,
+				318530E41C21E6150042B19E /* Rez */,
+				318530E51C21E6150042B19E /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "bitalino-max";
+			productName = iterator;
+			productReference = 318530E91C21E6150042B19E /* bitalino.mxo */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0620;
+			};
+			buildConfigurationList = 2FBBEACF08F335010078DB84 /* Build configuration list for PBXProject "bitalino" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 089C166AFE841209C02AAC07 /* iterator */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				318530DB1C21E6150042B19E /* bitalino-max */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		318530DE1C21E6150042B19E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXRezBuildPhase section */
+		318530E41C21E6150042B19E /* Rez */ = {
+			isa = PBXRezBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXRezBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		318530E51C21E6150042B19E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "ext=${WRAPPER_EXTENSION:-mxo}\ndefault_prod=$PRODUCT_NAME.$WRAPPER_EXTENSION\ndefault_dir=$EXTERNALS_DIR\n\nprod=${1:-$default_prod}\ndir=${2:-$default_dir}\next=${WRAPPER_EXTENSION:-mxo}\nbase=`echo $prod | sed \"s|\\.$ext||\"`\n\n# mxo bundle \nproddir=\"$BUILT_PRODUCTS_DIR/$prod\"\ninstalldir=\"$dir/$prod\"\n\n# set bundle bit for mxo's (on some installations, they show up as directories)\nSetFile -a B \"$proddir\"\n\n# remove target for clean install with current date and flags for directories\necho \"[removing  $installdir]\"\nrm -fr \"$installdir\"\n\n# copy to install dir with all attributes and resources\necho \"[installing $prod as $installdir]\"\nditto --rsrc \"$proddir\" \"$installdir\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		318530DF1C21E6150042B19E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				318530E11C21E6150042B19E /* bitalino-max.cpp in Sources */,
+				31E0808C1D0A1DA100885445 /* bitalino.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2FBBEAD008F335010078DB84 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				EXTERNALS_DIR = ../../bin;
+				HEADER_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MAXAPI_DIR = ../../../c74support;
+			};
+			name = Development;
+		};
+		2FBBEAD108F335010078DB84 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				EXTERNALS_DIR = ../../bin;
+				HEADER_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MAXAPI_DIR = ../../../c74support;
+			};
+			name = Deployment;
+		};
+		318530E71C21E6150042B19E /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(MAXAPI_DIR)/**";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREFIX_HEADER = "${MAXAPI_DIR}/max-includes/macho-prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "MAX611=1";
+				HEADER_SEARCH_PATHS = "$(MAXAPI_DIR)/**";
+				OTHER_LDFLAGS = (
+					"-framework",
+					MaxAPI,
+					"-framework",
+					MaxAudioAPI,
+					"-Wl,-U,_object_method_imp",
+				);
+				PRODUCT_NAME = bitalino;
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Development;
+		};
+		318530E81C21E6150042B19E /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(MAXAPI_DIR)/**";
+				GCC_PREFIX_HEADER = "${MAXAPI_DIR}/max-includes/macho-prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "MAX611=1";
+				HEADER_SEARCH_PATHS = "$(MAXAPI_DIR)/**";
+				OTHER_LDFLAGS = (
+					"-framework",
+					MaxAPI,
+					"-framework",
+					MaxAudioAPI,
+					"-Wl,-U,_object_method_imp",
+				);
+				PRODUCT_NAME = bitalino;
+				WRAPPER_EXTENSION = mxo;
+			};
+			name = Deployment;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2FBBEACF08F335010078DB84 /* Build configuration list for PBXProject "bitalino" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2FBBEAD008F335010078DB84 /* Development */,
+				2FBBEAD108F335010078DB84 /* Deployment */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		318530E61C21E6150042B19E /* Build configuration list for PBXNativeTarget "bitalino-max" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				318530E71C21E6150042B19E /* Development */,
+				318530E81C21E6150042B19E /* Deployment */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}
