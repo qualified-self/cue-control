@@ -2,6 +2,10 @@ class SoundCueNode extends CueNode {
 
   AudioPlayer player;
 
+  SoundCueNode(String fileName) {
+    this(fileName, fileName, 0, 0);
+  }
+
   SoundCueNode(String fileName, float preWait, float postWait) {
     this(fileName, fileName, preWait, postWait);
   }
@@ -20,7 +24,7 @@ class SoundCueNode extends CueNode {
     player.pause();
     player.rewind();
   }
-  
+
   public void doInit(Blackboard agent)
   {
     super.doInit(agent);
