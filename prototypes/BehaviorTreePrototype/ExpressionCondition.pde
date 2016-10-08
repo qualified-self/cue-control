@@ -1,8 +1,8 @@
-class BlackboardCondition extends Condition {
+class ExpressionCondition extends Condition {
 
   Expression expression;
 
-  BlackboardCondition(String expression) {
+  ExpressionCondition(String expression) {
     this.expression = new Expression(expression);
   }
 
