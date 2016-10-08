@@ -41,7 +41,7 @@ class CueNode extends BaseNode {
   boolean preWaiting = false;
   boolean postWaiting = false;
 
-  public int doExecute(Blackboard agent)
+  public State doExecute(Blackboard agent)
   {
     if (startTime == -1) {
       startTime = millis();
@@ -66,13 +66,13 @@ class CueNode extends BaseNode {
     }
 
     if (hasEnded()) {
-      int status = (result(agent) ? BT_SUCCESS : BT_FAILURE);
+      State status = (result(agent) ? State.SUCCESS : State.FAILURE);
       init(agent);
       return status;
     }
     else
-      return BT_RUNNING;
- //     return (hasEnded() ? (succeeds ? BT_SUCCESS : BT_FAILURE) : BT_RUNNING);
+      return State.RUNNING;
+ //     return (hasEnded() ? (succeeds ? State.SUCCESS : State.FAILURE) : State.RUNNING);
   }
 
   public void doInit(Blackboard agent)

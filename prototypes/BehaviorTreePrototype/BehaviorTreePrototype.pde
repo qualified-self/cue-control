@@ -16,10 +16,6 @@ final int NODE_HEIGHT = 30;
 final int OSC_SEND_PORT = 12000;
 final int OSC_RECV_PORT = 14000;
 
-final int BT_RUNNING = 0;
-final int BT_SUCCESS = 1;
-final int BT_FAILURE = 2;
-
 void setup() {
   size(800, 600);
   frameRate(10);
@@ -52,16 +48,15 @@ void setup() {
                       .addChild(new OscCueNode("/lights/off", 0, 2, 1))));
 }
 
-int rootState = BT_RUNNING;
+State rootState = State.RUNNING;
 
 void draw() {
   background(0);
 
-    rootState = root.execute(board);
-/*  if (rootState == BT_RUNNING) {
+  if (rootState == State.RUNNING) {
     rootState = root.execute(board);
   }
-  */
+
   drawTree(root, INDENT, NODE_HEIGHT);
 }
 
@@ -88,10 +83,10 @@ int drawTree(BaseNode node, int x, int y)
   return y;
 }
 
-color stateToColor(int state) {
-  if (state == BT_RUNNING)
+color stateToColor(State state) {
+  if (state == State.RUNNING)
     return color(#52F3F7);
-  else if (state == BT_SUCCESS)
+  else if (state == State.SUCCESS)
     return color(#73FC74);
   else
     return color(#E33535);

@@ -1,4 +1,4 @@
-class SequentialNode extends CompositeNode 
+class SequentialNode extends CompositeNode
 {
   int currentPosition;
 
@@ -13,7 +13,7 @@ class SequentialNode extends CompositeNode
     currentPosition = -1;
   }
 
-  public int doExecute(Blackboard agent)
+  public State doExecute(Blackboard agent)
   {
     if (currentPosition == -1) //starting out
     {
@@ -22,18 +22,18 @@ class SequentialNode extends CompositeNode
     }
 
     if (nChildren() == 0)
-      return BT_SUCCESS;
+      return State.SUCCESS;
 
     BaseNode currentTask = children.get(currentPosition);
-    int result = currentTask.execute(agent);
+    State result = currentTask.execute(agent);
 
-    while (result == BT_SUCCESS)
+    while (result == State.SUCCESS)
     {
       if (currentPosition == nChildren()-1) //finished last task
       {
         currentPosition = -1; //indicate we are not running anything
-        return BT_SUCCESS;
-      } 
+        return State.SUCCESS;
+      }
       else
       {
         currentPosition++;
@@ -41,7 +41,7 @@ class SequentialNode extends CompositeNode
         result = currentTask.execute(agent);
       }
     }
-    if (result == BT_FAILURE)
+    if (result == State.FAILURE)
       currentPosition = -1;
     return result;
   }

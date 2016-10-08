@@ -1,8 +1,8 @@
-class ParallelNode extends CompositeNode 
+class ParallelNode extends CompositeNode
 {
   boolean failOnAll;
   boolean succeedOnAll;
-  
+
   ArrayList<Boolean> childrenRunning;
   int nFailure;
   int nSuccess;
@@ -18,7 +18,7 @@ class ParallelNode extends CompositeNode
   ParallelNode(String description) {
     this(description, true, true);
   }
-  
+
   ParallelNode(String description, boolean failOnAll, boolean succeedOnAll)
   {
     super(description);
@@ -26,57 +26,57 @@ class ParallelNode extends CompositeNode
     this.succeedOnAll = succeedOnAll;
   }
 
-  public int doExecute(Blackboard agent)
+  public State doExecute(Blackboard agent)
   {
     // This means init() wasn't called...
     if (childrenRunning == null || childrenRunning.size() != nChildren())
       init(agent);
-  
+
     // go through all children and update the childrenRunning
     // TODO: implement avec ceci: https://github.com/NetEase/pomelo-bt/blob/master/lib/node/parallel.js
     for (int i = 0 ; i<nChildren(); i++)
     {
       if (childrenRunning.get(i).booleanValue())
       {
-        int status = children.get(i).execute(agent);
-        childrenRunning.set(i, new Boolean(status == BT_RUNNING));
-  
-        if (status == BT_SUCCESS)
+        State status = children.get(i).execute(agent);
+        childrenRunning.set(i, new Boolean(status == State.RUNNING));
+
+        if (status == State.SUCCESS)
           nSuccess++;
-        else if (status == BT_FAILURE)
+        else if (status == State.FAILURE)
           nFailure++;
       }
     }
-    
+
     if (nSuccess == nChildren() || (!succeedOnAll && nSuccess >= 1))
     {
       init(agent);
-      return BT_SUCCESS;
+      return State.SUCCESS;
     }
     else if (nFailure == nChildren() || (!failOnAll && nFailure >= 1))
     {
       init(agent);
-      return BT_FAILURE;
+      return State.FAILURE;
     }
     else
-      return BT_RUNNING;
+      return State.RUNNING;
   }
 
   void doInit(Blackboard agent)
   {
     childrenRunning = new ArrayList<Boolean>(nChildren());
-    
+
     for (BaseNode node : children)
       node.init(agent);
-    
+
     for (int i=0; i<nChildren(); i++) {
       children.get(i).init(agent);
       childrenRunning.add(new Boolean(true));
     }
-    
+
     nSuccess = 0;
     nFailure = 0;
   }
-  
+
   public String type() { return "PAR"; }
 }

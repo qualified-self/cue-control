@@ -1,34 +1,34 @@
 class WhileDecorator extends Decorator {
-  
+
   // Condition.
   Condition condition;
-  
+
   boolean running;
-  
+
   WhileDecorator(Condition condition) {
     this.condition = condition;
   }
-  
+
   public void doInit(Blackboard agent) {
     super.doInit(agent);
     running = false;
   }
 
-  public int doExecute(Blackboard agent) {
+  public State doExecute(Blackboard agent) {
     boolean check = condition.check(agent);
     if (!running) {
       if (check)
         running = true;
       else
-        return BT_FAILURE;
+        return State.FAILURE;
     }
     
     // Running.
-    int status = node.doExecute(agent);
-    if (status != BT_RUNNING) {
+    State status = node.doExecute(agent);
+    if (status != State.RUNNING) {
       init(agent);
-      if (check && status == BT_SUCCESS)
-        return BT_RUNNING; // repeat
+      if (check && status == State.SUCCESS)
+        return State.RUNNING; // repeat
     }
     return status;
   }

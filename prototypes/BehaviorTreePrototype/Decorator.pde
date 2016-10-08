@@ -11,7 +11,7 @@ abstract class Decorator extends BaseNode {
     this.node = node;
   }
 
-  public abstract int doExecute(Blackboard agent);
+  public abstract State doExecute(Blackboard agent);
   public void doInit(Blackboard agent) {
     if (hasNode())
       node.doInit(agent);
