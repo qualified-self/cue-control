@@ -22,7 +22,7 @@ class WhileDecorator extends Decorator {
       else
         return State.FAILURE;
     }
-    
+
     // Running.
     State status = node.doExecute(agent);
     if (status != State.RUNNING) {
@@ -32,4 +32,6 @@ class WhileDecorator extends Decorator {
     }
     return status;
   }
+
+  public String type() { return "REP"; }
 }

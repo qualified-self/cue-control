@@ -1,14 +1,14 @@
 class BlackboardCondition extends Condition {
-  
+
   String expression;
-  
+
   ScriptEngineManager manager = new ScriptEngineManager();
   ScriptEngine engine = manager.getEngineByName("js");
-  
+
   BlackboardCondition(String expression) {
     this.expression = expression;
   }
-  
+
   boolean check(Blackboard agent) {
     String expr = expression;
     for (HashMap.Entry<String, Integer> element : agent.entrySet()) {
@@ -24,5 +24,9 @@ class BlackboardCondition extends Condition {
       println("ERROR: " + e.toString());
       return false;
     }
-   }
+  }
+
+  public String toString() {
+    return expression;
+  }
 }

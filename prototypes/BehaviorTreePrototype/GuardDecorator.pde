@@ -28,4 +28,8 @@ class GuardDecorator extends Decorator {
       init(agent);
     return status;
   }
+
+  String getDefaultDescription() { return condition.toString(); }
+  public String type() { return "GRD"; }
+
 }

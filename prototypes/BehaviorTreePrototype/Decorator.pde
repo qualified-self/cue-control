@@ -1,11 +1,11 @@
 abstract class Decorator extends BaseNode {
   // Decorated node.
   BaseNode node;
-  
+
   Decorator() {
     this((BaseNode)null);
   }
-  
+
   Decorator(BaseNode node) {
     super();
     this.node = node;
@@ -21,13 +21,10 @@ abstract class Decorator extends BaseNode {
     this.node = node;
     return this;
   }
-  
+
   boolean hasNode() {
     return node != null;
   }
-  
-  BaseNode getNode() { return node; }
-  
-  public String type() { return "DEC"; }
 
+  BaseNode getNode() { return node; }
 }

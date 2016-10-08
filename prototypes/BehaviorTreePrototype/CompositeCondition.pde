@@ -7,6 +7,9 @@ class OrCondition extends Condition {
   boolean check(Blackboard agent) {
     return a.check(agent) || b.check(agent);
   }
+  public String toString() {
+    return "(" + a + " OR " + b + ")";
+  }
 }
 
 class AndCondition extends Condition  {
@@ -17,6 +20,9 @@ class AndCondition extends Condition  {
   }
   boolean check(Blackboard agent) {
     return a.check(agent) && b.check(agent);
+  }
+  public String toString() {
+    return "(" + a + " AND " + b + ")";
   }
 }
 
@@ -29,5 +35,7 @@ class NotCondition extends Condition  {
   boolean check(Blackboard agent) {
     return !a.check(agent);
   }
-}  
-  
+  public String toString() {
+    return "NOT " + a;
+  }
+}
