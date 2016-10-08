@@ -143,8 +143,10 @@ color stateToColor(State state) {
     return color(#52F3F7);
   else if (state == State.SUCCESS)
     return color(#73FC74);
-  else
+  else if (state == State.FAILURE)
     return color(#E33535);
+  else
+    return color(#999999);
 }
 
 void oscEvent(OscMessage msg) {

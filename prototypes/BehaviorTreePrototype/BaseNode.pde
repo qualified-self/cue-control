@@ -11,11 +11,13 @@ abstract class BaseNode
 
   BaseNode()
   {
+    this(null);
   }
 
   BaseNode(String description)
   {
     this.description = description;
+    state = State.UNDEFINED;
   }
 
   public BaseNode setDecorator(Decorator decorator) {
@@ -27,7 +29,7 @@ abstract class BaseNode
   public boolean hasDecorator() { return decorator != null; }
 
   public Decorator getDecorator() { return decorator; }
-  
+
   public void init(Blackboard agent) {
     if (hasDecorator())
       decorator.init(agent);
