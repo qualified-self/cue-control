@@ -5,6 +5,8 @@ class CueNode extends BaseNode {
 
   int startTime;
 
+  int step;
+
   CueNode(String description, float preWait, float runningTime, float postWait) {
     super(description);
     this.preWait     = preWait;
@@ -32,38 +34,51 @@ class CueNode extends BaseNode {
     return currentTime() >= preWait + runningTime + postWait;
   }
 
-  void beginCue(Blackboard agent) {}
-  void runCue(Blackboard agent) {}
-  void endCue(Blackboard agent) {}
+  void beginCue(Blackboard agent) {
+    if (step == 0) {
+      doBeginCue(agent);
+      step = 1;
+    }
+    else
+      println("Wrong step to call beginCue(): " + step);
+  }
+
+  void runCue(Blackboard agent) {
+    if (step == 0)
+      beginCue(agent);
+    if (step == 1) {
+      doRunCue(agent);
+      step = 2;
+    }
+  }
+
+  void endCue(Blackboard agent) {
+    if (step <= 1)
+      runCue(agent);
+    if (step == 2) {
+      doEndCue(agent);
+      step = 3;
+    }
+  }
+
+  void doBeginCue(Blackboard agent) {}
+  void doRunCue(Blackboard agent) {}
+  void doEndCue(Blackboard agent) {}
 
   boolean result(Blackboard agent) { return true; }
 
-  boolean preWaiting = false;
-  boolean postWaiting = false;
 
   public State doExecute(Blackboard agent)
   {
     if (startTime == -1) {
       startTime = millis();
-      preWaiting = true;
-      postWaiting = true;
+      step = 0;
     }
 
     if (isInRun())
-    {
-      if (preWaiting) {
-        beginCue(agent);
-        preWaiting = false;
-      }
-      else
-        runCue(agent);
-    }
-    else if (isInPostWait()) {
-      if (postWaiting) {
-        endCue(agent);
-        postWaiting = false;
-      }
-    }
+      runCue(agent); // this will also call beginCue if needed
+    else if ((isInPostWait() || hasEnded()) && step != 2)
+       endCue(agent);
 
     if (hasEnded()) {
       State status = (result(agent) ? State.SUCCESS : State.FAILURE);

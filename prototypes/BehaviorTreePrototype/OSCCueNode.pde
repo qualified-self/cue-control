@@ -15,9 +15,8 @@ class OscCueNode extends CueNode {
     super(description, preWait, runningTime, postWait);
     this.message = message;
   }
-  
-  void beginCue(Blackboard agent) {
-    println("Sending osc message: " + message);
+
+  void doBeginCue(Blackboard agent) {
     oscP5.send(message, remoteLocation);
   }
 }
