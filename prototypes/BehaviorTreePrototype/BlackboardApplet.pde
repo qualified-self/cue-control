@@ -2,7 +2,7 @@ public class BlackboardApplet extends PApplet {
 
 	BlackboardApplet() {
 		super();
-		PApplet.runSketch(new String[] {this.getClass().getSimpleName()}, this);
+		PApplet.runSketch(new String[] { "Blackboard" }, this);
 	}
 
   public void settings() {
