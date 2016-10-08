@@ -19,7 +19,6 @@ abstract class BaseNode
   }
 
   public BaseNode setDecorator(Decorator decorator) {
-    println("set decorator");
     decorator.setNode(this);
     this.decorator = decorator;
     return this;
