@@ -21,7 +21,7 @@ final color DECORATOR_FILL_COLOR = #555555;
 final color DECORATOR_TEXT_COLOR = #eeeeee;
 
 void setup() {
-  size(800, 600);
+  size(1000, 800);
   frameRate(10);
 
   // start oscP5, listening for incoming messages.
@@ -35,22 +35,28 @@ void setup() {
   board.put("test", 0);
   board.put("test2", 10);
 
-  root = new ParallelNode("Play sound and show", true, true)
-                  .addChild(new SoundCueNode("123go.mp3")
-                                .setDecorator(new GuardDecorator(new NotCondition(new KeyCondition(' ')))))
-                  .addChild(new SequentialNode()
+  root = new SequentialNode("Wait for starting cue then launch")
+                .addChild(new ConstantNode(State.SUCCESS).setDecorator(new WhileDecorator(new NotCondition(new KeyCondition(' ')))))
+                .addChild(new ParallelNode("Play sound and show", true, true)
+                  .addChild(new SoundCueNode("123go.mp3"))
+                  .addChild(new SequentialNode("Start the show")
                     .addChild(new OscCueNode("/curtain/on", 0, 2, 1))
                     .addChild(new OscCueNode("/lights/on", 1, 2, 1))
                     .addChild(new SelectorNode(false)
                       .addChild(new OscCueNode("/show/start", 0, 3, 1)
                                   .setDecorator(new GuardDecorator(new BlackboardCondition("[test] > 0"))))
-                      .addChild(new ParallelNode()
+                      .addChild(new ParallelNode("Error: try again using emergency procedure")
                         .addChild(new SoundCueNode("error.mp3"))
-                        .addChild(new OscCueNode("/show/startagain", 0, 2, 1))))
-                    .addChild(new ParallelNode()
+                        .addChild(new OscCueNode("/show/startagain", 0, 2, 1))
+                        )
+                      )
+                    .addChild(new ParallelNode("Stop the show")
                       .addChild(new SoundCueNode("stop.mp3"))
                       .addChild(new OscCueNode("/curtain/off", 1, 2, 1))
-                      .addChild(new OscCueNode("/lights/off", 0, 2, 1))));
+                      .addChild(new OscCueNode("/lights/off", 0, 2, 1))
+                      )
+                    )
+                  );
 }
 
 State rootState = State.RUNNING;
