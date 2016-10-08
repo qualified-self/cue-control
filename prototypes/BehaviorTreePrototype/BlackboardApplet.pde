@@ -14,21 +14,24 @@ public class BlackboardApplet extends PApplet {
 
 		int x = INDENT;
 		int y = NODE_HEIGHT;
-		y = drawRow("Name", "Value", x, y, #555555, #ffffff, true);
+		y = drawRow("Name", "Value", x, y, #555555, #ffffff, true, false);
 
 		boolean odd = true;
+		int nElements = board.size();
+		int i=0;
     for (HashMap.Entry<String, Integer> element : board.entrySet()) {
-			y = drawRow(element.getKey(), element.getValue().toString(), x, y, odd ? #cccccc : #aaaaaa, #000000, false);
+			y = drawRow(element.getKey(), element.getValue().toString(), x, y, odd ? #cccccc : #aaaaaa, #000000, false, (i == nElements-1));
 			odd = !odd;
+			i++;
     }
   }
 
-	int drawRow(String name, String value, int x, int y, color fillColor, color textColor, boolean header)
+	int drawRow(String name, String value, int x, int y, color fillColor, color textColor, boolean roundTops, boolean roundBottoms)
 	{
 	  rectMode(CORNERS);
 	  fill(fillColor);
-		int topCorners = header ? 10 : 0;
-		int bottomCorners = header ? 0 : 10;
+		int topCorners = roundTops ? 10 : 0;
+		int bottomCorners = roundBottoms ? 10 : 0;
 		rect(x, y, width-INDENT, y+NODE_HEIGHT, topCorners, topCorners, bottomCorners, bottomCorners);
 	  fill(textColor);
 	  textSize(NODE_HEIGHT/2);
