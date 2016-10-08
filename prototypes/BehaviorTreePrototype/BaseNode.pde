@@ -26,6 +26,8 @@ abstract class BaseNode
 
   public boolean hasDecorator() { return decorator != null; }
 
+  public Decorator getDecorator() { return decorator; }
+  
   public void init(Blackboard agent) {
     if (hasDecorator())
       decorator.init(agent);
