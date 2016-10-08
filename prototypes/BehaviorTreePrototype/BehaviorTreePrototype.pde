@@ -20,9 +20,17 @@ final int OSC_RECV_PORT = 14000;
 final color DECORATOR_FILL_COLOR = #555555;
 final color DECORATOR_TEXT_COLOR = #eeeeee;
 
-void setup() {
+void settings() {
   size(1000, 800);
-  frameRate(10);
+}
+
+void setup() {
+  // Secondary window (for blackboard).
+//  String[] args = {"Blackboard"};
+  BlackboardApplet sa = new BlackboardApplet();
+//  PApplet.runSketch(args, sa);
+
+  frameRate(30);
 
   // start oscP5, listening for incoming messages.
   oscP5 = new OscP5(this, OSC_RECV_PORT);
@@ -32,24 +40,27 @@ void setup() {
 
   minim = new Minim(this);
 
-  board.put("test", 0);
-  board.put("test2", 10);
+  // board.put("test", 0);
+  // board.put("test2", 10);
 
   root = new SequentialNode("Wait for starting cue then launch")
                 .addChild(new ConstantNode(State.SUCCESS).setDecorator(new WhileDecorator(new NotCondition(new KeyCondition(' ')))))
                 .addChild(new ParallelNode("Play sound and show", true, true)
+                  .addChild(new OscToBlackboard("/cue-proto/start", "start").setDecorator(new WhileDecorator(new BlackboardCondition("true"))))
                   .addChild(new SoundCueNode("123go.mp3"))
                   .addChild(new SequentialNode("Start the show")
+                    .addChild(new ConstantNode(State.SUCCESS).setDecorator(new WhileDecorator(new NotCondition(new KeyCondition('S')))))
                     .addChild(new OscCueNode("/curtain/on", 0, 2, 1))
                     .addChild(new OscCueNode("/lights/on", 1, 2, 1))
                     .addChild(new SelectorNode(false)
                       .addChild(new OscCueNode("/show/start", 0, 3, 1)
-                                  .setDecorator(new GuardDecorator(new BlackboardCondition("[test] > 0"))))
+                                  .setDecorator(new GuardDecorator(new BlackboardCondition("[start] == 1"))))
                       .addChild(new ParallelNode("Error: try again using emergency procedure")
                         .addChild(new SoundCueNode("error.mp3"))
                         .addChild(new OscCueNode("/show/startagain", 0, 2, 1))
                         )
                       )
+                    .addChild(new ConstantNode(State.SUCCESS).setDecorator(new WhileDecorator(new NotCondition(new KeyCondition('S')))))
                     .addChild(new ParallelNode("Stop the show")
                       .addChild(new SoundCueNode("stop.mp3"))
                       .addChild(new OscCueNode("/curtain/off", 1, 2, 1))
@@ -57,6 +68,7 @@ void setup() {
                       )
                     )
                   );
+
 }
 
 State rootState = State.RUNNING;
@@ -133,4 +145,11 @@ color stateToColor(State state) {
     return color(#73FC74);
   else
     return color(#E33535);
+}
+
+void oscEvent(OscMessage msg) {
+  /* print the address pattern and the typetag of the received OscMessage */
+  print("### received an osc message.");
+  print(" addrpattern: "+msg.addrPattern());
+  println(" typetag: "+msg.typetag());
 }
