@@ -2,7 +2,7 @@
 abstract class CompositeNode extends BaseNode
 {
   ArrayList<BaseNode> children;
-  
+
   CompositeNode() {
     this("");
   }
@@ -11,7 +11,7 @@ abstract class CompositeNode extends BaseNode
     super(description);
     children = new ArrayList<BaseNode>();
   }
-  
+
   public CompositeNode setDecorator(Decorator decorator) {
     return (CompositeNode)super.setDecorator(decorator);
   }
