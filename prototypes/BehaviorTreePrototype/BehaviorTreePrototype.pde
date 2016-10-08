@@ -119,6 +119,17 @@ int drawNode(BaseNode node, int x, int y)
   fill(stateToColor(node.getState()));
   int topCorners = node.hasDecorator() ? 0 : 10;
   rect(x, y, width-INDENT, y+NODE_HEIGHT, topCorners, topCorners, 10, 10);
+
+  // Animation for running nodes.
+  if (node.getState() == State.RUNNING) {
+    final int SPREAD=100;
+    int start = x+frameCount%SPREAD;
+    int end   = width-INDENT-SPREAD;
+    for (int xx=start; xx<end; xx+=SPREAD) {
+      fill(255, 255, 255, map(xx, start, end, 100, 0));
+      rect(xx, y, xx+SPREAD*0.5, y+NODE_HEIGHT);
+    }
+  }
   fill(0);
   textSize(NODE_HEIGHT/2);
   text(node.type() + " " + node.getDescription(), x+INDENT/2, y+NODE_HEIGHT/2);
