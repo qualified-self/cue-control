@@ -11,7 +11,7 @@ Blackboard board = new Blackboard();
 BaseNode root;
 
 final int INDENT = 30;
-final int NODE_HEIGHT = 30;
+final int NODE_HEIGHT = 25;
 final int NODE_SPACING = 5;
 
 final int OSC_SEND_PORT = 12000;
@@ -21,7 +21,7 @@ final color DECORATOR_FILL_COLOR = #555555;
 final color DECORATOR_TEXT_COLOR = #eeeeee;
 
 void settings() {
-  size(1000, 800);
+  size(1000, 1000);
 }
 
 void setup() {
@@ -30,7 +30,8 @@ void setup() {
   BlackboardApplet sa = new BlackboardApplet();
 //  PApplet.runSketch(args, sa);
 
-  frameRate(30);
+  noStroke();
+//  frameRate(5);
 
   // start oscP5, listening for incoming messages.
   oscP5 = new OscP5(this, OSC_RECV_PORT);
