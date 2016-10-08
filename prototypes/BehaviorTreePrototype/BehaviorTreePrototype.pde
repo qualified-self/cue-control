@@ -100,7 +100,7 @@ int drawDecorator(Decorator dec, int x, int y)
   rect(x, y, width-INDENT, y+NODE_HEIGHT, 10, 10, 0, 0);
   fill(DECORATOR_TEXT_COLOR);
   textSize(NODE_HEIGHT/2);
-  text(dec.type() + " " + dec.getDescription(), x+INDENT/2, y+NODE_HEIGHT/2);
+  text(dec.type() + " " + dec.getDescription(), x+INDENT/2, y+NODE_HEIGHT*0.65);
   y += NODE_HEIGHT;
 
   return y;
@@ -132,7 +132,7 @@ int drawNode(BaseNode node, int x, int y)
   }
   fill(0);
   textSize(NODE_HEIGHT/2);
-  text(node.type() + " " + node.getDescription(), x+INDENT/2, y+NODE_HEIGHT/2);
+  text(node.type() + " " + node.getDescription(), x+INDENT/2, y+NODE_HEIGHT*0.65);
   y += NODE_HEIGHT+NODE_SPACING;
 
   return y;

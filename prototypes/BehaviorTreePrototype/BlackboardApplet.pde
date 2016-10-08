@@ -32,8 +32,8 @@ public class BlackboardApplet extends PApplet {
 		rect(x, y, width-INDENT, y+NODE_HEIGHT, topCorners, topCorners, bottomCorners, bottomCorners);
 	  fill(textColor);
 	  textSize(NODE_HEIGHT/2);
-	  text(name,  x+INDENT/2, y+NODE_HEIGHT/2);
-	  text(value, x+width/2+INDENT/2, y+NODE_HEIGHT/2);
+	  text(name,  x+INDENT/2, y+NODE_HEIGHT*0.65);
+	  text(value, x+width/2+INDENT/2, y+NODE_HEIGHT*0.65);
 	  y += NODE_HEIGHT;
 		return y;
 	}
