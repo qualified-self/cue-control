@@ -4,7 +4,7 @@ class SelectorNode extends CompositeNode
   boolean restart;
 
   SelectorNode(boolean restart) {
-    this("", restart);
+    this(null, restart);
   }
 
   SelectorNode(String description, boolean restart)

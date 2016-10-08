@@ -4,7 +4,7 @@ class SequentialNode extends CompositeNode
 
   SequentialNode()
   {
-    this("");
+    this(null);
   }
 
   SequentialNode(String description)
