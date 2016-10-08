@@ -32,7 +32,7 @@ void setup() {
   board.put("test2", 10);
 
   root = new ParallelNode("Play sound and show", true, true)
-                  .addChild(new SoundCueNode("123go.mp3", 1, 0)
+                  .addChild(new SoundCueNode("123go.mp3")
                                 .setDecorator(new GuardDecorator(new NotCondition(new KeyCondition(' ')))))
                   .addChild(new SequentialNode()
                     .addChild(new OscCueNode("/curtain/on", 0, 2, 1))
@@ -41,9 +41,10 @@ void setup() {
                       .addChild(new OscCueNode("/show/start", 0, 3, 1)
                                   .setDecorator(new GuardDecorator(new BlackboardCondition("[test] > 0"))))
                       .addChild(new ParallelNode()
-                        .addChild(new SoundCueNode("error.mp3", 1, 0))
+                        .addChild(new SoundCueNode("error.mp3"))
                         .addChild(new OscCueNode("/show/startagain", 0, 2, 1))))
                     .addChild(new ParallelNode()
+                      .addChild(new SoundCueNode("stop.mp3"))
                       .addChild(new OscCueNode("/curtain/off", 1, 2, 1))
                       .addChild(new OscCueNode("/lights/off", 0, 2, 1))));
 }
