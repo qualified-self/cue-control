@@ -1,4 +1,4 @@
-/************************************************ //<>// //<>// //<>//
+/************************************************ //<>// //<>// //<>// //<>//
  ** Class representing a state in the HFSM
  ************************************************
  ** jeraman.info, Sep. 30 2016 ******************
@@ -78,8 +78,8 @@ public class State {
 
       if (temporary_status == Status.RUNNING) {
         this.status = Status.RUNNING;
-        //if this is a canvas
-        //if (t instanceof Canvas) 
+        //if this is a State_Machine
+        //if (t instanceof State_Machine) 
 
         break;
       }
@@ -95,9 +95,9 @@ public class State {
   State tick(Input current_input) {
     State my_return = this;
 
-    //ticks all subcanvas that are inside this state
+    //ticks all subState_Machine that are inside this state
     if (this.status==Status.RUNNING)
-      for (Task t : tasks) if (t instanceof Canvas) ((Canvas)t).tick(current_input);
+      for (Task t : tasks) if (t instanceof State_Machine) ((State_Machine)t).tick(current_input);
 
     if (this.status==Status.DONE) 
       my_return = this.change_state(current_input);

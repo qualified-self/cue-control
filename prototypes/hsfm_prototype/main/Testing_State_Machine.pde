@@ -1,5 +1,5 @@
 /************************************************
- ** Basic file created to test the Canvas Class
+ ** Basic file created to test the State_Machine Class
  ************************************************
  ** State machine designed based on our scenario 
  ************************************************
@@ -7,28 +7,28 @@
  ************************************************
  ************************************************/
 
-class Testing_Canvas extends Testing {
+class Testing_State_Machine extends Testing {
 
   //check the diagram to get an idea of this struct according to our scenario
 
   //first level
-  Canvas root; 
+  State_Machine root; 
   State wait_for_trigger;
   State main;
 
   //second level - part 1
-  Canvas environmental;
+  State_Machine environmental;
   State osc_loop;
 
   //second level - part 2
-  Canvas piece;
+  State_Machine piece;
   State introduction;
   State self_appears;
   State sync;
 
   //third level (not sure)
-  Canvas light_control;
-  Canvas sound_control;
+  State_Machine light_control;
+  State_Machine sound_control;
 
   //8 tasks: one per state, as an example
   OSCTask init;
@@ -40,7 +40,7 @@ class Testing_Canvas extends Testing {
   //input for debug
   Input i;
 
-  public Testing_Canvas(PApplet p) {
+  public Testing_State_Machine(PApplet p) {
     super(p);
   }
 
@@ -83,7 +83,7 @@ class Testing_Canvas extends Testing {
     setup_environmental();
     setup_piece();
     root.run();
-    println("the canvas is ready!");
+    println("the State_Machine is ready!");
   }
 
   void draw() {
@@ -111,7 +111,7 @@ class Testing_Canvas extends Testing {
   }
 
   ////////////////////////////////////////////////
-  //setting up root canvas - LEVEL 1
+  //setting up root State_Machine - LEVEL 1
   void setup_root() {
     root_create_states();
     root_associate_tasks_to_state();
@@ -119,11 +119,11 @@ class Testing_Canvas extends Testing {
   }
 
   void root_create_states() {
-    root             = new Canvas("MAIN_CANVAS");
+    root             = new State_Machine("MAIN_State_Machine");
     wait_for_trigger = new State("WAIT_FOR_TRIGGER");
     main             = new State("MAIN_STATE_FOR_THE_PIECE");
-    environmental    = new Canvas("ENVIRONMENTAL");
-    piece            = new Canvas("PIECE");
+    environmental    = new State_Machine("ENVIRONMENTAL");
+    piece            = new State_Machine("PIECE");
 
     root.add_state(wait_for_trigger);
     root.add_state(main);
@@ -146,7 +146,7 @@ class Testing_Canvas extends Testing {
   }
 
   ////////////////////////////////////////////////
-  //setting up enviromental canvas - LEVEL 2 - PART 1
+  //setting up enviromental State_Machine - LEVEL 2 - PART 1
   void setup_environmental() {
     environmental_create_states();
     environmental_associate_tasks_to_state();
@@ -155,7 +155,7 @@ class Testing_Canvas extends Testing {
 
   void environmental_create_states() {
     //environmental was already created!
-    //environmental = new Canvas("ENVIRONMENTAL_CANVAS");
+    //environmental = new State_Machine("ENVIRONMENTAL_State_Machine");
     osc_loop      = new State("OSC_LOOP");
     environmental.add_state(osc_loop);
   }
@@ -173,7 +173,7 @@ class Testing_Canvas extends Testing {
   }
 
   ////////////////////////////////////////////////
-  //setting up piece canvas - LEVEL 2 - PART 2
+  //setting up piece State_Machine - LEVEL 2 - PART 2
   void setup_piece() {
     piece_create_states();
     piece_associate_tasks_to_state();

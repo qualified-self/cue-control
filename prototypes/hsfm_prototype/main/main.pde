@@ -5,13 +5,15 @@
  ************************************************
  ************************************************/
 
-//Testing_Task t       = new Testing_Task(this);
-//Testing_State t      = new Testing_State(this);
-//Testing_Connection t = new Testing_Connection(this);
-Testing_Canvas t     = new Testing_Canvas(this);
+//Testing_Task          t = new Testing_Task(this);
+//Testing_State         t = new Testing_State(this);
+//Testing_Connection    t = new Testing_Connection(this);
+//Testing_State_Machine t = new Testing_State_Machine(this);
+Testing_Blackboard    t = new Testing_Blackboard(this);
 
 void setup() {
   size(200, 200);
+  setup_osc();
   t.setup();
 }
 
