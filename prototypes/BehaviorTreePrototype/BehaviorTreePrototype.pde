@@ -10,7 +10,7 @@ Minim minim;
 Blackboard board = new Blackboard();
 BaseNode root;
 
-final int INDENT = 30;
+final int INDENT = 50;
 final int NODE_HEIGHT = 25;
 final int NODE_SPACING = 5;
 
