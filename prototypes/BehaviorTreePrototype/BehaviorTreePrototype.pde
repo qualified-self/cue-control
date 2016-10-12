@@ -49,13 +49,16 @@ void setup() {
 State rootState = State.RUNNING;
 
 void draw() {
+  // Reset background.
   background(0);
 
+  // Draw tree.
+  drawTree(root, INDENT, NODE_HEIGHT);
+
+  // Execute (if running).
   if (rootState == State.RUNNING) {
     rootState = root.execute(board);
   }
-
-  drawTree(root, INDENT, NODE_HEIGHT);
 }
 
 void oscEvent(OscMessage msg) {
