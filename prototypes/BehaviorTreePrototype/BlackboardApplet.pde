@@ -19,8 +19,8 @@ public class BlackboardApplet extends PApplet {
 		boolean odd = true;
 		int nElements = board.size();
 		int i=0;
-    for (HashMap.Entry<String, Integer> element : board.entrySet()) {
-			y = drawRow(element.getKey(), element.getValue().toString(), x, y, odd ? #cccccc : #aaaaaa, #000000, false, (i == nElements-1));
+    for (HashMap.Entry<String, Double> element : board.entrySet()) {
+			y = drawRow(element.getKey(), this.nf(element.getValue().floatValue(), 0, 5), x, y, odd ? #cccccc : #aaaaaa, #000000, false, (i == nElements-1));
 			odd = !odd;
 			i++;
     }

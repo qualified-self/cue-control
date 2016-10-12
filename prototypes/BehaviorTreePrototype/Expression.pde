@@ -7,11 +7,15 @@ class Expression {
 
   Expression(String expression) {
     this.expression = expression;
+
+  Double evalAsDouble(Blackboard agent) {
+    return new Double( ((Number)eval(agent)).doubleValue() );
   }
 
 	Object eval(Blackboard agent) {
     String expr = expression;
-    for (HashMap.Entry<String, Integer> element : agent.entrySet()) {
+    // Replace keys from the blackboard.
+    for (HashMap.Entry<String, Double> element : agent.entrySet()) {
       expr = expr.replaceAll("\\["+element.getKey()+"\\]", element.getValue().toString());
     }
     try {

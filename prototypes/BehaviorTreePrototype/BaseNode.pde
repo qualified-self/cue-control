@@ -1,6 +1,3 @@
-class Blackboard extends HashMap<String, Integer>
-{
-}
 
 abstract class BaseNode
 {

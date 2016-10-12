@@ -1,7 +1,7 @@
 class OscReceiveNode extends CueNode
 {
 	String varName;
-	int value;
+	double value;
 	boolean valueReceived;
 	boolean hasStarted;
 
@@ -21,11 +21,10 @@ class OscReceiveNode extends CueNode
 		oscP5.plug(this, "process", message);
 	}
 
-	void process(int value)
+	void process(double value)
 	{
 		if (hasStarted)
 		{
-			println("received value " + value);
 			this.value = value;
 			valueReceived = true;
 		}
@@ -42,7 +41,7 @@ class OscReceiveNode extends CueNode
 		hasStarted = true;
 		if (valueReceived)
 		{
-			agent.put(varName, new Integer(value));
+			agent.put(varName, new Double(value));
 			valueReceived = false;
 			hasStarted = false;
 			return State.SUCCESS;
