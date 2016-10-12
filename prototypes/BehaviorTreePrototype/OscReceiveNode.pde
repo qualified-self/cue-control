@@ -1,4 +1,4 @@
-class OscToBlackboard extends CueNode
+class OscReceiveNode extends CueNode
 {
 	String varName;
 	int value;
@@ -7,12 +7,12 @@ class OscToBlackboard extends CueNode
 
 	State stateOnNoValueReceived;
 
-	OscToBlackboard(String message, String varName)
+	OscReceiveNode(String message, String varName)
 	{
 		this(message, varName, State.RUNNING);
 	}
 
-	OscToBlackboard(String message, String varName, State stateOnNoValueReceived)
+	OscReceiveNode(String message, String varName, State stateOnNoValueReceived)
 	{
 		super(message, 0, 0, 0);
 		this.varName = varName;
