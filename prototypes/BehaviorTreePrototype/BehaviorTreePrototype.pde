@@ -48,6 +48,7 @@ void setup() {
 
   root = new SequentialNode("Wait for starting cue then launch")
                 .addChild(new BlackboardSetNode("end", "0"))
+                .addChild(new BlackboardSetNode("invented", "1000"))
                 .addChild(new ProbabilityNode("random event")
                   .addChild(1, new BlackboardSetNode("start", "1"))
                   .addChild(100, new BlackboardSetNode("start", "0"))

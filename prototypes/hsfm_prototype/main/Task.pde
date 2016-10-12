@@ -90,14 +90,14 @@ class AudioTask extends Task {
 class OSCTask extends Task {
 
   //variables to store my osc connection
-  private OscP5      oscP5;
+ // private OscP5      oscP5;
   private NetAddress broadcast; 
   private OscMessage message;
 
   //contructor loading the file
   public OSCTask (PApplet p, String taskname, int port, String ip, Object[] content) {
     super(taskname);
-    this.oscP5     = new OscP5(p, port+1); 
+    //this.oscP5     = new OscP5(p, port+1); 
     this.broadcast = new NetAddress(ip, port);
     this.update_message(content);
   }
