@@ -1,3 +1,18 @@
+
+/*****************************************************
+ ** Default variables and methods for the Blackboard *
+ *****************************************************
+ ** jeraman.info, Oct. 11 2016 ***********************
+ *****************************************************
+ *****************************************************/
+
+Blackboard bb;
+
+void setup_blackboard() {
+  bb = new Blackboard();
+}
+
+
 /************************************************
  ** Class representing the blackboard ***********
  ************************************************
@@ -25,7 +40,7 @@ class Blackboard_Item {
   
   //returns the type of this value
   String get_type() {
-    return ((value.getClass()).toString());
+    return ((value.getClass()).getName());
   }
   
   //returns the value
@@ -53,8 +68,15 @@ class Blackboard {
   //adding an item into the blackboard
   void add_item(String name, Object value) {
     items.addElement(new Blackboard_Item(name, value));
-    println("a new item " + name + " with value " + value + " was added to the blackboard");
+    println("a new item " + value.getClass().getName() + " " + name + " = " + value.toString() + " was added to the blackboard");
   }
+  
+  //adding an item into the blackboard
+  void add_item(Blackboard_Item bi) {
+    items.addElement(bi);
+    println("a new item " + bi.get_type() + " " + bi.get_name() + " = " + bi.get_value() + " was added to the blackboard");
+  }
+  
   
   //looking for a specific item in the blackboard
   Blackboard_Item contains(String name) {
@@ -64,13 +86,14 @@ class Blackboard {
     
     //looks for a variable with the name received
     for (Blackboard_Item c : items) {
-      if (c.name == name) item = c;
+      if (c.get_name() == name) item = c;
     }
     
     //in case item is not found, this function returns null
     return item;
   }
   
+  //removes an item from the blackboard
   void remove_item(String name) {
     //my returning variable
     Blackboard_Item item = contains(name);
@@ -81,6 +104,7 @@ class Blackboard {
       println("Unable to remove item " + name + " from the blackboard.");
   }
   
+  //updates the value of an item in the blackboard
   void update_item(String name, Object value) {
     //my returning variable
     Blackboard_Item item = contains(name);
@@ -91,5 +115,15 @@ class Blackboard {
       println("Unable to update item " + name + " from the blackboard.");
   }
   
+  //updates the value of an item in the blackboard
+  void update_item(Blackboard_Item bi) {
+    //my returning variable
+    Blackboard_Item item = contains(bi.name);
+    
+    if (item!=null)
+      item.update_value(bi.get_value());
+    else
+      println("Unable to update item " + bi.get_name() + " from the blackboard.");
+  }
   
 }

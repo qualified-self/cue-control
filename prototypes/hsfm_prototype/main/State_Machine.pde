@@ -54,7 +54,7 @@ public class State_Machine extends Task {
 
     //updating the status of the actual
     actual.update_status();
-    
+
     //if this state finished. test this condition, maybe you need to overload the comparison!
     if (actual==end) {
       this.status = Status.DONE;
@@ -66,9 +66,25 @@ public class State_Machine extends Task {
       this.status = Status.DONE;
       println("State_Machine " + this.name +  " is empty! Done!");
     }
-    
+
     //checks if currect actual has any empty transition
     //check_for_empty_transition();
+  }
+
+  //draws all states associated with this state_machine
+  void draw() {
+    //cleaning the background
+    background(0);
+
+    //drawing the entry state
+    begin.draw();
+    begin.draw_begin();
+    //drawing the states begining to this state machine
+    for (State s : states)
+      s.draw();
+    //drawing the end state
+    end.draw();
+    end.draw_end();
   }
 
   //function called by State_Machine at every update looking for empty connections

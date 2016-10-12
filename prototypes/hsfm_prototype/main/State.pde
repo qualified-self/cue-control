@@ -17,12 +17,23 @@ public class State {
   private String             name;
   private Status             status;
 
+  //variables used for the gui
+  public int x;
+  public int y;
+  private final int size = 50;
+  //accordion that stores the tasks
+  private Accordion accordion;
+
   //constructor
   public State(String name) {
     this.name   = name;
     this.status = Status.INACTIVE; 
     this.tasks  = new Vector<Task>();
     this.connections = new Vector<Connection>();
+    this.x = (int)random(10, 1024);
+    this.y = (int)random(10, 768);
+
+    init_gui();
   }
 
   //run all tasks associated to this node
@@ -85,7 +96,7 @@ public class State {
       }
 
       if (temporary_status == Status.DONE) 
-        this.status = Status.DONE;   
+        this.status = Status.DONE;
     }
 
     //println("State " + this.name + "state was updated to " + this.status);
@@ -102,7 +113,7 @@ public class State {
     if (this.status==Status.DONE) 
       my_return = this.change_state(current_input);
     else //not ready yet...
-      println("State " + this.name + " is not ready to change!");
+    println("State " + this.name + " is not ready to change!");
 
     return my_return;
   }
@@ -142,6 +153,9 @@ public class State {
   void add_task(Task t) {
     tasks.addElement(t);
     println("Task " + t.name + " added to state " + this.name);
+
+    //updates the gui
+    add_task_in_accordion_gui(t);
   }
 
   //remove a task t from this state
@@ -150,6 +164,9 @@ public class State {
       this.tasks.removeElement(t);
     else
       println("Unable to remove task " + t.name + " from state " + this.name);
+
+    //updates the gui
+    remove_task_in_accordion_gui(t);
   }
 
   //add a connection to this state
@@ -180,7 +197,7 @@ public class State {
 
   //@TODO function: Connect anything (all input conditions leads to a state)
   void connect_via_all_inputs (State next_state) {
-    
+
     //get all possible inputs and converts to a vector
     Vector<Input> inputs = new Vector(Arrays.asList( (Input[])Input.values() ));
 
@@ -189,8 +206,8 @@ public class State {
 
     for (Input i : inputs) 
       this.connect(i, next_state);
-      
-      //this.empty_connection(next_state);
+
+    //this.empty_connection(next_state);
   }
 
   //@TODO function: Connect all remaining input  (all input conditions that were not used so far leads to a state)
@@ -216,26 +233,243 @@ public class State {
   void set_finish(State end) {
     this.connect(Input.FINISH, end);
   }
-  
-  
-  /*//clear all current connections and adds a single empty transition to next_state
-  void empty_connection(State next_state) {
-    //get all possible inputs and converts to a vector
-    Vector<Input> inputs = new Vector(Arrays.asList( (Input[])Input.values() ));
 
-    //removing the finish
-    inputs.remove(Input.FINISH);
 
-    //removing the connections except the finish
-    for (Connection c : connections)
-      connections.remove(c);
-      
-    //and creates the empty transition
-    this.connect(Input.EMPTY, next_state);
-    
-    println("state " + this.name + " has its connections deleted and a new empty trans. to state: " + next_state.name + " was added.");
+  /*******************************************
+   ** GUI FUNCTIONS ***************************
+   ********************************************/
+  void draw() {
+    update_cordinates_gui();
+    draw_state();
+    draw_connections();
   }
-  */
-  
-  //@TODO behavior?: implement default behavior of staying in the current node?
+
+  //updates the current position of this state in screen
+  void set_position_gui(int newx, int newy) {
+    this.x = newx;
+    this.y = newy;
+  }
+
+  //checks if a certain position (often the mouse) intersects this state in the screen
+  boolean intersects_gui(int test_x, int test_y) {
+    int dx = abs(test_x-x);
+    int dy = abs(test_y-y);
+    int R = size-25;
+
+    return (dx*dx)+(dy*dy) <= R*R;
+  }
+
+  //aux variable to handle the state moving on the screen
+  boolean moving = false;
+
+  //updates the coords of the state in the screen in case mouse drags it
+  void update_cordinates_gui() {
+    //if mouse if moving
+    if (mousePressed) {
+      //if intersects for the first time
+      if (this.intersects_gui(mouseX, mouseY))
+        //set move equals true
+        moving= true;
+
+      //if is moving, updates the value
+      if (moving) 
+        set_position_gui(mouseX, mouseY);
+      //if mouse is released
+    } else
+      //stops moving
+      moving = false;
+  }
+
+  //inits gui elements related to controlP5
+  void init_gui() {
+    init_state_name_gui();
+    init_accordion_gui();
+    //init_tasks_gui();
+  }
+
+  //inits the label with the name of the state
+  void init_state_name_gui() { 
+    cp5.addTextlabel(this.name)
+      .setText(this.name)
+      .setColorValue(color(255))
+      //.hide()
+      ;
+  }
+
+  //init the accordion that will store the tasks
+  void init_accordion_gui() {
+    accordion = cp5.addAccordion("acc_"+this.name)
+      .setWidth(100)
+      //.hide()
+      ;
+  }
+
+  //adds a task from the accordion
+  void add_task_in_accordion_gui(Task t) {
+    //creates a new group 
+    Group g = cp5.addGroup(t.get_name())
+      .setColorBackground(color(255, 50)) //color of the task
+      .setBackgroundColor(color(255, 25)) //color of task when openned
+      .setBackgroundHeight(50) //
+      ;
+    cp5.addBang("bang_" + t.get_name() +"_example_"+this.tasks.size())
+      .setPosition(10, 20)
+      .setSize(10, 10)
+      .moveTo(g)
+      ;
+
+    //adds this group to the accordion
+    accordion.addItem(g);
+  }
+
+  //removes a task from the accordion
+  void remove_task_in_accordion_gui(Task t) {
+    //looks for the group
+    Group g = cp5.get(Group.class, t.get_name());
+    //removes this task from the accordion
+    accordion.removeItem(g);
+  }
+
+  //draws the status of this state
+  void draw_status() {
+    noStroke();
+
+    switch(status) {
+    case RUNNING://running
+      fill (0, green+75, 0);
+      break;
+    case DONE://done
+      fill (100, 0, 0);
+      break;
+    case INACTIVE://running
+      fill (100);
+      break;
+    }
+    ellipse(x, y, size+25, size+25);
+
+    //increments the status
+    increment_status();
+  }
+
+  //aux variables for the gui
+  float counter = 0, green = 0;
+
+  void increment_status() {
+    //incrementing the counter
+    int limit = 32;
+    if (counter < limit/2)
+      green = green+limit/16;
+    else
+      green = green-limit/16;
+
+    counter=(counter+1)%limit;
+  }
+
+  void draw_state() {
+    //if keypressed, draws a connection
+    //if (keyPressed)
+    // draw_connections(mouseX, mouseY);
+
+    //draws the status circle
+    draw_status();
+
+    //draws the main central ellipse 
+    noStroke();
+    fill (0);
+    ellipse(x, y, size, size);
+
+    //prints info such as tasks and name
+    move_gui();
+  }
+
+  void move_gui() {
+    //moving the label
+    Textlabel label = cp5.get(Textlabel.class, name);
+    label.setPosition(x-(label.getWidth()/10)-7, y-5);
+
+    //moving the tasks
+    accordion.setPosition(x-(accordion.getWidth()/2), y+(size/2)+(size/4));
+  }
+
+  //draws additional info if this is a begin
+  void draw_begin() {
+    //line color
+    stroke(green+25);
+    //the wieght of the line
+    strokeWeight(5);
+    //draws the line
+    line(x-110, y, x-50, y);
+
+    //draws the arrow
+    line(x-70, y-20, x-50, y);
+    line(x-70, y+20, x-50, y);
+
+    //drawing the text
+    fill(green+25);
+    noStroke();
+    textAlign(LEFT, CENTER);
+    text("ENTRY", x-110, y-10);
+  }
+
+  //draws additional info if this is an end
+  void draw_end() {
+    //line color
+    noFill();
+    stroke(green+25);
+    //the wieght of the line
+    strokeWeight(5);
+    ellipse(x, y, size*2, size*2);
+    fill(green+25);
+    noStroke();
+    textAlign(CENTER, CENTER);
+    text("END", x, y-(size*1.2));
+  }
+
+  void draw_connections () {
+    for (Connection c : connections) 
+      if (c.get_condition() != Input.FINISH)
+        draw_connection(c);
+  }
+
+  void draw_connection (Connection c) {
+    State ns = c.get_next_state();
+    //line color
+    stroke(50);
+    //the wieght of the line
+    strokeWeight(5);
+    //draws the line
+    line(x, y, ns.x, ns.y);
+    //saves the current matrix
+    pushMatrix();
+    //moving to where the arrow is going
+    translate(x, y);
+    //saves the current matrix
+    pushMatrix();
+    //computes the midpoint where the arrow is going to be
+    float newx = (ns.x-x)/2;
+    float newy = (ns.y-y)/2;
+    //translate to the final position of the arrow
+    translate(newx, newy);
+
+    //saves the current matrix
+    pushMatrix();
+
+    //computes the angle to rotate the arrow
+    float a = atan2(x-ns.x, ns.y-y);
+    //rotates
+    rotate(a);
+    //draws the arr0w
+    line(0, 0, -10, -10);
+    line(0, 0, 10, -10);
+    //returns the matris to the regular position
+    popMatrix();
+    //sets text color
+    fill(100);
+    textAlign(CENTER, CENTER);
+    text(c.get_condition().toString(), 0, -30);
+    //returns the matris to the regular position
+    popMatrix();
+    popMatrix();
+  }
+ 
 }

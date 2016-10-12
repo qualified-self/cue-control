@@ -11,12 +11,6 @@
  ************************************************/
 
 ////////////////////////////////////////
-//importing whatever we need
-import ddf.minim.*;
-import oscP5.*;
-import netP5.*;
-
-////////////////////////////////////////
 //this is the abstract class every task needs to implement
 public abstract class Task {
   protected Status status;
@@ -25,26 +19,67 @@ public abstract class Task {
   public Task (String taskname) {
     this.name   = taskname;
     this.status = Status.INACTIVE;
-    
+
     println("task " + this.toString() + " created!");
   }
 
   void set_name(String newname) {
     this.name = newname;
   }
+  
+  String get_name() {
+    return this.name;
+  }
 
   Status get_status () {
     return this.status;
   }
-  
+
   void refresh() {
-   this.stop();
+    this.stop();
   }
-  
+
   abstract void run();
   abstract void update_status();
   abstract void stop();
-  
+}
+
+////////////////////////////////////////
+//implementing a task for setting the blackboard
+class SetBBTask extends Task {
+  Blackboard_Item task;
+
+  public SetBBTask (PApplet p, String taskname, Object value) {
+    super(taskname);
+    task = new Blackboard_Item(taskname, value);
+  }
+
+  void run() {
+    this.status = Status.RUNNING;
+    
+    //checks if the item already exists in the blackboard 
+    Blackboard_Item bi = bb.contains(this.name);
+    
+    //if not, adds a new item
+    if (bi == null) {
+      bb.add_item(task);
+      println(task.get_type() + " " + task.get_name() + " " + task.get_value() + " was inserted into the blackboard");
+    }else {//otherwise, updates the value
+      bb.update_item(task);
+      println("blackboard updated. " + task.get_type() + " " + task.get_name() + " " + task.get_value());
+    }
+    
+    
+    
+    this.status = Status.DONE;
+  }
+
+  void stop() {
+    this.status = Status.INACTIVE;
+  }
+
+  void update_status() {
+  }
 }
 
 ////////////////////////////////////////
@@ -83,14 +118,14 @@ class AudioTask extends Task {
     else
       this.status = Status.DONE;
   }
-}
+} //<>//
 
 ////////////////////////////////////////
 //implementing a task for OSC messages
 class OSCTask extends Task {
 
   //variables to store my osc connection
- // private OscP5      oscP5;
+  // private OscP5      oscP5;
   private NetAddress broadcast; 
   private OscMessage message;
 

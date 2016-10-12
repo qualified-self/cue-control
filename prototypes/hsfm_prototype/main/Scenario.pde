@@ -7,7 +7,7 @@
  ************************************************
  ************************************************/
 
-class Testing_State_Machine extends Testing {
+class Scenario extends Testing {
 
   //check the diagram to get an idea of this struct according to our scenario
 
@@ -30,17 +30,17 @@ class Testing_State_Machine extends Testing {
   State_Machine light_control;
   State_Machine sound_control;
 
-  //8 tasks: one per state, as an example
-  OSCTask init;
-  OSCTask final_fadeout;
-  OSCTask update_vibropixel1, update_vibropixel2;
-  OSCTask update_bb;
-  OSCTask t2, t3, t4, t5, t6, t7, t8; 
+  //the tasks used in this scenario
+  OSCTask   init;
+  OSCTask   final_fadeout;
+  OSCTask   update_vibropixel1, update_vibropixel2;
+  OSCTask   update_bb;
+  SetBBTask putMouseXValuesInBB;
 
   //input for debug
   Input i;
 
-  public Testing_State_Machine(PApplet p) {
+  public Scenario(PApplet p) {
     super(p);
   }
 
@@ -51,6 +51,8 @@ class Testing_State_Machine extends Testing {
     update_vibropixel2 = new OSCTask(p, "update/vibropixel/2", 5004, "127.0.0.1", new Object[]{0});
     update_bb          = new OSCTask(p, "update/variables/blackboard", 5005, "127.0.0.1", new Object[]{0});
 
+    putMouseXValuesInBB= new SetBBTask(p, "my_mouse_x", 100);
+
     //t3 = new OSCTask(p, "start/main/loop", 5002, "127.0.0.1", new Object[]{1, 1, 1, 1});
     //t4 = new OSCTask(p, "update/vibropixel/1", 5003, "127.0.0.1", new Object[]{0});
     //t5 = new OSCTask(p, "update/vibropixel/2", 5004, "127.0.0.1", new Object[]{0});
@@ -60,20 +62,22 @@ class Testing_State_Machine extends Testing {
   }
 
   void gui() {
+    /*
     //drawing background
-    switch(root.get_status()) {
-    case INACTIVE:
-      background(0, 0, 0);
-      break;
-
-    case RUNNING:
-      background(0, 0, 255);
-      break;
-
-    case DONE:
-      background(255, 0, 0);
-      break;
-    }
+     switch(root.get_status()) {
+     case INACTIVE:
+     background(0, 0, 0);
+     break;
+     
+     case RUNNING:
+     background(0, 0, 255);
+     break;
+     
+     case DONE:
+     background(255, 0, 0);
+     break;
+     }
+     */
   }
 
 
@@ -82,12 +86,13 @@ class Testing_State_Machine extends Testing {
     setup_root();
     setup_environmental();
     setup_piece();
-    root.run();
+    //root.run();
     println("the State_Machine is ready!");
   }
 
   void draw() {
     root.update_status();
+    root.draw();
     gui();
   }
 
@@ -104,6 +109,12 @@ class Testing_State_Machine extends Testing {
       break;
     case '4':
       i = Input.FINISH;
+      break;
+    case ' ':
+      root.run();
+      break;
+    case 's':
+      root.stop();
       break;
     }
     println("inputing " + i);
@@ -163,6 +174,7 @@ class Testing_State_Machine extends Testing {
   void environmental_associate_tasks_to_state () {
     osc_loop.add_task(update_vibropixel1);
     osc_loop.add_task(update_vibropixel2);
+    osc_loop.add_task(putMouseXValuesInBB);
   }
 
   void environmental_create_connections_state () {

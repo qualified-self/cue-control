@@ -21,4 +21,8 @@ public class Connection {
   State get_next_state() {
     return next_state;
   }
+  
+  Input get_condition() {
+    return this.condition;
+  }
 }
