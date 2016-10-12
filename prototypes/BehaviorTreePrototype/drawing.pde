@@ -5,8 +5,8 @@ void drawItem(PApplet app, int x, int y, color fillColor, boolean roundTops, boo
 {
 	int topCorners    = roundTops    ? 10 : 0;
 	int bottomCorners = roundBottoms ? 10 : 0;
-  app.rectMode(CORNERS);
-  app.fill(fillColor);
+	app.rectMode(CORNERS);
+	app.fill(fillColor);
 	app.rect(x, y, app.width-INDENT, y+NODE_HEIGHT, topCorners, topCorners, bottomCorners, bottomCorners);
 }
 
@@ -18,28 +18,29 @@ void drawItemText(PApplet app, String text, int x, int y, color textColor)
 	app.text(text, x+INDENT/2, y+NODE_HEIGHT*0.65);
 }
 
-int drawDecorator(Decorator dec, int x, int y)
+
+int drawDecorator(PApplet app, Decorator dec, int x, int y)
 {
   if (dec.hasDecorator())
-    y = drawDecorator(dec.getDecorator(), x, y);
+    y = drawDecorator(app, dec.getDecorator(), x, y);
 
   // Draw decorator.
-	drawItem(this, x, y, DECORATOR_FILL_COLOR, true, false);
-	drawItemText(this, dec.type() + " " + dec.getDescription(), x, y, DECORATOR_TEXT_COLOR);
+	drawItem(app, x, y, DECORATOR_FILL_COLOR, true, false);
+	drawItemText(app, dec.type() + " " + dec.getDescription(), x, y, DECORATOR_TEXT_COLOR);
 
   return (y + NODE_HEIGHT);
 }
 
-int drawNode(BaseNode node, int x, int y)
+int drawNode(PApplet app, BaseNode node, int x, int y)
 {
   // Draw decorators (if any).
   if (node.hasDecorator())
   {
-    y = drawDecorator(node.getDecorator(), x, y);
+    y = drawDecorator(app, node.getDecorator(), x, y);
   }
 
   // Draw node.
-	drawItem(this, x, y, stateToColor(node.getState()), !node.hasDecorator(), true);
+	drawItem(app, x, y, stateToColor(node.getState()), !node.hasDecorator(), true);
 
   // Animation for running nodes.
   if (node.getState() == State.RUNNING) {
@@ -53,33 +54,64 @@ int drawNode(BaseNode node, int x, int y)
   }
 
 	// Draw item text.
-	drawItemText(this, node.type() + " " + node.getDescription(), x, y, NODE_TEXT_COLOR);
+	drawItemText(app, node.type() + " " + node.getDescription(), x, y, NODE_TEXT_COLOR);
+
+	// Draw expand button and deal with it.
+	if (node instanceof CompositeNode)
+	{
+		CompositeNode cn = (CompositeNode)node;
+		// Draw button.
+		app.fill(NODE_EXPANSION_BUTTON_COLOR);
+		app.pushMatrix();
+		app.translate(x+INDENT/4, y+NODE_HEIGHT/2);
+		app.scale(NODE_HEIGHT/4);
+		if (!cn.isExpanded())
+			app.rotate(radians(-90));
+		app.triangle(-1, -1, 1, -1, 0, 1);
+//		app.ellipse(x, y+NODE_HEIGHT/2, NODE_HEIGHT/2, NODE_HEIGHT/2);
+		app.popMatrix();
+
+		// Check for click.
+		if (click.buttonWasClicked(x+INDENT/4, y+NODE_HEIGHT/2, NODE_HEIGHT/2))
+		{
+			cn.toggleExpanded();
+			click.reset();
+		}
+
+	}
 
   return (y + NODE_HEIGHT + NODE_SPACING);
 }
 
-int drawTree(BaseNode node, int x, int y)
+int drawTree(PApplet app, BaseNode node, int x, int y)
 {
   // Draw node.
-  y = drawNode(node, x, y);
+  y = drawNode(app, node, x, y);
 
- if (node instanceof CompositeNode) {
+  if (node instanceof CompositeNode)
+  {
     CompositeNode cn = (CompositeNode)node;
-    for (BaseNode child : cn.children) {
-      y = drawTree(child, x+INDENT, y);
-    }
+
+
+		if (cn.isExpanded())
+		{
+	    for (BaseNode child : cn.children)
+			{
+	      y = drawTree(app, child, x+INDENT, y);
+	    }
+		}
   }
 
   return y;
 }
 
 color stateToColor(State state) {
-  if (state == State.RUNNING)
-    return color(#52F3F7);
-  else if (state == State.SUCCESS)
-    return color(#73FC74);
-  else if (state == State.FAILURE)
-    return color(#E33535);
-  else
-    return color(#999999);
+if (state == State.RUNNING)
+  return color(#52F3F7);
+else if (state == State.SUCCESS)
+  return color(#73FC74);
+else if (state == State.FAILURE)
+  return color(#E33535);
+else
+  return color(#999999);
 }

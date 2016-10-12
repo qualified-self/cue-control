@@ -22,6 +22,8 @@ final color DECORATOR_TEXT_COLOR = #eeeeee;
 
 final color NODE_TEXT_COLOR = #000000;
 
+final color NODE_EXPANSION_BUTTON_COLOR = #333333;
+
 void settings() {
   size(1000, 1000);
 }
@@ -53,12 +55,42 @@ void draw() {
   background(0);
 
   // Draw tree.
-  drawTree(root, INDENT, NODE_HEIGHT);
+  drawTree(this, root, INDENT, NODE_HEIGHT);
 
   // Execute (if running).
   if (rootState == State.RUNNING) {
     rootState = root.execute(board);
   }
+}
+
+class MouseClick {
+  float x;
+  float y;
+  boolean clicked;
+
+  MouseClick() { reset(); }
+
+  void reset() { clicked = false; }
+
+  void click() {
+    x = mouseX;
+    y = mouseY;
+    clicked = true;
+  }
+
+  boolean wasClicked() { return clicked; }
+
+  boolean buttonWasClicked(float bx, float by, float radius)
+  {
+    return wasClicked() && dist(x, y, bx, by) < radius;
+  }
+}
+
+MouseClick click = new MouseClick();
+
+void mouseClicked()
+{
+  click.click();
 }
 
 void oscEvent(OscMessage msg) {
