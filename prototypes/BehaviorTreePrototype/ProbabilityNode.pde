@@ -13,11 +13,11 @@ class ProbabilityNode extends CompositeNode
 		weighting = new ArrayList<Float>();
   }
 
-  CompositeNode addChild(BaseNode node) {
+  ProbabilityNode addChild(BaseNode node) {
 		return addChild(1, node);
   }
 
-  CompositeNode addChild(float weight, BaseNode node) {
+  ProbabilityNode addChild(float weight, BaseNode node) {
 		weighting.add(new Float(weight));
     children.add(node);
 
