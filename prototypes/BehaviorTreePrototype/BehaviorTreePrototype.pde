@@ -20,6 +20,8 @@ final int OSC_RECV_PORT = 14000;
 final color DECORATOR_FILL_COLOR = #555555;
 final color DECORATOR_TEXT_COLOR = #eeeeee;
 
+final color NODE_TEXT_COLOR = #000000;
+
 void settings() {
   size(1000, 1000);
 }
@@ -89,83 +91,6 @@ void draw() {
   }
 
   drawTree(root, INDENT, NODE_HEIGHT);
-}
-
-int drawDecorator(Decorator dec, int x, int y)
-{
-  if (dec.hasDecorator())
-    y = drawDecorator(dec.getDecorator(), x, y);
-
-  // Draw decorator.
-  rectMode(CORNERS);
-  fill(DECORATOR_FILL_COLOR);
-  rect(x, y, width-INDENT, y+NODE_HEIGHT, 10, 10, 0, 0);
-  fill(DECORATOR_TEXT_COLOR);
-  textSize(NODE_HEIGHT/2);
-  text(dec.type() + " " + dec.getDescription(), x+INDENT/2, y+NODE_HEIGHT*0.65);
-  y += NODE_HEIGHT;
-
-  return y;
-}
-
-int drawNode(BaseNode node, int x, int y)
-{
-  // Draw decorators (if any).
-  if (node.hasDecorator())
-  {
-    y = drawDecorator(node.getDecorator(), x, y);
-  }
-
-  // Draw node.
-  rectMode(CORNERS);
-  fill(stateToColor(node.getState()));
-  int topCorners = node.hasDecorator() ? 0 : 10;
-  rect(x, y, width-INDENT, y+NODE_HEIGHT, topCorners, topCorners, 10, 10);
-
-  // Animation for running nodes.
-  if (node.getState() == State.RUNNING) {
-    final int SPREAD=100;
-    int start = x+frameCount%SPREAD;
-    int end   = width-INDENT-SPREAD;
-    for (int xx=start; xx<end; xx+=SPREAD) {
-      fill(255, 255, 255, map(xx, start, end, 100, 0));
-      rect(xx, y, xx+SPREAD*0.5, y+NODE_HEIGHT);
-    }
-  }
-  fill(0);
-  textSize(NODE_HEIGHT/2);
-  text(node.type() + " " + node.getDescription(), x+INDENT/2, y+NODE_HEIGHT*0.65);
-  y += NODE_HEIGHT+NODE_SPACING;
-
-  return y;
-}
-
-int drawTree(BaseNode node, int x, int y)
-{
-  // Draw node.
-  y = drawNode(node, x, y);
-
-  // Draw children.
-  if (node instanceof CompositeNode) {
-    CompositeNode cn = (CompositeNode)node;
-    for (BaseNode child : cn.children)
-    {
-      y = drawTree(child, x+INDENT, y);
-    }
-  }
-
-  return y;
-}
-
-color stateToColor(State state) {
-  if (state == State.RUNNING)
-    return color(#52F3F7);
-  else if (state == State.SUCCESS)
-    return color(#73FC74);
-  else if (state == State.FAILURE)
-    return color(#E33535);
-  else
-    return color(#999999);
 }
 
 void oscEvent(OscMessage msg) {
