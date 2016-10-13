@@ -22,6 +22,7 @@ void setup() {
 
 void draw() {
   t.draw();
+  draw_blackboard();
 }
   
 void mousePressed() {

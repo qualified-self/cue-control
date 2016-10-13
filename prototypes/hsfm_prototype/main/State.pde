@@ -23,10 +23,11 @@ public class State {
   private final int size = 50;
   //accordion that stores the tasks
   private Accordion accordion;
+  private Textlabel label;
 
   //constructor
   public State(String name) {
-    this.name   = name;
+    this.name   = name.toUpperCase();
     this.status = Status.INACTIVE; 
     this.tasks  = new Vector<Task>();
     this.connections = new Vector<Connection>();
@@ -34,6 +35,11 @@ public class State {
     this.y = (int)random(10, 768);
 
     init_gui();
+    hide_gui();
+  }
+
+  String get_name() {
+    return this.name;
   }
 
   //run all tasks associated to this node
@@ -240,8 +246,8 @@ public class State {
    ********************************************/
   void draw() {
     update_cordinates_gui();
-    draw_state();
     draw_connections();
+    draw_state();
   }
 
   //updates the current position of this state in screen
@@ -282,14 +288,26 @@ public class State {
 
   //inits gui elements related to controlP5
   void init_gui() {
+    textSize(cp5.getFont().getSize());
+    textFont(cp5.getFont().getFont());
     init_state_name_gui();
     init_accordion_gui();
     //init_tasks_gui();
   }
 
+  void hide_gui() {
+    label.hide();
+    accordion.hide();
+  }
+
+  void show_gui() {
+    label.show();
+    accordion.show();
+  }
+
   //inits the label with the name of the state
   void init_state_name_gui() { 
-    cp5.addTextlabel(this.name)
+    label = cp5.addTextlabel(this.name)
       .setText(this.name)
       .setColorValue(color(255))
       //.hide()
@@ -299,7 +317,7 @@ public class State {
   //init the accordion that will store the tasks
   void init_accordion_gui() {
     accordion = cp5.addAccordion("acc_"+this.name)
-      .setWidth(100)
+      .setWidth(110)
       //.hide()
       ;
   }
@@ -307,7 +325,7 @@ public class State {
   //adds a task from the accordion
   void add_task_in_accordion_gui(Task t) {
     //creates a new group 
-    Group g = cp5.addGroup(t.get_name())
+    Group g = cp5.addGroup(t.get_prefix() + "   " + t.get_name())
       .setColorBackground(color(255, 50)) //color of the task
       .setBackgroundColor(color(255, 25)) //color of task when openned
       .setBackgroundHeight(50) //
@@ -384,8 +402,11 @@ public class State {
 
   void move_gui() {
     //moving the label
-    Textlabel label = cp5.get(Textlabel.class, name);
-    label.setPosition(x-(label.getWidth()/10)-7, y-5);
+    label.align(ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER);
+    float textwidth = textWidth(name);
+    textwidth = textwidth/2;
+    label.setPosition(x-textwidth+(textwidth/5), y-5);
+
 
     //moving the tasks
     accordion.setPosition(x-(accordion.getWidth()/2), y+(size/2)+(size/4));
@@ -393,42 +414,79 @@ public class State {
 
   //draws additional info if this is a begin
   void draw_begin() {
+    /*
     //line color
-    stroke(green+25);
+     stroke(green+25);
+     //the wieght of the line
+     strokeWeight(5);
+     //draws the line
+     line(x-110, y, x-50, y);
+     
+     //draws the arrow
+     line(x-70, y-20, x-50, y);
+     line(x-70, y+20, x-50, y);
+     
+     //drawing the text
+     fill(green+25);
+     //textFont(cp5.controlFont);
+     noStroke();
+     textAlign(LEFT, CENTER);
+     text("ENTRY", x-110, y-10);
+     */
+
+    noFill();
+    //stroke(green+25);
+    stroke(50);
     //the wieght of the line
     strokeWeight(5);
-    //draws the line
-    line(x-110, y, x-50, y);
-
-    //draws the arrow
-    line(x-70, y-20, x-50, y);
-    line(x-70, y+20, x-50, y);
-
-    //drawing the text
-    fill(green+25);
+    ellipse(x, y, size*2, size*2);
+    //fill(green+25);
+    fill(50);
     noStroke();
-    textAlign(LEFT, CENTER);
-    text("ENTRY", x-110, y-10);
+    textAlign(CENTER, CENTER);
+    text("BEGIN", x, y-(size*1.2));
   }
 
   //draws additional info if this is an end
   void draw_end() {
     //line color
     noFill();
-    stroke(green+25);
+    //stroke(green+25);
+    stroke(50);
     //the wieght of the line
     strokeWeight(5);
     ellipse(x, y, size*2, size*2);
-    fill(green+25);
+    //fill(green+25);
+    fill(50);
     noStroke();
     textAlign(CENTER, CENTER);
     text("END", x, y-(size*1.2));
   }
+  
+  //draws additional info if this is an end
+  void draw_actual() {
+    //line color
+    noFill();
+    stroke(green+25);
+    //stroke(50);
+    //the wieght of the line
+    strokeWeight(5);
+    ellipse(x, y, size*2.5, size*2.5);
+    fill(green+25);
+    //fill(50);
+    noStroke();
+    textAlign(CENTER, CENTER);
+    text("ACTUAL", x, y-(size*1.5));
+  }
 
   void draw_connections () {
-    for (Connection c : connections) 
-      if (c.get_condition() != Input.FINISH)
+    for (Connection c : connections) {
+      if (c.get_next_state().get_name() == this.get_name())
+        draw_connection_to_self(c);
+
+      else if (c.get_condition() != Input.FINISH)
         draw_connection(c);
+    }
   }
 
   void draw_connection (Connection c) {
@@ -464,12 +522,29 @@ public class State {
     //returns the matris to the regular position
     popMatrix();
     //sets text color
-    fill(100);
+    fill(180);
     textAlign(CENTER, CENTER);
     text(c.get_condition().toString(), 0, -30);
     //returns the matris to the regular position
     popMatrix();
     popMatrix();
   }
- 
+
+  void draw_connection_to_self(Connection c) {
+    //line color
+    stroke(50);
+    //the wieght of the line
+    strokeWeight(5);
+    //draws the lines
+    line(x, y, x-100, y-100);
+    line(x, y, x+100, y-100);
+    line(x-100, y-100, x+100, y-100);
+    //draw the arrow
+    line(x-5, y-100, x+5, y-90);
+    line(x-5, y-100, x+5, y-110);
+    //draw the input
+    fill(180);
+    textAlign(CENTER, CENTER);
+    text(c.get_condition().toString(), x, y-125);
+  }
 }

@@ -17,7 +17,7 @@ public abstract class Task {
   protected String name;
 
   public Task (String taskname) {
-    this.name   = taskname;
+    this.name   = taskname.toUpperCase();
     this.status = Status.INACTIVE;
 
     println("task " + this.toString() + " created!");
@@ -37,6 +37,19 @@ public abstract class Task {
 
   void refresh() {
     this.stop();
+  }
+  
+  String get_prefix() {
+    String result = "[TASK]";
+    
+    if (this instanceof SetBBTask) result = "[B_B]";
+    if (this instanceof AudioTask) result = "[AUDIO]";
+    if (this instanceof OSCTask) result = "[OSC]";
+    if (this instanceof State_Machine) result = "[S_M]";
+    
+    //create other according to the type of the task
+    
+    return result;
   }
 
   abstract void run();
@@ -118,7 +131,7 @@ class AudioTask extends Task {
     else
       this.status = Status.DONE;
   }
-} //<>//
+} //<>// //<>//
 
 ////////////////////////////////////////
 //implementing a task for OSC messages

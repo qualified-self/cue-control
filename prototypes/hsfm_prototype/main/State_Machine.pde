@@ -70,6 +70,20 @@ public class State_Machine extends Task {
     //checks if currect actual has any empty transition
     //check_for_empty_transition();
   }
+  
+  void hide() {
+    begin.hide_gui();
+    for (State s : states)
+      s.hide_gui();
+    end.hide_gui();
+  }
+  
+  void show() {
+    begin.show_gui();
+    for (State s : states)
+      s.show_gui();
+    end.show_gui();
+  }
 
   //draws all states associated with this state_machine
   void draw() {
@@ -85,6 +99,10 @@ public class State_Machine extends Task {
     //drawing the end state
     end.draw();
     end.draw_end();
+    
+    //drawing the actual, if running
+    if (this.status==Status.RUNNING)
+      actual.draw_actual();
   }
 
   //function called by State_Machine at every update looking for empty connections

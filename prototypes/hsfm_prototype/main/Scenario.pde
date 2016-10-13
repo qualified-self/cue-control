@@ -38,7 +38,8 @@ class Scenario extends Testing {
   SetBBTask putMouseXValuesInBB;
 
   //input for debug
-  Input i;
+  Input i = Input.INIT;
+  
 
   public Scenario(PApplet p) {
     super(p);
@@ -52,32 +53,6 @@ class Scenario extends Testing {
     update_bb          = new OSCTask(p, "update/variables/blackboard", 5005, "127.0.0.1", new Object[]{0});
 
     putMouseXValuesInBB= new SetBBTask(p, "my_mouse_x", 100);
-
-    //t3 = new OSCTask(p, "start/main/loop", 5002, "127.0.0.1", new Object[]{1, 1, 1, 1});
-    //t4 = new OSCTask(p, "update/vibropixel/1", 5003, "127.0.0.1", new Object[]{0});
-    //t5 = new OSCTask(p, "update/vibropixel/2", 5004, "127.0.0.1", new Object[]{0});
-    //t6 = new OSCTask(p, "update/variables/blackboard", 5005, "127.0.0.1", new Object[]{0});
-    //t7 = new OSCTask(p, "update/dmx", 5006, "127.0.0.1", new Object[]{0});
-    //t8 = new OSCTask(p, "update/sound", 5007, "127.0.0.1", new Object[]{0});
-  }
-
-  void gui() {
-    /*
-    //drawing background
-     switch(root.get_status()) {
-     case INACTIVE:
-     background(0, 0, 0);
-     break;
-     
-     case RUNNING:
-     background(0, 0, 255);
-     break;
-     
-     case DONE:
-     background(255, 0, 0);
-     break;
-     }
-     */
   }
 
 
@@ -86,14 +61,20 @@ class Scenario extends Testing {
     setup_root();
     setup_environmental();
     setup_piece();
+    root.show();  
+    
+    bb.add_item("Input", i);
+    
     //root.run();
     println("the State_Machine is ready!");
   }
 
+  
+  
   void draw() {
+    root.tick((Input)bb.get_value_by_name("Input"));
     root.update_status();
     root.draw();
-    gui();
   }
 
   void keyPressed() {
@@ -117,8 +98,10 @@ class Scenario extends Testing {
       root.stop();
       break;
     }
-    println("inputing " + i);
-    root.tick(i);
+    
+    bb.update_item("Input", i);
+    //println("inputing " + i);
+    //root.tick(i);
   }
 
   ////////////////////////////////////////////////
