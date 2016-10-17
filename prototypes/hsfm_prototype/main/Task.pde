@@ -82,13 +82,15 @@ class SetBBTask extends Task {
       println("blackboard updated. " + task.get_type() + " " + task.get_name() + " " + task.get_value());
     }
     
-    
-    
     this.status = Status.DONE;
   }
 
   void stop() {
     this.status = Status.INACTIVE;
+  }
+  
+  void update_value(Object new_value) {
+    this.task.update_value(new_value);
   }
 
   void update_status() {

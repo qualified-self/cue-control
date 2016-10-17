@@ -120,7 +120,7 @@ class Blackboard {
 
     //looks for a variable with the name received
     for (Blackboard_Item c : items) {
-      if (c.get_name() == name) item = c;
+      if (c.get_name().equalsIgnoreCase(name)) item = c;
     }
 
     //in case item is not found, this function returns null
@@ -163,7 +163,7 @@ class Blackboard {
   Object get_value_by_name (String name) {
     //my returning variable
     Blackboard_Item item = contains(name);
-
+    
     if (item!=null)
       return item.get_value();
     else

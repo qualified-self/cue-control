@@ -17,6 +17,8 @@ public class State {
   private String             name;
   private Status             status;
 
+  public boolean             is_actual;
+
   //variables used for the gui
   public int x;
   public int y;
@@ -36,6 +38,8 @@ public class State {
 
     init_gui();
     hide_gui();
+
+    this.is_actual = false;
   }
 
   String get_name() {
@@ -208,7 +212,7 @@ public class State {
     Vector<Input> inputs = new Vector(Arrays.asList( (Input[])Input.values() ));
 
     //removing the finish
-    inputs.remove(Input.FINISH);
+    //inputs.remove(Input.FINISH);
 
     for (Input i : inputs) 
       this.connect(i, next_state);
@@ -222,7 +226,7 @@ public class State {
     Vector<Input> inputs = new Vector(Arrays.asList( (Input[])Input.values() ));
 
     //removing the finish
-    inputs.remove(Input.FINISH);
+    //inputs.remove(Input.FINISH);
 
     //removing the conditions already used
     for (Connection c : connections)
@@ -235,11 +239,12 @@ public class State {
     println("state " + this.name + " has the following remaining inputs: " + inputs);
   }
 
+  /*
   //sets the finish condition
-  void set_finish(State end) {
-    this.connect(Input.FINISH, end);
-  }
-
+   void set_finish(State end) {
+   this.connect(Input.FINISH, end);
+   }
+   */
 
   /*******************************************
    ** GUI FUNCTIONS ***************************
@@ -330,6 +335,16 @@ public class State {
       .setBackgroundColor(color(255, 25)) //color of task when openned
       .setBackgroundHeight(50) //
       ;
+
+    /*
+    if (t instanceof State_Machine)
+     g.setLabel(t.get_prefix() + "   " + t.get_name()+ "_preview")
+     //.setPosition(100, 200)
+     .setWidth(200)
+     .addCanvas(((State_Machine)t).preview)
+     ;
+     else
+     */
     cp5.addBang("bang_" + t.get_name() +"_example_"+this.tasks.size())
       .setPosition(10, 20)
       .setSize(10, 10)
@@ -352,17 +367,25 @@ public class State {
   void draw_status() {
     noStroke();
 
-    switch(status) {
-    case RUNNING://running
+    if (status==Status.RUNNING | (status==Status.DONE & is_actual))
       fill (0, green+75, 0);
-      break;
-    case DONE://done
+    else if (status==Status.DONE)
       fill (100, 0, 0);
-      break;
-    case INACTIVE://running
+    else if (status==Status.INACTIVE)
       fill (100);
-      break;
-    }
+
+    /*switch(status) {
+     case RUNNING://running
+     fill (0, green+75, 0);
+     break;
+     case DONE://done
+     fill (100, 0, 0);
+     break;
+     case INACTIVE://running
+     fill (100);
+     break;
+     }
+     */
     ellipse(x, y, size+25, size+25);
 
     //increments the status
@@ -405,7 +428,7 @@ public class State {
     label.align(ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER);
     float textwidth = textWidth(name);
     textwidth = textwidth/2;
-    label.setPosition(x-textwidth+(textwidth/5), y-5);
+    label.setPosition(x-textwidth-(textwidth/5), y-5);
 
 
     //moving the tasks
@@ -462,7 +485,7 @@ public class State {
     textAlign(CENTER, CENTER);
     text("END", x, y-(size*1.2));
   }
-  
+
   //draws additional info if this is an end
   void draw_actual() {
     //line color
@@ -484,8 +507,8 @@ public class State {
       if (c.get_next_state().get_name() == this.get_name())
         draw_connection_to_self(c);
 
-      else if (c.get_condition() != Input.FINISH)
-        draw_connection(c);
+      else //if (c.get_condition() != Input.FINISH)
+      draw_connection(c);
     }
   }
 

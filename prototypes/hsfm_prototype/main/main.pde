@@ -14,6 +14,7 @@ Scenario t = new Scenario(this);
 void setup() {
   size(1024, 748);
   background(0);
+  smooth();
   setup_util();
   setup_blackboard();
   
@@ -27,6 +28,10 @@ void draw() {
   
 void mousePressed() {
   t.mousePressed();
+}
+
+void mouseMoved() {
+  t.mouseMoved();
 }
 
 void mouseReleased() {

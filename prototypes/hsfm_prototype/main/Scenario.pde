@@ -36,23 +36,29 @@ class Scenario extends Testing {
   OSCTask   update_vibropixel1, update_vibropixel2;
   OSCTask   update_bb;
   SetBBTask putMouseXValuesInBB;
+  AudioTask go123;
 
   //input for debug
   Input i = Input.INIT;
-  
+
+  //the most recent state
+  int what_state_machine_is_showing = 0;
+
 
   public Scenario(PApplet p) {
     super(p);
   }
 
   void init_tasks() {
-    init               = new OSCTask(p, "switch/off", 5000, "127.0.0.1", new Object[]{0});
-    final_fadeout      = new OSCTask(p, "fade/out", 5001, "127.0.0.1", new Object[]{1, 1});
-    update_vibropixel1 = new OSCTask(p, "update/vibropixel/1", 5003, "127.0.0.1", new Object[]{0});
-    update_vibropixel2 = new OSCTask(p, "update/vibropixel/2", 5004, "127.0.0.1", new Object[]{0});
-    update_bb          = new OSCTask(p, "update/variables/blackboard", 5005, "127.0.0.1", new Object[]{0});
+    init               = new OSCTask(p, "/switch/off", 5000, "127.0.0.1", new Object[]{0});
+    final_fadeout      = new OSCTask(p, "/fade/out", 5001, "127.0.0.1", new Object[]{1, 1});
+    update_vibropixel1 = new OSCTask(p, "/update/vibropixel/1", 5003, "127.0.0.1", new Object[]{0});
+    update_vibropixel2 = new OSCTask(p, "/update/vibropixel/2", 5004, "127.0.0.1", new Object[]{0});
+    update_bb          = new OSCTask(p, "/update/variables/blackboard", 5005, "127.0.0.1", new Object[]{0});
 
-    putMouseXValuesInBB= new SetBBTask(p, "my_mouse_x", 100);
+    putMouseXValuesInBB= new SetBBTask(p, "my_mouse_x", mouseX);
+
+    go123              = new AudioTask(p, "Playing sound!", "123go.mp3");
   }
 
 
@@ -61,36 +67,85 @@ class Scenario extends Testing {
     setup_root();
     setup_environmental();
     setup_piece();
-    root.show();  
-    
+
+    //hide_all();
+    root.show();
+
     bb.add_item("Input", i);
-    
+
     //root.run();
     println("the State_Machine is ready!");
   }
 
-  
-  
+
+
   void draw() {
     root.tick((Input)bb.get_value_by_name("Input"));
     root.update_status();
-    root.draw();
+    //root.draw();
+    //environmental.draw();
+    //piece.draw();
+    draw_proper_state_machine();
+  }
+
+  void draw_proper_state_machine() {
+    switch(what_state_machine_is_showing) {
+    case 0:
+      environmental.hide();
+      piece.hide();
+      root.show();
+      root.draw();
+      fill(255);
+      //textSize(20);
+      textAlign(LEFT);
+      text("ROOT", 20, 20);
+      break;
+    case 1:
+      root.hide();
+      piece.hide();
+      environmental.show();
+      environmental.draw();
+      fill(255);
+      textAlign(LEFT);
+      text("ROOT > ENVIRONMENTAL", 20, 20);
+      break;
+    case 2:
+      root.hide();
+      environmental.hide();
+      piece.show();
+      piece.draw();
+      fill(255);
+      textAlign(LEFT);
+      text("ROOT > PIECE", 20, 20);
+      break;
+    }
   }
 
   void keyPressed() {
     switch(key) {
-    case '1':
+    case 'q':
       i = Input.START_MAIN_LOOP;
       break;
-    case '2':
+    case 'w':
       i = Input.START_SELF_APPEARS;
       break;
-    case '3':
+    case 'e':
       i = Input.DATA_SYNCED_OR_TIMEOUT;
       break;
-    case '4':
+    case 'r':
       i = Input.FINISH;
       break;
+
+    case '1':
+      what_state_machine_is_showing = 0;
+      break;
+    case '2':
+      what_state_machine_is_showing = 1;
+      break;
+    case '3':
+      what_state_machine_is_showing = 2;
+      break;
+
     case ' ':
       root.run();
       break;
@@ -98,10 +153,24 @@ class Scenario extends Testing {
       root.stop();
       break;
     }
-    
+  
     bb.update_item("Input", i);
     //println("inputing " + i);
     //root.tick(i);
+  }
+
+  void mouseMoved() {
+    putMouseXValuesInBB.update_value(p.mouseX);
+    Object obj[] = {bb.get_value_by_name(putMouseXValuesInBB.get_name())};
+
+    //println("********************");
+    //println(obj);
+    //println("********************");
+
+    if (obj!=null) {
+      update_vibropixel1.update_message(obj);
+      update_vibropixel2.update_message(obj);
+    }
   }
 
   ////////////////////////////////////////////////
@@ -125,6 +194,7 @@ class Scenario extends Testing {
 
   void root_associate_tasks_to_state () {
     root.add_initialization_task(init);
+    root.add_initialization_task(go123);
     root.add_finalization_task(final_fadeout);
     main.add_task(environmental);
     main.add_task(piece);
@@ -136,7 +206,7 @@ class Scenario extends Testing {
     wait_for_trigger.connect_via_all_unused_inputs(wait_for_trigger);
     main.connect_via_all_inputs(root.end);
 
-    root.all_states_connect_to_finish_when_finished();
+    //root.all_states_connect_to_finish_when_finished();
   }
 
   ////////////////////////////////////////////////
@@ -164,7 +234,7 @@ class Scenario extends Testing {
     environmental.begin.connect_via_all_inputs(osc_loop);
     osc_loop.connect(Input.FINISH, environmental.end);
     osc_loop.connect_via_all_unused_inputs(osc_loop);
-    environmental.all_states_connect_to_finish_when_finished();
+    //environmental.all_states_connect_to_finish_when_finished();
   }
 
   ////////////////////////////////////////////////
@@ -199,6 +269,6 @@ class Scenario extends Testing {
     self_appears.connect_via_all_unused_inputs(self_appears);
     sync.connect(Input.FINISH, piece.end);
     sync.connect_via_all_unused_inputs(sync);
-    piece.all_states_connect_to_finish_when_finished();
+    //piece.all_states_connect_to_finish_when_finished();
   }
 }

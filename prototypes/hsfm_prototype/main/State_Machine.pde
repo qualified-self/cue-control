@@ -9,13 +9,16 @@ public class State_Machine extends Task {
   State begin, end, actual;
   Vector<State> states;
   Input input_condition;
+  //State_Machine_Preview preview;
 
   //contructor
   public State_Machine (String name) {
     super (name);
-    begin  = new State("BEGIN_" + name);
-    end    = new State("END_"+name);
-    states = new Vector<State>();
+    begin   = new State("BEGIN_" + name);
+    end     = new State("END_"+name);
+    states  = new Vector<State>();
+    //preview = new State_Machine_Preview(this);
+    
     actual = begin;
 
     println("State_Machine " + this.name + " is inited!");
@@ -39,11 +42,20 @@ public class State_Machine extends Task {
     end.stop();
 
     //updating the actual
-    actual = begin;
+    //actual = begin;
+    update_actual(begin);
 
     this.status = Status.INACTIVE;
 
     println("stopping State_Machine" + this.name);
+  }
+  
+  void update_actual (State next) {
+    actual.is_actual = false;
+    //updating the actual
+    actual = next;
+    
+    actual.is_actual = true;
   }
 
   //updates the status of this state
@@ -84,7 +96,7 @@ public class State_Machine extends Task {
       s.show_gui();
     end.show_gui();
   }
-
+  
   //draws all states associated with this state_machine
   void draw() {
     //cleaning the background
@@ -128,7 +140,7 @@ public class State_Machine extends Task {
     next = actual.tick(input_condition);
 
     if (next!=null) //in case next is not null, change state!
-      actual = next;
+      update_actual(next);
   }
 
   //add a state s to this State_Machine
@@ -169,10 +181,64 @@ public class State_Machine extends Task {
     println("Task " + t.name + " removed from the finalization of State_Machine " + this.name);
   }
 
+  /*
   void all_states_connect_to_finish_when_finished() {
     begin.connect(Input.FINISH, this.end);    
 
     for (State s : states) 
       s.connect(Input.FINISH, this.end);
   }
+  */
 }
+
+
+/******************************************************
+ ** Class used in the gui to preview a state machine **
+ ******************************************************
+ ** jeraman.info, Oct. 3 2016 *************************
+ ******************************************************
+ ******************************************************/
+/*
+class State_Machine_Preview extends Canvas {
+  State_Machine sm;
+  
+  public State_Machine_Preview (State_Machine sm){
+        this.sm = sm;
+  }
+  
+  public void setup(PGraphics pg) {
+    println("seting up mini canvas");
+
+  }
+  
+  //draws all states associated with this state_machine
+  void draw(PGraphics pg) {
+    
+    PGraphics a = createGraphics(200, 200);
+    
+    a.ellipseMode(CENTER);
+    a.rectMode(CENTER);
+    
+    //cleaning the background
+    //background(0);
+    a.fill(255,150);
+    
+    //ellipse(a.width/2,a.height/2, 100, 100);
+    //drawing the entry state
+    sm.begin.draw();
+    sm.begin.draw_begin();
+    //drawing the states begining to this state machine
+    for (State s : sm.states)
+      s.draw();
+    //drawing the end state
+    sm.end.draw();
+    sm.end.draw_end();
+    //a.resize(200, 200);
+    
+    PImage img1 = createImage(width, height, ARGB);
+    img1.resize(200,200);
+    
+    image(img1, 0, 0);
+  }
+}
+*/
