@@ -1,14 +1,12 @@
 #Scenario 1
-Our first scenario implemented in Processing using [Hierarchical Finite State Machines (HFSM)](https://en.wikipedia.org/wiki/UML_state_machine#Hierarchically_nested_states). This prototype is back end only (no UI is provided). For more info on UI possibilities, check [this paper prototype](https://github.com/qualified-self/documents/blob/master/cue%20trigger%20system/interface%20prototypes/prototype1.md).
-
+Our first scenario implemented in Processing using [Hierarchical Finite State Machines (HFSM)](https://en.wikipedia.org/wiki/UML_state_machine#Hierarchically_nested_states).
+ 
 ##Basic behavior
 In this prototype, a state machine is represented by a "Canvas". The basic behavior of a Canvas is the same of as in a FSM. 
 
 The only difference relies on the tasks associated to the states. Each "State" (the blue circles in our diagram) has a set of Tasks (the red boxes in our diagram). These tasks run in parallel whenever a state is executed. This allows us to easily implement tasks in parallel (for example, a OSC message could be sent at the same time as an audio is played). 
 
-Tasks can be so far: a) Audio; b) OSC; and c) Other canvas (which allows us to create hierarchy). More (e.g. MIDI, DMX) can be created by extending the abstract class [Task](https://github.com/qualified-self/documents/blob/master/cue%20trigger%20system/code/hsfm_prototype/main/Task.pde).
-
-No blackboard was implemented in this prototype.
+Tasks can be so far: a) Audio; b) OSC; and c) Other canvas (which allows us to create hierarchy). More (e.g. MIDI, DMX) can be created by extending the abstract class [Task](https://github.com/qualified-self/cue-control/blob/master/prototypes/hsfm_prototype/main/Task.pde).
 
 ##Diagram
 This diagram was built based on the notes taken by Sofian available [here](https://github.com/qualified-self/documents/blob/master/cue%20trigger%20system/Meeting%20-%20September%2027%202016.md):
@@ -64,5 +62,25 @@ public static enum Input {
 }
 ```
 
-For more details, check the class ["Testing_Canvas"](https://github.com/qualified-self/documents/blob/master/cue%20trigger%20system/code/hsfm_prototype/main/Testing_Canvas.pde).
+For more details, check the class ["Scenario"](https://github.com/qualified-self/cue-control/blob/master/prototypes/hsfm_prototype/main/Scenario.pde).
+
+##UI
+A simple UI was created as follows:
+
+![image](screenshot.jpg)
+
+To note:
+
+- Key ' ' executes the demo. The 's' key stops the execution. Keys 'q', 'w', 'e' and 'r' change the input value on the blackboard. Keys '1', '2', and '3' change the state machine which is being currently exhibited;
+
+- A label on the top left represents the State Machine is is being presented in the moment. This label should allow navigation between different state machines (not implemented);
+
+- States are now initialized in a random x/y position, but they can be dragged to whatever position users find convenient;
+
+- Blackboard does not currently support user-defined expressions, but support Java data type. The Blackboard should also be fed according to the received OSC messages. This functionality is not currently implemented;
+
+- Whenever users click on a task, they should see options related to this task (e.g. audio filename and volume to AudioTasks; a previous of the graphics for the sub state machines). This functionality is not currently implemented;
+
+For more info on extended UI possibilities, check [this paper prototype](https://github.com/qualified-self/documents/blob/master/cue%20trigger%20system/interface%20prototypes/prototype1.md).
+
 
