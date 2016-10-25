@@ -47,6 +47,9 @@ class OscReceiveNode extends BaseNode
 		}
 	}
 
+	void process(int value) { process((double)value);}
+	void process(float value) { process((double)value); }
+
 	public void doInit(Blackboard agent)
 	{
 		value = 0;
