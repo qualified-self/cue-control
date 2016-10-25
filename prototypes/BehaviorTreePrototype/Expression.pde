@@ -1,5 +1,4 @@
 // Static components.
-final String MATHJS_URL = "http://cdnjs.cloudflare.com/ajax/libs/mathjs/1.0.1/math.js"; // math library
 ScriptEngineManager manager;
 ScriptEngine engine;
 
@@ -14,7 +13,7 @@ class Expression {
       engine = manager.getEngineByName("js");
       try {
         // Load library for math operations.
-        java.util.Scanner s = new java.util.Scanner(new java.net.URL(MATHJS_URL).openStream()).useDelimiter("\\A");
+        java.util.Scanner s = new java.util.Scanner(new java.net.URL("file://" + dataPath("math.js")).openStream()).useDelimiter("\\A");
         engine.eval(s.hasNext() ? s.next() : "");
       }
       catch (Exception e) {
