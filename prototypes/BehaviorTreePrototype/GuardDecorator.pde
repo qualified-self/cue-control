@@ -5,12 +5,24 @@ class GuardDecorator extends Decorator {
 
   boolean running;
 
+  // If true, will return SUCCESS in case the condition fails.
+  boolean succeedOnFalse;
 
   GuardDecorator(String expression) {
     this(new ExpressionCondition(expression));
   }
+
+  GuardDecorator(String expression, boolean succeedOnFalse) {
+    this(new ExpressionCondition(expression), succeedOnFalse);
+  }
+
   GuardDecorator(Condition condition) {
+    this(condition, false);
+  }
+
+  GuardDecorator(Condition condition, boolean succeedOnFalse) {
     this.condition = condition;
+    this.succeedOnFalse = succeedOnFalse;
   }
 
   public void doInit(Blackboard agent) {
@@ -23,7 +35,7 @@ class GuardDecorator extends Decorator {
       if (condition.check(agent))
         running = true;
       else
-        return State.FAILURE;
+        return (succeedOnFalse ? State.SUCCESS : State.FAILURE);
     }
 
     // Running.
