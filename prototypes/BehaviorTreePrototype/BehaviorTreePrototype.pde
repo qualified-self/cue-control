@@ -25,7 +25,7 @@ final color NODE_TEXT_COLOR = #000000;
 final color NODE_EXPANSION_BUTTON_COLOR = #333333;
 
 void settings() {
-  size(1000, 1000);
+  size(displayWidth-300, displayHeight);
 }
 
 void setup() {
