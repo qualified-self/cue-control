@@ -59,6 +59,8 @@ class Scenario extends Testing {
     putMouseXValuesInBB= new SetBBTask(p, "my_mouse_x", mouseX);
 
     go123              = new AudioTask(p, "Playing sound!", "123go.mp3");
+
+    setup_sofians_OSC_message();
   }
 
 
@@ -153,7 +155,7 @@ class Scenario extends Testing {
       root.stop();
       break;
     }
-  
+
     bb.update_item("Input", i);
     //println("inputing " + i);
     //root.tick(i);
@@ -162,6 +164,17 @@ class Scenario extends Testing {
   void mouseMoved() {
     putMouseXValuesInBB.update_value(p.mouseX);
     Object obj[] = {bb.get_value_by_name(putMouseXValuesInBB.get_name())};
+
+    //prototyping communication to server
+    float value = ((float)p.mouseX/width)*200;
+    sofiansBBtask.update_value(value);
+    sofianOSCmessage.update_message(new Object[]{value});
+    aura_amp.update_message(new Object[]{value});      
+    speaker_amp.update_message(new Object[]{value}); 
+    dmx_intensity.update_message(new Object[]{value});   
+    dmx_duration.update_message(new Object[]{value});    
+    dmx_rate.update_message(new Object[]{value});        
+
 
     //println("********************");
     //println(obj);
@@ -198,6 +211,21 @@ class Scenario extends Testing {
     root.add_finalization_task(final_fadeout);
     main.add_task(environmental);
     main.add_task(piece);
+
+    //testing tasks
+    wait_for_trigger.add_task(sofiansBBtask);
+    wait_for_trigger.add_task(sofianOSCmessage);
+    //OSCTask aura_amp;
+    //OSCTask speaker_amp;
+    //OSCTask dmx_intensity;
+    //OSCTask dmx_duration;
+    //OSCTask dmx_rate;
+
+    wait_for_trigger.add_task(aura_amp);
+    wait_for_trigger.add_task(speaker_amp);
+    wait_for_trigger.add_task(dmx_intensity);
+    wait_for_trigger.add_task(dmx_duration);
+    wait_for_trigger.add_task(dmx_rate);
   }
 
   void root_create_connections_state () {
@@ -270,5 +298,39 @@ class Scenario extends Testing {
     sync.connect(Input.FINISH, piece.end);
     sync.connect_via_all_unused_inputs(sync);
     //piece.all_states_connect_to_finish_when_finished();
+  }
+
+  //debug!
+  //used for testing
+  SetBBTask sofiansBBtask;
+  OSCTask sofianOSCmessage;
+  OSCTask aura_amp;
+  OSCTask speaker_amp;
+  OSCTask dmx_intensity;
+  OSCTask dmx_duration;
+  OSCTask dmx_rate;
+
+  void setup_sofians_OSC_message () {
+    sofiansBBtask    = new SetBBTask(p, "OSC_from_Sofian", 0);
+    sofianOSCmessage = new OSCTask(p, "/variable", 12000, "192.168.1.103", new Object[]{0});
+    aura_amp         = new OSCTask(p, "/aura/amp/0", 12000, "192.168.1.105", new Object[]{0});
+    speaker_amp      = new OSCTask(p, "/speaker/amp/0", 12000, "192.168.1.105", new Object[]{0});
+    dmx_intensity    = new OSCTask(p, "/dmx/intensity", 12000, "192.168.1.105", new Object[]{0});
+    dmx_duration     = new OSCTask(p, "/dmx/duration", 12000, "192.168.1.105", new Object[]{0});
+    dmx_rate         = new OSCTask(p, "/dmx/rate", 12000, "192.168.1.105", new Object[]{0});
+  }
+
+  //@TODO - integrate that with the Blackboard
+  //adding input osc support similar to Sofian's
+  void oscEvent(OscMessage msg) {
+    /* print the address pattern and the typetag of the received OscMessage */
+    print("### received an osc message.");
+    print(" addrpattern: "+msg.addrPattern());
+    print(" typetag: "+msg.typetag());
+    float sofiansvalue = (msg.get(0)).floatValue();
+    println(" value: " +  sofiansvalue);
+
+    //sofianOSCmessage.update_message(new Object[]{(float)sofiansvalue*2});
+    sofiansBBtask.update_value(sofiansvalue);
   }
 }

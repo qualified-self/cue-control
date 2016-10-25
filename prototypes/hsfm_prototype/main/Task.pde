@@ -167,7 +167,7 @@ class OSCTask extends Task {
   }
 
   void update_message (Object[] content) {
-    this.message = new OscMessage(this.name);
+    this.message = new OscMessage(this.name.toLowerCase());
     this.message.add(content);
   }
 
