@@ -13,6 +13,7 @@ BaseNode root;
 final int INDENT = 50;
 final int NODE_HEIGHT = 25;
 final int NODE_SPACING = 5;
+final int BLACKBOARD_WIDTH = 400;
 
 final int OSC_SEND_PORT = 12000;
 final int OSC_RECV_PORT = 14000;
@@ -26,7 +27,7 @@ final color NODE_TEXT_COLOR = #000000;
 final color NODE_EXPANSION_BUTTON_COLOR = #333333;
 
 void settings() {
-  size(displayWidth-300, displayHeight);
+  size(displayWidth-BLACKBOARD_WIDTH, displayHeight);
 }
 
 void setup() {

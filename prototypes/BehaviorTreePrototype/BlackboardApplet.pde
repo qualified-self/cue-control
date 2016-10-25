@@ -6,7 +6,7 @@ public class BlackboardApplet extends PApplet {
 	}
 
   public void settings() {
-    this.size(500, 1000);
+    this.size(BLACKBOARD_WIDTH, displayHeight);
   }
 
   public void draw() {
