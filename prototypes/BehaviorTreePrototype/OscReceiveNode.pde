@@ -1,6 +1,8 @@
-class OscReceiveNode extends CueNode
+class OscReceiveNode extends BaseNode
 {
 	String varName;
+	float timeOut;
+
 	double value;
 	boolean valueReceived;
 	boolean hasStarted;
@@ -12,12 +14,27 @@ class OscReceiveNode extends CueNode
 		this(message, varName, State.RUNNING);
 	}
 
+	OscReceiveNode(String message, String varName, float timeOut)
+	{
+		this(message, varName, State.RUNNING, timeOut);
+	}
+
 	OscReceiveNode(String message, String varName, State stateOnNoValueReceived)
 	{
-		super(message, 0, 0, 0);
+		this(message, varName,stateOnNoValueReceived, 0);
+	}
+
+	OscReceiveNode(String message, String varName, State stateOnNoValueReceived, float timeOut)
+	{
+		super(message);
 		this.varName = varName;
 		this.stateOnNoValueReceived = stateOnNoValueReceived;
+		this.timeOut = timeOut*1000;
+
+		chrono = new Chrono(false);
+
 		hasStarted = false;
+
 		oscP5.plug(this, "process", message);
 	}
 
@@ -34,11 +51,18 @@ class OscReceiveNode extends CueNode
 	{
 		value = 0;
 		valueReceived = false;
+		hasStarted = false;
+	  chrono.restart();
 	}
 
 	public State doExecute(Blackboard agent)
 	{
-		hasStarted = true;
+		if (!hasStarted)
+		{
+			init(agent);
+			hasStarted = true;
+		}
+
 		if (valueReceived)
 		{
 			agent.put(varName, new Double(value));
@@ -46,8 +70,14 @@ class OscReceiveNode extends CueNode
 			hasStarted = false;
 			return State.SUCCESS;
 		}
+		else if (!chrono.hasPassed((long)timeOut))
+			return State.RUNNING;
 		else
 			return stateOnNoValueReceived;
 	}
+
+  public String type() { return "RCV"; }
+
+	Chrono chrono;
 
 }
