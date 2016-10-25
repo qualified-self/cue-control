@@ -16,6 +16,7 @@ final int NODE_SPACING = 5;
 
 final int OSC_SEND_PORT = 12000;
 final int OSC_RECV_PORT = 14000;
+final String OSC_IP     = "192.168.1.101";
 
 final color DECORATOR_FILL_COLOR = #555555;
 final color DECORATOR_TEXT_COLOR = #eeeeee;
@@ -41,7 +42,7 @@ void setup() {
   oscP5 = new OscP5(this, OSC_RECV_PORT);
 
   // location to send OSC messages
-  remoteLocation = new NetAddress("127.0.0.1", OSC_SEND_PORT);
+  remoteLocation = new NetAddress(OSC_IP, OSC_SEND_PORT);
 
   minim = new Minim(this);
 
