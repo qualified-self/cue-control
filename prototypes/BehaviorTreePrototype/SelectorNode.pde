@@ -20,7 +20,8 @@ class SelectorNode extends CompositeNode
     {
       init(agent);
       currentPosition = 0;
-    } else if (restart) // restart on running
+    }
+    else if (restart) // restart on running
     {
       currentPosition = 0;
     }
