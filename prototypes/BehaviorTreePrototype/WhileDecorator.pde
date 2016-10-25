@@ -7,6 +7,10 @@ class WhileDecorator extends Decorator {
 
   State lastState;
 
+  WhileDecorator(String expression) {
+    this(new ExpressionCondition(expression));
+  }
+  
   WhileDecorator(Condition condition) {
     this.condition = condition;
   }

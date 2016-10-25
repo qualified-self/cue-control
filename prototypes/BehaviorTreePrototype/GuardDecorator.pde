@@ -5,6 +5,10 @@ class GuardDecorator extends Decorator {
 
   boolean running;
 
+
+  GuardDecorator(String expression) {
+    this(new ExpressionCondition(expression));
+  }
   GuardDecorator(Condition condition) {
     this.condition = condition;
   }
