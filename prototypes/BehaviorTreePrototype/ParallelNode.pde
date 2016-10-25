@@ -66,9 +66,6 @@ class ParallelNode extends CompositeNode
   {
     childrenRunning = new ArrayList<Boolean>(nChildren());
 
-    for (BaseNode node : children)
-      node.init(agent);
-
     for (int i=0; i<nChildren(); i++) {
       children.get(i).init(agent);
       childrenRunning.add(new Boolean(true));
