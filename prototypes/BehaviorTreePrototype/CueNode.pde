@@ -3,7 +3,7 @@ class CueNode extends BaseNode {
   float postWait;
   float runningTime;
 
-  int startTime;
+  Chrono chrono;
 
   int step;
 
@@ -12,6 +12,7 @@ class CueNode extends BaseNode {
     this.preWait     = preWait;
     this.runningTime = runningTime;
     this.postWait    = postWait;
+    chrono = new Chrono(false);
    }
 
   float getPreWait()     { return this.preWait; }
@@ -70,8 +71,8 @@ class CueNode extends BaseNode {
 
   public State doExecute(Blackboard agent)
   {
-    if (startTime == -1) {
-      startTime = millis();
+    if (!chrono.isRunning()) {
+      chrono.restart();
       step = 0;
     }
 
@@ -92,13 +93,13 @@ class CueNode extends BaseNode {
 
   public void doInit(Blackboard agent)
   {
-    startTime = -1;
+    chrono.stop();
   }
 
   public String type() { return "CUE"; }
 
   float currentTime() {
-    return (millis() - startTime)/1000.0f;
+    return (chrono.elapsed())/1000.0f;
   }
 
 }
