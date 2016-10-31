@@ -16,13 +16,15 @@ class SoundCueNode extends CueNode {
     runningTime = player.getMetaData().length() / 1000.0;
   }
 
-  void beginCue(Blackboard agent) {
+  boolean doBeginCue(Blackboard agent) {
     player.play();
+    return true;
   }
 
-  void endCue(Blackboard agent) {
+  boolean doEndCue(Blackboard agent) {
     player.pause();
     player.rewind();
+    return true;
   }
 
   public void doInit(Blackboard agent)
