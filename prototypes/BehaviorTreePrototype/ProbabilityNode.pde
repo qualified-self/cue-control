@@ -52,7 +52,7 @@ class ProbabilityNode extends CompositeNode
 		float totalSum = 0;
 		try {
 			for (int i=0; i<nChildren(); i++)
-				totalSum += ( frozenWeighting[i] = max((float)weighting.get(i).evalAsDouble(agent).doubleValue(), 0) );
+				totalSum += ( frozenWeighting[i] = max((float) ((Number)weighting.get(i).eval(agent)).doubleValue(), 0) );
 		} catch (ScriptException e) {
 			return State.FAILURE;
 		}
