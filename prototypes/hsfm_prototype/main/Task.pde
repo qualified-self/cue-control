@@ -70,7 +70,20 @@ class SetBBTask extends Task {
 
   void run() {
     this.status = Status.RUNNING;
-    bb.put(name, value);
+
+    // If added an expression, process it and save result in blackboard.
+    if (value instanceof Expression)
+    {
+      try {
+        bb.put(name, ((Expression)value).eval(bb));
+      } catch (ScriptException e) {
+        println("ScriptExpression thrown, unhandled update.");
+      }
+    }
+
+    else
+      bb.put(name, value);
+
     this.status = Status.DONE;
   }
 
