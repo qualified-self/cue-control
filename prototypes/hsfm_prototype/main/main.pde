@@ -41,3 +41,9 @@ void mouseReleased() {
 void keyPressed() {
   t.keyPressed();
 }
+
+//@TODO - integrate that with the Blackboard
+//adding input osc support similar to Sofian's
+void oscEvent(OscMessage msg) {
+  t.oscEvent(msg);
+}
