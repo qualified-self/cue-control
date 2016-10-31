@@ -27,13 +27,8 @@ class Expression {
   }
 
 	Object eval(Blackboard agent) {
-    String expr = expression;
-    // Replace keys from the blackboard.
-    for (HashMap.Entry<String, Double> element : agent.entrySet()) {
-      expr = expr.replaceAll("\\["+element.getKey()+"\\]", element.getValue().toString());
-    }
     try {
-      return engine.eval(expr);
+      return engine.eval(agent.processExpression(expression));
     }
 		catch (Exception e) {
       println("ERROR: " + e.toString());
