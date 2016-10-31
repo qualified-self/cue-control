@@ -35,36 +35,50 @@ class CueNode extends BaseNode {
     return currentTime() >= preWait + runningTime + postWait;
   }
 
-  void beginCue(Blackboard agent) {
+  boolean beginCue(Blackboard agent) {
     if (step == 0) {
-      doBeginCue(agent);
+      if (!doBeginCue(agent))
+        return false;
       step = 1;
     }
     else
       println("Wrong step to call beginCue(): " + step);
+
+    return true;
   }
 
-  void runCue(Blackboard agent) {
+  boolean runCue(Blackboard agent) {
     if (step == 0)
-      beginCue(agent);
+      if (!beginCue(agent))
+        return false;
+
     if (step == 1) {
-      doRunCue(agent);
+      if (!doRunCue(agent))
+        return false;
+
       step = 2;
     }
+
+    return true;
   }
 
-  void endCue(Blackboard agent) {
+  boolean endCue(Blackboard agent) {
     if (step <= 1)
-      runCue(agent);
+      if (!runCue(agent))
+        return false;
+
     if (step == 2) {
-      doEndCue(agent);
+      if (!doEndCue(agent))
+        return false;
       step = 3;
     }
+
+    return true;
   }
 
-  void doBeginCue(Blackboard agent) {}
-  void doRunCue(Blackboard agent) {}
-  void doEndCue(Blackboard agent) {}
+  boolean doBeginCue(Blackboard agent) { return true; }
+  boolean doRunCue(Blackboard agent) { return true; }
+  boolean doEndCue(Blackboard agent) { return true; }
 
   boolean result(Blackboard agent) { return true; }
 
@@ -77,9 +91,21 @@ class CueNode extends BaseNode {
     }
 
     if (isInRun())
-      runCue(agent); // this will also call beginCue if needed
+    {
+      if (!runCue(agent)) // this will also call beginCue if needed
+      {
+        init(agent);
+        return State.FAILURE;
+      }
+    }
     else if ((isInPostWait() || hasEnded()) && step != 2)
-       endCue(agent);
+    {
+      if (!endCue(agent))
+      {
+        init(agent);
+        return State.FAILURE;
+      }
+    }
 
     if (hasEnded()) {
       State status = (result(agent) ? State.SUCCESS : State.FAILURE);
