@@ -3,6 +3,10 @@ class SelectorNode extends CompositeNode
   int currentPosition;
   boolean restart;
 
+  SelectorNode() {
+    this(null, false);
+  }
+
   SelectorNode(boolean restart) {
     this(null, restart);
   }
@@ -41,6 +45,7 @@ class SelectorNode extends CompositeNode
       } else
         currentlyRunningNode = children.get(currentPosition);
     }
+
     if (status == State.RUNNING)
       return State.RUNNING;
     else
@@ -52,7 +57,7 @@ class SelectorNode extends CompositeNode
 
   void doInit(Blackboard agent)
   {
-    currentPosition = -1;
+//    currentPosition = -1;
     for (BaseNode node : children)
       node.init(agent);
   }
