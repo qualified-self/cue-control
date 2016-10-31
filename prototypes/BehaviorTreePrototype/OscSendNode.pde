@@ -27,8 +27,8 @@ class OscSendNode extends CueNode {
 
   void doBeginCue(Blackboard agent) {
     OscMessage message = new OscMessage(addrPattern);
-    if (argExpression != null)
-      message.add(argExpression.evalAsDouble(agent));
-    oscP5.send(message, remoteLocation);
+      if (argExpression != null)
+        message.add(new Object[] { argExpression.eval(agent) });
+      oscP5.send(message, remoteLocation);
   }
 }

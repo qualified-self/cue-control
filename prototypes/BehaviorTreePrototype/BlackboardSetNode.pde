@@ -13,7 +13,7 @@ class BlackboardSetNode extends BaseNode {
   public State doExecute(Blackboard agent)
 	{
     try {
-			agent.put(blackboardKey, expression.evalAsDouble(agent));
+			agent.put(blackboardKey, expression.eval(agent));
       return State.SUCCESS;
     }
     catch (Exception e) {

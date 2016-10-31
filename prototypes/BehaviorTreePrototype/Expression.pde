@@ -22,18 +22,12 @@ class Expression {
     }
   }
 
-  Double evalAsDouble(Blackboard agent) {
+  Double evalAsDouble(Blackboard agent) throws ScriptException {
     return new Double( ((Number)eval(agent)).doubleValue() );
   }
 
-	Object eval(Blackboard agent) {
-    try {
-      return engine.eval(agent.processExpression(expression));
-    }
-		catch (Exception e) {
-      println("ERROR: " + e.toString());
-			return null;
-    }
+	Object eval(Blackboard agent) throws ScriptException {
+    return engine.eval(agent.processExpression(expression));
 	}
 
   public String toString() {

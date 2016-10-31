@@ -19,12 +19,32 @@ public class BlackboardApplet extends PApplet {
 		boolean odd = true;
 		int nElements = board.size();
 		int i=0;
-		java.util.Set<HashMap.Entry<String, Double>> entries = board.entrySet();
-    for (HashMap.Entry<String, Double> element : entries) {
-			y = drawRow(element.getKey(), this.nf(element.getValue().floatValue(), 0, 5), x, y, odd ? #cccccc : #aaaaaa, #000000, false, (i == nElements-1));
-			odd = !odd;
-			i++;
-    }
+		try {
+			java.util.Set<Map.Entry<String, Object>> entries = board.entrySet();
+	    for (Map.Entry<String, Object> element : entries) {
+				Object val = element.getValue();
+				// Format value.
+				String str;
+				if (val == null)
+					str = "NULL";
+				if (val instanceof Double || val instanceof Float)
+					str = this.nf(((Number)val).floatValue(), 0, 5);
+				else
+					str = val.toString();
+			  // Draw row.
+				y = drawRow(element.getKey(), str, x, y, odd ? #cccccc : #aaaaaa, #000000, false, (i == nElements-1));
+				odd = !odd;
+				i++;
+	    }
+		} catch (Exception exception) {
+			java.io.StringWriter writer = new java.io.StringWriter();
+			java.io.PrintWriter printWriter = new java.io.PrintWriter( writer );
+			exception.printStackTrace( printWriter );
+			printWriter.flush();
+
+			String stackTrace = writer.toString();
+			println(stackTrace);
+		}
   }
 
 	int drawRow(String name, String value, int x, int y, color fillColor, color textColor, boolean roundTops, boolean roundBottoms)
