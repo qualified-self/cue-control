@@ -21,12 +21,17 @@ class OscReceiveNode extends BaseNode
 
 	OscReceiveNode(String message, String varName, State stateOnNoValueReceived)
 	{
-		this(message, varName,stateOnNoValueReceived, 0);
+		this(message, varName, stateOnNoValueReceived, 0);
 	}
 
 	OscReceiveNode(String message, String varName, State stateOnNoValueReceived, float timeOut)
 	{
-		super(message);
+		this("[" + varName + "] =" + message, message, varName, stateOnNoValueReceived, timeOut);
+	}
+
+	OscReceiveNode(String description, String message, String varName, State stateOnNoValueReceived, float timeOut)
+	{
+		super(description);
 		this.varName = varName;
 		this.stateOnNoValueReceived = stateOnNoValueReceived;
 		this.timeOut = timeOut*1000;
