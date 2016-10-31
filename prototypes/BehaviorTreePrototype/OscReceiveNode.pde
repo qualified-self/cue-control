@@ -1,9 +1,10 @@
 class OscReceiveNode extends BaseNode
 {
 	String varName;
+	Object value;
+
 	float timeOut;
 
-	double value;
 	boolean valueReceived;
 	boolean hasStarted;
 
@@ -43,8 +44,25 @@ class OscReceiveNode extends BaseNode
 		oscP5.plug(this, "process", message);
 	}
 
-	void process(double value)
+	void process(int value) {
+		process(new Integer(value));
+	}
+
+	void process(float value) {
+		process(new Float(value));
+	}
+
+	void process(double value) {
+		process(new Double(value));
+	}
+
+	void process(String value) {
+		process( (Object) value);
+	}
+
+	void process(Object value)
 	{
+		println("OSC received: " + value);
 		if (hasStarted)
 		{
 			this.value = value;
@@ -52,12 +70,9 @@ class OscReceiveNode extends BaseNode
 		}
 	}
 
-	void process(int value)   { process((double)value);}
-	void process(float value) { process((double)value); }
-
 	public void doInit(Blackboard agent)
 	{
-		value = 0;
+		value = null;
 		valueReceived = false;
 		hasStarted = false;
 	  chrono.restart();
@@ -73,7 +88,7 @@ class OscReceiveNode extends BaseNode
 
 		if (valueReceived)
 		{
-			agent.put(varName, new Double(value));
+			agent.put(varName, value);
 			valueReceived = false;
 			hasStarted = false;
 			return State.SUCCESS;
