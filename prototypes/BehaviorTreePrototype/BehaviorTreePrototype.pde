@@ -50,6 +50,8 @@ void setup() {
 
   minim = new Minim(this);
 
+  board.addTask(new OscBlackboardTask("sensor", "/bitalino/0"));
+  board.addTask(new ConditionBlackboardTask("spacebar", new KeyCondition(' ')));
   root = createTree();
 }
 
@@ -61,6 +63,9 @@ void draw() {
 
   // Draw tree.
   drawTree(this, root, INDENT, NODE_HEIGHT);
+
+  // Execute blackboard tasks.
+  board.execute();
 
   // Execute (if running).
   if (rootState == State.RUNNING) {

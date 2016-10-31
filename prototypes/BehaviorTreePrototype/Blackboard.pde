@@ -4,6 +4,23 @@ class Blackboard extends ConcurrentHashMap<String, Object>
 	Pattern pattern1 = Pattern.compile("(\\$(\\w+))");
 	Pattern pattern2 = Pattern.compile("(\\$\\{(\\w+)\\})"); //" <-- this comment to avoid code-highlight issues in Atom
 
+	ArrayList<BlackboardTask> tasks;
+
+	Blackboard() {
+		tasks = new ArrayList<BlackboardTask>();
+	}
+
+	Blackboard addTask(BlackboardTask task)
+	{
+		tasks.add(task);
+		return this;
+	}
+	
+	void execute() {
+		for (BlackboardTask task : tasks)
+			task.execute(this);
+	}
+
 	/**
 	 * Replaces variable names in expression with pattern "$varName" or "${varName}"
 	 * with values corresponding to these variables from the blackboard.
