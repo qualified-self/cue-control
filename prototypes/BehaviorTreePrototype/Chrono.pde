@@ -95,8 +95,8 @@ class Chrono {
 	  }
 	}
 
-	long seconds() {
-	  return (millis()/1000);
+	float seconds() {
+	  return (millis()/1000.0f);
 	}
 
   // Keeps track of start time (in chosen time unit).

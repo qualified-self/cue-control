@@ -16,7 +16,8 @@ class ChronoCondition extends Condition {
 	Chrono getChrono() { return chrono; }
 
   public String toString() {
-		return "time left " + (timeOut - chrono.elapsed()/1000.0f);
+		float timeLeft = timeOut - chrono.elapsed()/1000.0f;
+		return "Time left: " + nf(max(timeLeft, 0), 0, 1) + "s";
   }
 
 }
