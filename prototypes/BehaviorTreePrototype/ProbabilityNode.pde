@@ -1,6 +1,6 @@
 class ProbabilityNode extends CompositeNode
 {
-	ArrayList<Float> weighting;
+	ArrayList<Expression> weighting;
 	float totalSum;
 	BaseNode currentNode;
 
@@ -10,23 +10,31 @@ class ProbabilityNode extends CompositeNode
 
   ProbabilityNode(String description) {
 		super(description);
-		weighting = new ArrayList<Float>();
+		weighting = new ArrayList<Expression>();
   }
 
   ProbabilityNode addChild(BaseNode node) {
 		return addChild(1, node);
   }
 
-  ProbabilityNode addChild(float weight, BaseNode node) {
-		weighting.add(new Float(weight));
+	// todo: weight could be a blackboard element
+  ProbabilityNode addChild(Expression weight, BaseNode node) {
+		weighting.add(weight);
     children.add(node);
-
-		// Recompute total.
-		totalSum = 0;
-		for (Float f : weighting)
-			totalSum += f.floatValue();
     return this;
+	}
+
+  ProbabilityNode addChild(String weight, BaseNode node) {
+		return addChild(new Expression(weight), node);
+	}
+
+  ProbabilityNode addChild(float weight, BaseNode node) {
+		return addChild(new Expression(String.valueOf(weight)), node);
   }
+
+	ProbabilityNode setDecorator(Decorator decorator) {
+		return (ProbabilityNode)super.setDecorator(decorator);
+	}
 
   public State doExecute(Blackboard agent)
   {
@@ -39,15 +47,25 @@ class ProbabilityNode extends CompositeNode
 			return status;
 		}
 
-		double chosen = random(totalSum); // generate a number between 0 and the sum of the weights
+		// Compute total sum and "freeze" weights.
+		float[] frozenWeighting = new float[nChildren()];
+		float totalSum = 0;
+		try {
+			for (int i=0; i<nChildren(); i++)
+				totalSum += ( frozenWeighting[i] = max((float)weighting.get(i).evalAsDouble(agent).doubleValue(), 0) );
+		} catch (ScriptException e) {
+			return State.FAILURE;
+		}
+
+		// Generate a number between 0 and the sum of the weights
+		float chosen = (float)random(totalSum);
 
 		float sum = 0;
 		for (int i=0; i<nChildren(); i++)
 		{
-			sum += weighting.get(i).floatValue();
+			sum += frozenWeighting[i];
 			if (sum >= chosen) //execute this node
 			{
-				println("Chose child: " + i);
 				State status = children.get(i).execute(agent);
 
 				if (status == State.RUNNING)
