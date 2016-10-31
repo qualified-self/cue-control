@@ -50,8 +50,8 @@ public class BlackboardApplet extends PApplet {
 	int drawRow(String name, String value, int x, int y, color fillColor, color textColor, boolean roundTops, boolean roundBottoms)
 	{
 		drawItem(this, x, y, fillColor, roundTops, roundBottoms);
-		drawItemText(this, name,  x, y, textColor);
-		drawItemText(this, value, x+width/2, y, textColor);
+		drawItemText(this, name,  x,         y, textColor);
+		drawItemText(this, value, x+width*1/3, y, textColor);
 
 		return (y + NODE_HEIGHT);
 	}
