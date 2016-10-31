@@ -24,10 +24,6 @@ class Expression {
   }
 
   /// Computes expression using blackboard and returns result.
-  Double evalAsDouble(Blackboard agent) throws ScriptException {
-    return new Double( ((Number)eval(agent)).doubleValue() );
-  }
-
 	Object eval(Blackboard agent) throws ScriptException {
     return engine.eval(agent.processExpression(expression));
 	}
