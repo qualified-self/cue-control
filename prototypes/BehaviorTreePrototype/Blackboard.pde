@@ -1,4 +1,4 @@
-class Blackboard extends HashMap<String, Double>
+class Blackboard extends ConcurrentHashMap<String, Object>
 {
 
 	String processExpression(String expr) {
