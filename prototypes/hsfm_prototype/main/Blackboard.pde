@@ -1,10 +1,10 @@
 
 /*****************************************************
- ** Default variables and methods for the Blackboard *
- *****************************************************
- ** jeraman.info, Oct. 11 2016 ***********************
- *****************************************************
- *****************************************************/
+** Default variables and methods for the Blackboard *
+*****************************************************
+** jeraman.info, Oct. 11 2016 ***********************
+*****************************************************
+*****************************************************/
 
 Blackboard bb;
 
@@ -18,69 +18,18 @@ void draw_blackboard() {
 
 
 /************************************************
- ** Class representing the blackboard ***********
- ************************************************
- ** jeraman.info, Oct. 11 2016 ******************
- ************************************************
- ************************************************/
+** Class representing the blackboard ***********
+************************************************
+** jeraman.info, Oct. 11 2016 ******************
+************************************************
+************************************************/
 
+/// Blackboard class.
+class Blackboard extends ConcurrentHashMap<String, Object>
+{
+  Pattern pattern1 = Pattern.compile("(\\$(\\w+))");
+  Pattern pattern2 = Pattern.compile("(\\$\\{(\\w+)\\})"); //" <-- this comment to avoid code-highlight issues in Atom
 
-//a blackboard item is a pair of a name (given by the user) and a value (given by the user or received via osc)
-class Blackboard_Item {
-
-  private String name;
-  private Object value;
-
-  //constructor
-  Blackboard_Item (String name, Object value) {
-    this.name = name;
-    this.value = value;
-  }
-
-  //returns the name of this item
-  String get_name() {
-    return this.name;
-  }
-
-  //returns the type of this value
-  String get_type() {
-    return ((value.getClass()).getName());
-  }
-
-  //returns the value
-  Object get_value() {
-    return this.value;
-  }
-
-  //updates the value
-  void update_value(Object new_value) {
-    this.value = new_value;
-  }
-
-  void draw(int posx, int posy, int mywidth, int myheight) {
-    int xoffset = mywidth+1;
-
-    //header
-    noStroke();
-    fill(255, 50);
-    rectMode(CENTER);
-    rect(posx, posy, mywidth, myheight);
-    rect(posx+xoffset, posy, mywidth, myheight);
-    rect(posx+xoffset+xoffset, posy, mywidth, myheight);
-
-    fill(200);
-    textAlign(CENTER, CENTER);
-    text(this.get_type(), posx, posy);
-    text(name.toString(), posx+xoffset, posy);
-    text(value.toString(), posx+xoffset+xoffset+5, posy);
-  }
-}
-
-///////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////
-//the actual blackboard class, defined as a vector of blackboard items 
-class Blackboard {
-  Vector<Blackboard_Item> items;
   int mywidth = 60;
   int myheight = 20;
   int x;
@@ -88,86 +37,31 @@ class Blackboard {
 
   //contructor
   public Blackboard () {
-    this.items = new Vector<Blackboard_Item>();
     this.x = width-(mywidth*3)-20;
     this.y = 20;
   }
 
-  //adding an item into the blackboard
-  void add_item(String name, Object value) {
-    this.add_item(new Blackboard_Item(name, value));
+  /**
+  * Replaces variable names in expression with pattern "$varName" or "${varName}"
+  * with values corresponding to these variables from the blackboard.
+  */
+  String processExpression(String expr) {
+    expr = _processPattern(pattern1, expr);
+    expr = _processPattern(pattern2, expr);
+    return expr;
   }
 
-  //adding an item into the blackboard
-  void add_item(Blackboard_Item bi) {
-    //my returning variable
-    Blackboard_Item item = contains(bi.get_name());
-
-    if (item!=null)
-      item.update_value(bi.get_value());
-    else {
-      items.addElement(bi);
-      println("a new item " + bi.get_type() + " " + bi.get_name() + " = " + bi.get_value() + " was added to the blackboard");
+  String _processPattern(Pattern pattern, String expr) {
+    Matcher matcher = pattern.matcher(expr);
+    if (matcher.find())
+    {
+      String varName = matcher.group(2); // candidate var name in blackboard
+      if (containsKey(varName))
+      expr = matcher.replaceAll(get(varName).toString());
+      else
+      println("Blackboard variable not found: " + varName);
     }
-  }
-
-
-  //looking for a specific item in the blackboard
-  Blackboard_Item contains(String name) {
-
-    //my returning variable
-    Blackboard_Item item = null;
-
-    //looks for a variable with the name received
-    for (Blackboard_Item c : items) {
-      if (c.get_name().equalsIgnoreCase(name)) item = c;
-    }
-
-    //in case item is not found, this function returns null
-    return item;
-  }
-
-  //removes an item from the blackboard
-  void remove_item(String name) {
-    //my returning variable
-    Blackboard_Item item = contains(name);
-
-    if (item!=null)
-      items.remove(item);
-    else
-      println("Unable to remove item " + name + " from the blackboard.");
-  }
-
-  //updates the value of an item in the blackboard
-  void update_item(String name, Object value) {
-    //my returning variable
-    Blackboard_Item item = contains(name);
-
-    if (item!=null)
-      item.update_value(value);
-    else
-      println("Unable to update item " + name + " from the blackboard.");
-  }
-
-  //updates the value of an item in the blackboard
-  void update_item(Blackboard_Item bi) {
-    //my returning variable
-    Blackboard_Item item = contains(bi.name);
-
-    if (item!=null)
-      item.update_value(bi.get_value());
-    else
-      println("Unable to update item " + bi.get_name() + " from the blackboard.");
-  }
-  
-  Object get_value_by_name (String name) {
-    //my returning variable
-    Blackboard_Item item = contains(name);
-    
-    if (item!=null)
-      return item.get_value();
-    else
-      return null;
+    return expr;
   }
 
   /////////////////
@@ -199,8 +93,29 @@ class Blackboard {
   //draws the items
   void draw_bb_items () {
     draw_header_gui();
+    int i=0;
+    for (Map.Entry<String, Object> element : entrySet()) {
+      drawItem(element, x, y+(myheight*(i+1))+i+1, mywidth, myheight);
+      i++;
+    }
+  }
 
-    for (int i = 0; i < items.size(); i++)
-      items.get(i).draw(x, y+(myheight*(i+1))+i+1, mywidth, myheight);
+
+  void drawItem(Map.Entry<String, Object> element, int posx, int posy, int mywidth, int myheight) {
+    int xoffset = mywidth+1;
+
+    //header
+    noStroke();
+    fill(255, 50);
+    rectMode(CENTER);
+    rect(posx, posy, mywidth, myheight);
+    rect(posx+xoffset, posy, mywidth, myheight);
+    rect(posx+xoffset+xoffset, posy, mywidth, myheight);
+
+    fill(200);
+    textAlign(CENTER, CENTER);
+    text(element.getValue().getClass().getName(), posx, posy);
+    text(element.getKey().toString(),   posx+xoffset, posy);
+    text(element.getValue().toString(), posx+xoffset+xoffset+5, posy);
   }
 }

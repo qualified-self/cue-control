@@ -26,7 +26,7 @@ public abstract class Task {
   void set_name(String newname) {
     this.name = newname;
   }
-  
+
   String get_name() {
     return this.name;
   }
@@ -38,17 +38,17 @@ public abstract class Task {
   void refresh() {
     this.stop();
   }
-  
+
   String get_prefix() {
     String result = "[TASK]";
-    
+
     if (this instanceof SetBBTask) result = "[B_B]";
     if (this instanceof AudioTask) result = "[AUDIO]";
     if (this instanceof OSCTask) result = "[OSC]";
     if (this instanceof State_Machine) result = "[S_M]";
-    
+
     //create other according to the type of the task
-    
+
     return result;
   }
 
@@ -60,37 +60,26 @@ public abstract class Task {
 ////////////////////////////////////////
 //implementing a task for setting the blackboard
 class SetBBTask extends Task {
-  Blackboard_Item task;
+
+  Object value;
 
   public SetBBTask (PApplet p, String taskname, Object value) {
     super(taskname);
-    task = new Blackboard_Item(taskname, value);
+    this.value = value;
   }
 
   void run() {
     this.status = Status.RUNNING;
-    
-    //checks if the item already exists in the blackboard 
-    Blackboard_Item bi = bb.contains(this.name);
-    
-    //if not, adds a new item
-    if (bi == null) {
-      bb.add_item(task);
-      println(task.get_type() + " " + task.get_name() + " " + task.get_value() + " was inserted into the blackboard");
-    }else {//otherwise, updates the value
-      bb.update_item(task);
-      println("blackboard updated. " + task.get_type() + " " + task.get_name() + " " + task.get_value());
-    }
-    
+    bb.put(name, value);
     this.status = Status.DONE;
   }
 
   void stop() {
     this.status = Status.INACTIVE;
   }
-  
+
   void update_value(Object new_value) {
-    this.task.update_value(new_value);
+    value = new_value;
   }
 
   void update_status() {
@@ -141,13 +130,13 @@ class OSCTask extends Task {
 
   //variables to store my osc connection
   // private OscP5      oscP5;
-  private NetAddress broadcast; 
+  private NetAddress broadcast;
   private OscMessage message;
 
   //contructor loading the file
   public OSCTask (PApplet p, String taskname, int port, String ip, Object[] content) {
     super(taskname);
-    //this.oscP5     = new OscP5(p, port+1); 
+    //this.oscP5     = new OscP5(p, port+1);
     this.broadcast = new NetAddress(ip, port);
     this.update_message(content);
   }

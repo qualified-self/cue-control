@@ -1,7 +1,7 @@
 /************************************************
  ** Basic file created to test the State_Machine Class
  ************************************************
- ** State machine designed based on our scenario 
+ ** State machine designed based on our scenario
  ************************************************
  ** jeraman.info, Oct. 7 2016 *******************
  ************************************************
@@ -12,7 +12,7 @@ class Scenario extends Testing {
   //check the diagram to get an idea of this struct according to our scenario
 
   //first level
-  State_Machine root; 
+  State_Machine root;
   State wait_for_trigger;
   State main;
 
@@ -73,7 +73,7 @@ class Scenario extends Testing {
     //hide_all();
     root.show();
 
-    bb.add_item("Input", i);
+    bb.put("Input", i);
 
     //root.run();
     println("the State_Machine is ready!");
@@ -82,7 +82,7 @@ class Scenario extends Testing {
 
 
   void draw() {
-    root.tick((Input)bb.get_value_by_name("Input"));
+    root.tick((Input)bb.get("Input"));
     root.update_status();
     //root.draw();
     //environmental.draw();
@@ -156,24 +156,24 @@ class Scenario extends Testing {
       break;
     }
 
-    bb.update_item("Input", i);
+    bb.put("Input", i);
     //println("inputing " + i);
     //root.tick(i);
   }
 
   void mouseMoved() {
     putMouseXValuesInBB.update_value(p.mouseX);
-    Object obj[] = {bb.get_value_by_name(putMouseXValuesInBB.get_name())};
+    Object obj[] = {bb.get(putMouseXValuesInBB.get_name())};
 
     //prototyping communication to server
     float value = ((float)p.mouseX/width)*200;
     sofiansBBtask.update_value(value);
     sofianOSCmessage.update_message(new Object[]{value});
-    aura_amp.update_message(new Object[]{value});      
-    speaker_amp.update_message(new Object[]{value}); 
-    dmx_intensity.update_message(new Object[]{value});   
-    dmx_duration.update_message(new Object[]{value});    
-    dmx_rate.update_message(new Object[]{value});        
+    aura_amp.update_message(new Object[]{value});
+    speaker_amp.update_message(new Object[]{value});
+    dmx_intensity.update_message(new Object[]{value});
+    dmx_duration.update_message(new Object[]{value});
+    dmx_rate.update_message(new Object[]{value});
 
 
     //println("********************");
