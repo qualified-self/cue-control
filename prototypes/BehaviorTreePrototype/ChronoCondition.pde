@@ -1,3 +1,4 @@
+/// Condition that triggers when a certain time has passed.
 class ChronoCondition extends Condition {
 
 	Chrono chrono;

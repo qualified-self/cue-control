@@ -2,6 +2,7 @@
 ScriptEngineManager manager;
 ScriptEngine engine;
 
+/// Expression class which allows to compute javascript-style expressions with variables from the blackboard.
 class Expression {
 
   String expression;
@@ -22,6 +23,7 @@ class Expression {
     }
   }
 
+  /// Computes expression using blackboard and returns result.
   Double evalAsDouble(Blackboard agent) throws ScriptException {
     return new Double( ((Number)eval(agent)).doubleValue() );
   }

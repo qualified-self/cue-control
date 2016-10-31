@@ -1,3 +1,4 @@
+/// Condition that triggers when pressing a hotkey.
 class KeyCondition extends Condition {
 
   char hotKey;

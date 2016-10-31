@@ -1,3 +1,4 @@
+/// Condition that triggers based on a boolean expression.
 class ExpressionCondition extends Condition {
 
   Expression expression;
