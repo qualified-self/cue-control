@@ -128,6 +128,9 @@ class Blackboard extends ConcurrentHashMap<String, Object>
     
     //gets the name
     String name = msg.addrPattern();
+    //processing the address
+    name = name.substring(1, name.length());
+    name = name.replace("/", "_");
     
     //value will be stored in this variable
     Object value = null;

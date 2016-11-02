@@ -35,7 +35,7 @@ class Scenario extends Testing {
   OSCTask   final_fadeout;
   OSCTask   update_vibropixel1, update_vibropixel2;
   OSCTask   update_bb;
-  SetBBTask putMouseXValuesInBB;
+  //SetBBTask putMouseXValuesInBB;
   AudioTask go123;
 
   //input for debug
@@ -56,11 +56,11 @@ class Scenario extends Testing {
     update_vibropixel2 = new OSCTask(p, "/update/vibropixel/2", 5004, "127.0.0.1", new Object[]{0});
     update_bb          = new OSCTask(p, "/update/variables/blackboard", 5005, "127.0.0.1", new Object[]{0});
 
-    putMouseXValuesInBB= new SetBBTask(p, "my_mouse_x", mouseX);
+    //putMouseXValuesInBB= new SetBBTask(p, "my_mouse_x", mouseX);
 
     go123              = new AudioTask(p, "Playing sound!", "123go.mp3");
 
-    setup_sofians_OSC_message();
+    setup_media_message();
   }
 
 
@@ -80,15 +80,13 @@ class Scenario extends Testing {
   }
 
 
-
   void draw() {
     root.tick((Input)bb.get("Input"));
     root.update_status();
-    //root.draw();
-    //environmental.draw();
-    //piece.draw();
+
     draw_proper_state_machine();
   }
+  
 
   void draw_proper_state_machine() {
     switch(what_state_machine_is_showing) {
@@ -157,31 +155,14 @@ class Scenario extends Testing {
     }
 
     bb.put("Input", i);
-    //println("inputing " + i);
-    //root.tick(i);
   }
+
 
   void mouseMoved() {
-    putMouseXValuesInBB.update_value(p.mouseX);
-    Object obj[] = {bb.get(putMouseXValuesInBB.get_name())};
 
-    
-    //prototyping communication to server
-    float value = ((float)p.mouseX/width)*200;
-    
-    sofiansBBtask.update_value(value);
-    sofianOSCmessage.update_message(new Object[]{value});
-    aura_amp.update_message(new Object[]{value});
-    speaker_amp.update_message(new Object[]{value});
-    dmx_intensity.update_message(new Object[]{value});
-    dmx_duration.update_message(new Object[]{value});
-    dmx_rate.update_message(new Object[]{value});
-
-    if (obj!=null) {
-      update_vibropixel1.update_message(obj);
-      update_vibropixel2.update_message(obj);
-    }
+    mouseXPos.update_value((float)p.mouseX/width);
   }
+
 
   ////////////////////////////////////////////////
   //setting up root State_Machine - LEVEL 1
@@ -210,9 +191,9 @@ class Scenario extends Testing {
     main.add_task(piece);
 
     //testing tasks
-    wait_for_trigger.add_task(sofiansBBtask);
-    wait_for_trigger.add_task(sofianOSCmessage);
-    
+    wait_for_trigger.add_task(mouseXPos);
+    wait_for_trigger.add_task(mouseXPosTimes2);
+
     root.add_initialization_task(speaker_enable);
     wait_for_trigger.add_task(aura_amp);
     wait_for_trigger.add_task(speaker_amp);
@@ -248,7 +229,7 @@ class Scenario extends Testing {
   void environmental_associate_tasks_to_state () {
     osc_loop.add_task(update_vibropixel1);
     osc_loop.add_task(update_vibropixel2);
-    osc_loop.add_task(putMouseXValuesInBB);
+    osc_loop.add_task(mouseXPos);
   }
 
   void environmental_create_connections_state () {
@@ -295,8 +276,8 @@ class Scenario extends Testing {
 
   //debug!
   //used for testing
-  SetBBTask sofiansBBtask;
-  OSCTask sofianOSCmessage;
+  SetBBTask mouseXPos;
+  SetBBTask mouseXPosTimes2;
   OSCTask aura_amp;
   OSCTask speaker_enable;
   OSCTask speaker_amp;
@@ -304,30 +285,27 @@ class Scenario extends Testing {
   OSCTask dmx_duration;
   OSCTask dmx_rate;
 
-  void setup_sofians_OSC_message () {
-    sofiansBBtask    = new SetBBTask(p, "OSC_from_Sofian", 0);
-    sofianOSCmessage = new OSCTask(p, "/variable", 12000, "192.168.1.103", new Object[]{0});
+
+  void setup_media_message () {
+    mouseXPos        = new SetBBTask(p, "mouse_x", 0);
+
+    //creating a new expression using the mouse_x variable
+    Expression expr  = new Expression("$mouse_x*2");
+
+    //feeding a new variable (mouseXPosTimes2) in the blackboard using the previous variable
+    mouseXPosTimes2  = new SetBBTask(p, "mouse_x2", expr);
     
-    String expr = "((float)p.mouseX/width)*200";
-    aura_amp         = new OSCTask(p, "/aura/amp/0", 12000, "192.168.1.100", new Object[]{0});
+    Expression expr2  = new Expression("$mouse_x2*180"); 
+    Expression expr3  = new Expression("$mouse_x2*255"); 
+    // Expression expr2  = new Expression("(${bitalino_0}/1000) * 180");
+    // Expression expr3  = new Expression("(${bitalino_0}/1000) * 255");
+
+    aura_amp         = new OSCTask(p, "/aura/amp/0", 12000, "192.168.1.100", new Object[]{expr2});
     speaker_enable   = new OSCTask(p, "/speaker/enable", 12000, "192.168.1.100", new Object[]{1});
-    speaker_amp      = new OSCTask(p, "/speaker/amp/0", 12000, "192.168.1.100", new Object[]{0});
-    dmx_intensity    = new OSCTask(p, "/dmx/intensity", 12000, "192.168.1.100", new Object[]{0});
-    dmx_duration     = new OSCTask(p, "/dmx/duration", 12000, "192.168.1.100", new Object[]{0});
-    dmx_rate         = new OSCTask(p, "/dmx/rate", 12000, "192.168.1.100", new Object[]{0});
+    speaker_amp      = new OSCTask(p, "/speaker/amp/0", 12000, "192.168.1.100", new Object[]{expr3});
+    dmx_intensity    = new OSCTask(p, "/dmx/intensity", 12000, "192.168.1.100", new Object[]{expr2});
+    dmx_duration     = new OSCTask(p, "/dmx/duration", 12000, "192.168.1.100", new Object[]{expr3});
+    dmx_rate         = new OSCTask(p, "/dmx/rate", 12000, "192.168.1.100", new Object[]{expr3});
   }
 
-  //@TODO - integrate that with the Blackboard
-  //adding input osc support similar to Sofian's
-  void oscEvent(OscMessage msg) {
-    /* print the address pattern and the typetag of the received OscMessage */
-    print("### received an osc message.");
-    print(" addrpattern: "+msg.addrPattern());
-    print(" typetag: "+msg.typetag());
-    float sofiansvalue = (msg.get(0)).floatValue();
-    println(" value: " +  sofiansvalue);
-
-    //sofianOSCmessage.update_message(new Object[]{(float)sofiansvalue*2});
-    sofiansBBtask.update_value(sofiansvalue);
-  }
 }
