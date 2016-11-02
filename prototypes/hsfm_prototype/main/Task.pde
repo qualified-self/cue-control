@@ -1,4 +1,4 @@
-/************************************************
+/************************************************ //<>// //<>// //<>// //<>//
  ** Abstract Task class and all possible kids (audio, osc, etc)
  ************************************************
  ** MISSING: ************************************
@@ -58,48 +58,6 @@ public abstract class Task {
 }
 
 ////////////////////////////////////////
-//implementing a task for setting the blackboard
-class SetBBTask extends Task {
-
-  Object value;
-
-  public SetBBTask (PApplet p, String taskname, Object value) {
-    super(taskname);
-    this.value = value;
-  }
-
-  void run() {
-    this.status = Status.RUNNING;
-
-    // If added an expression, process it and save result in blackboard.
-    if (value instanceof Expression)
-    {
-      try {
-        bb.put(name, ((Expression)value).eval(bb));
-      } catch (ScriptException e) {
-        println("ScriptExpression thrown, unhandled update.");
-      }
-    }
-
-    else
-      bb.put(name, value);
-
-    this.status = Status.DONE;
-  }
-
-  void stop() {
-    this.status = Status.INACTIVE;
-  }
-
-  void update_value(Object new_value) {
-    value = new_value;
-  }
-
-  void update_status() {
-  }
-}
-
-////////////////////////////////////////
 //implementing a task for audio
 class AudioTask extends Task {
 
@@ -135,7 +93,58 @@ class AudioTask extends Task {
     else
       this.status = Status.DONE;
   }
-} //<>// //<>//
+} 
+
+
+////////////////////////////////////////
+//implementing a task for setting the blackboard
+class SetBBTask extends Task {
+
+  Object value;
+
+  public SetBBTask (PApplet p, String taskname, Object value) {
+    super(taskname);
+    this.value = value;
+  }
+
+  //function that tries to evaluates the value (if necessary) and returns the real value
+  Object evaluate_value () {
+    Object ret = value;
+
+    // If added an expression, process it and save result in blackboard.
+    if (value instanceof Expression)
+    {
+      try {
+        ret = ((Expression)value).eval(bb);
+      } 
+      catch (ScriptException e) {
+        println("ScriptExpression thrown, unhandled update.");
+      }
+    }
+
+    return ret;
+  }
+
+  void run() {
+    this.status = Status.RUNNING;
+
+    bb.put(name, evaluate_value());
+
+    this.status = Status.DONE;
+  }
+
+  void stop() {
+    this.status = Status.INACTIVE;
+  }
+
+  void update_value(Object new_value) {
+    value = new_value;
+  }
+
+  void update_status() {
+  }
+}
+
 
 ////////////////////////////////////////
 //implementing a task for OSC messages

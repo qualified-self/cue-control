@@ -165,8 +165,10 @@ class Scenario extends Testing {
     putMouseXValuesInBB.update_value(p.mouseX);
     Object obj[] = {bb.get(putMouseXValuesInBB.get_name())};
 
+    
     //prototyping communication to server
     float value = ((float)p.mouseX/width)*200;
+    
     sofiansBBtask.update_value(value);
     sofianOSCmessage.update_message(new Object[]{value});
     aura_amp.update_message(new Object[]{value});
@@ -174,11 +176,6 @@ class Scenario extends Testing {
     dmx_intensity.update_message(new Object[]{value});
     dmx_duration.update_message(new Object[]{value});
     dmx_rate.update_message(new Object[]{value});
-
-
-    //println("********************");
-    //println(obj);
-    //println("********************");
 
     if (obj!=null) {
       update_vibropixel1.update_message(obj);
@@ -215,12 +212,8 @@ class Scenario extends Testing {
     //testing tasks
     wait_for_trigger.add_task(sofiansBBtask);
     wait_for_trigger.add_task(sofianOSCmessage);
-    //OSCTask aura_amp;
-    //OSCTask speaker_amp;
-    //OSCTask dmx_intensity;
-    //OSCTask dmx_duration;
-    //OSCTask dmx_rate;
-
+    
+    root.add_initialization_task(speaker_enable);
     wait_for_trigger.add_task(aura_amp);
     wait_for_trigger.add_task(speaker_amp);
     wait_for_trigger.add_task(dmx_intensity);
@@ -305,6 +298,7 @@ class Scenario extends Testing {
   SetBBTask sofiansBBtask;
   OSCTask sofianOSCmessage;
   OSCTask aura_amp;
+  OSCTask speaker_enable;
   OSCTask speaker_amp;
   OSCTask dmx_intensity;
   OSCTask dmx_duration;
@@ -313,11 +307,14 @@ class Scenario extends Testing {
   void setup_sofians_OSC_message () {
     sofiansBBtask    = new SetBBTask(p, "OSC_from_Sofian", 0);
     sofianOSCmessage = new OSCTask(p, "/variable", 12000, "192.168.1.103", new Object[]{0});
-    aura_amp         = new OSCTask(p, "/aura/amp/0", 12000, "192.168.1.105", new Object[]{0});
-    speaker_amp      = new OSCTask(p, "/speaker/amp/0", 12000, "192.168.1.105", new Object[]{0});
-    dmx_intensity    = new OSCTask(p, "/dmx/intensity", 12000, "192.168.1.105", new Object[]{0});
-    dmx_duration     = new OSCTask(p, "/dmx/duration", 12000, "192.168.1.105", new Object[]{0});
-    dmx_rate         = new OSCTask(p, "/dmx/rate", 12000, "192.168.1.105", new Object[]{0});
+    
+    String expr = "((float)p.mouseX/width)*200";
+    aura_amp         = new OSCTask(p, "/aura/amp/0", 12000, "192.168.1.100", new Object[]{0});
+    speaker_enable   = new OSCTask(p, "/speaker/enable", 12000, "192.168.1.100", new Object[]{1});
+    speaker_amp      = new OSCTask(p, "/speaker/amp/0", 12000, "192.168.1.100", new Object[]{0});
+    dmx_intensity    = new OSCTask(p, "/dmx/intensity", 12000, "192.168.1.100", new Object[]{0});
+    dmx_duration     = new OSCTask(p, "/dmx/duration", 12000, "192.168.1.100", new Object[]{0});
+    dmx_rate         = new OSCTask(p, "/dmx/rate", 12000, "192.168.1.100", new Object[]{0});
   }
 
   //@TODO - integrate that with the Blackboard

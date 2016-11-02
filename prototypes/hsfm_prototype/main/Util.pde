@@ -15,6 +15,11 @@ import oscP5.*;
 import netP5.*;
 import controlP5.*;
 
+import javax.script.*;
+import java.util.regex.*;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
 //my osc variables
 OscP5 oscP5;
 
@@ -22,10 +27,8 @@ OscP5 oscP5;
 ControlP5 cp5;
 
 
-
-
 //system's default port for receiveing osc messages
-final int OSC_RECV_PORT = 12000;
+final int OSC_RECV_PORT = 12001;
 
 //calls all other utils
 void setup_util() {

@@ -5,10 +5,7 @@
  ************************************************
  ************************************************/
 
-import javax.script.*;
-import java.util.regex.*;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+
 
 //Testing_Task          t = new Testing_Task(this);
 //Testing_State         t = new Testing_State(this);
@@ -50,5 +47,7 @@ void keyPressed() {
 //@TODO - integrate that with the Blackboard
 //adding input osc support similar to Sofian's
 void oscEvent(OscMessage msg) {
-  t.oscEvent(msg);
+  //t.oscEvent(msg);
+  //t.oscEvent(msg);
+  bb.oscEvent(msg);
 }

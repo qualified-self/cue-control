@@ -133,7 +133,7 @@ public class State {
 
     //if it' not done yet, not ready to change
     if (this.status!=Status.DONE) {
-      println("State " + this.name + " is not ready to change!");
+      //println("State " + this.name + " is not ready to change!");
       return null;
     }
 

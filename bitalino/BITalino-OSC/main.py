@@ -20,12 +20,12 @@ from OSC import OSCClient, OSCServer, OSCMessage
 #send_address = ('192.168.1.68', 55551) #('127.0.0.1', 55551)
 #osctx = None
 
-#samplingRate = 10
-samplingRate = 100
+samplingRate = 10
+#samplingRate = 100
 #samplingRate = 1000
 
 
-def osc_init( address=('192.168.1.68', 8888) ):
+def osc_init( address=('localhost', 12000) ):
     print "Opening OSC connection to", address[0], "on", address[1]
     retval = OSCClient()
     retval.connect(address)
@@ -34,10 +34,10 @@ def osc_init( address=('192.168.1.68', 8888) ):
 def bitalino_init(port='/dev/tty.bitalino-DevB'):
     print "Opening bitalino on port ", port
 
-    #batteryThreshold = 30
-    
+    #batteryThreshold = 30    
     #acqChannels=[4]
-    acqChannels = [0,5]
+    acqChannels = [0, 1, 2, 3, 4, 5]
+
     
     #samplingRate = 10
     #samplingRate = 100
@@ -73,7 +73,7 @@ def loop(serial, host, port):
     try:
         print "Entering reading loop..."
         while True:
-            samples = bitadev.read()
+            samples = bitadev.read(1)
             #instead of sleeping a fixed time
             #time.sleep(0.005)
             #now it depends on the refresh rate
@@ -81,16 +81,22 @@ def loop(serial, host, port):
             #bitadev.trigger(digitalOutput)
             
             for s in samples:
-                msg = OSCMessage()
-                msg.setAddress("/biosample")
-                out = []
+                
+                #getting the last 6 messages
+                subarray = s[-6:]
+                counter = 0
+                for nm in subarray:
+                
+                    msg = OSCMessage()
+                    msg.setAddress("/bitalino/"+str(counter))
+                    out = []
+                    counter = counter+1
+                    
+                    #print "my samples are " + str(subarray) + "\n"
 
-                for sval in s:
-                    out.append(sval / 1024)
-
-                msg.append(out)
-                #print msg
-                osctx.send( msg )
+                    msg.append(nm)
+                    #print msg
+                    osctx.send(msg)
                 
     except KeyboardInterrupt as e:
         print "Looks like you wanna leave. Good bye!"
@@ -100,7 +106,9 @@ def loop(serial, host, port):
 
 if __name__ == '__main__':
     print "(cc) 2015 Luis Rodil-Fernandez <zilog@protokol.cc>"
-    print
+    print 
+    print "October 31th 2016 - modified to support realtime stream of the 6 bitalino ports - jeraman.info."
+    print 
 
     arguments = docopt(__doc__, version='BITalino')
     
