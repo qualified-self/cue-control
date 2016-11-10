@@ -3,11 +3,24 @@
 // General function that draws a single "row".
 void drawItem(PApplet app, int x, int y, color fillColor, boolean roundTops, boolean roundBottoms)
 {
+  drawItem(app, x, y, fillColor, roundTops, roundBottoms, false);
+}
+
+void drawItem(PApplet app, int x, int y, color fillColor, boolean roundTops, boolean roundBottoms, boolean selected)
+{
 	int topCorners    = roundTops    ? 10 : 0;
 	int bottomCorners = roundBottoms ? 10 : 0;
 	app.rectMode(CORNERS);
-	app.fill(fillColor);
+  if (selected)
+  {
+    app.stroke(255);
+    app.strokeWeight(3);
+  }
+  else
+	  app.noStroke();
+  app.fill(fillColor);
 	app.rect(x, y, app.width-INDENT, y+NODE_HEIGHT, topCorners, topCorners, bottomCorners, bottomCorners);
+  app.noStroke();
 }
 
 // General function to draw text.
@@ -40,7 +53,11 @@ int drawNode(PApplet app, BaseNode node, int x, int y)
   }
 
   // Draw node.
-	drawItem(app, x, y, stateToColor(node.getState()), !node.hasDecorator(), true);
+	drawItem(app, x, y, stateToColor(node.getState()), !node.hasDecorator(), true, selectedNode == node);
+
+  // Check for clicking on node.
+  if (click.rectButtonWasClicked(x, y, width-INDENT, y+NODE_HEIGHT))
+    nextSelectedNode = node;
 
   // Animation for running nodes.
   if (node.getState() == State.RUNNING) {
@@ -72,7 +89,7 @@ int drawNode(PApplet app, BaseNode node, int x, int y)
 		app.popMatrix();
 
 		// Check for click.
-		if (click.buttonWasClicked(x+INDENT/4, y+NODE_HEIGHT/2, NODE_HEIGHT/2))
+		if (click.roundButtonWasClicked(x+INDENT/4, y+NODE_HEIGHT/2, NODE_HEIGHT/2))
 		{
 			cn.toggleExpanded();
 			click.reset();
@@ -91,7 +108,6 @@ int drawTree(PApplet app, BaseNode node, int x, int y)
   if (node instanceof CompositeNode)
   {
     CompositeNode cn = (CompositeNode)node;
-
 
 		if (cn.isExpanded())
 		{

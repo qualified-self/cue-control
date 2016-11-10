@@ -67,7 +67,10 @@ void draw() {
   background(0);
 
   // Draw tree.
+  nextSelectedNode = null;
   drawTree(this, root, INDENT, NODE_HEIGHT);
+  if (nextSelectedNode != null)
+    selectedNode = nextSelectedNode;
 
   // Execute blackboard tasks.
   board.execute();
@@ -95,12 +98,18 @@ class MouseClick {
 
   boolean wasClicked() { return clicked; }
 
-  boolean buttonWasClicked(float bx, float by, float radius)
+  boolean roundButtonWasClicked(float bx, float by, float radius)
   {
     return wasClicked() && dist(x, y, bx, by) < radius;
   }
+
+  boolean rectButtonWasClicked(float bx1, float by1, float bx2, float by2) {
+    return wasClicked() && (bx1 <= x && x <= bx2 && by1 <= y && y <= by2);
+  }
 }
 
+BaseNode selectedNode = null;
+BaseNode nextSelectedNode = null;
 MouseClick click = new MouseClick();
 
 void mouseClicked()
