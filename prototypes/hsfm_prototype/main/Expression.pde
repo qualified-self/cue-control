@@ -1,3 +1,8 @@
+
+/************************************************
+ ** Class used to interpret expressions developed by Sofian
+ ************************************************/
+
 // Static components.
 ScriptEngineManager manager;
 ScriptEngine engine;
@@ -7,8 +12,10 @@ class Expression {
 
   String expression;
 
-  Expression(String expression) {
+  public Expression(String expression) {
+    
     this.expression = expression;
+    
     if (manager == null) {
       manager = new ScriptEngineManager();
       engine = manager.getEngineByName("js");

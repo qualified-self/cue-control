@@ -118,4 +118,41 @@ class Blackboard extends ConcurrentHashMap<String, Object>
     text(element.getKey().toString(),   posx+xoffset, posy);
     text(element.getValue().toString(), posx+xoffset+xoffset+5, posy);
   }
+  
+  
+  //adding input osc support to the blackboard
+  void oscEvent(OscMessage msg) {
+    print("### received an osc message.");
+    print(" addrpattern: "+msg.addrPattern());
+    print(" typetag: "+msg.typetag());
+    
+    //gets the name
+    String name = msg.addrPattern();
+    //processing the address
+    name = name.substring(1, name.length());
+    name = name.replace("/", "_");
+    
+    //value will be stored in this variable
+    Object value = null;
+    
+    //checks for the right data type
+         if (msg.checkTypetag("i")) //integer
+      value = msg.get(0).intValue();
+    else if (msg.checkTypetag("f")) //float
+      value = msg.get(0).floatValue();
+    else if (msg.checkTypetag("d")) //double
+      value = msg.get(0).doubleValue();
+    else if (msg.checkTypetag("s")) //string
+      value = msg.get(0).stringValue();
+    else if (msg.checkTypetag("b")) //boolean
+      value = msg.get(0).booleanValue();
+    else if (msg.checkTypetag("l")) //long
+      value = msg.get(0).longValue();
+    else if (msg.checkTypetag("c")) //char
+      value = msg.get(0).charValue();
+    
+    if (!containsKey(name)) put(name, value);
+    else                    replace(name, value);    
+  }
+  
 }

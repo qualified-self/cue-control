@@ -1,4 +1,4 @@
-#N canvas 323 265 935 454 10;
+#N canvas 401 41 935 454 10;
 #X declare -lib mrpeach;
 #X obj 310 17 import mrpeach;
 #X obj 36 86 unpackOSC;
@@ -20,6 +20,13 @@
 #X obj 515 68 udpreceive 6448;
 #X obj 518 117 routeOSC /wek/inputs;
 #X obj 517 146 unpack f f f f f f;
+#X floatatom 515 179 5 0 0 0 - - -;
+#X floatatom 537 212 5 0 0 0 - - -;
+#X floatatom 560 239 5 0 0 0 - - -;
+#X floatatom 578 175 5 0 0 0 - - -;
+#X floatatom 600 208 5 0 0 0 - - -;
+#X floatatom 623 235 5 0 0 0 - - -;
+#X obj 461 136 print;
 #X connect 1 0 3 0;
 #X connect 5 0 4 0;
 #X connect 5 1 6 0;
@@ -31,6 +38,12 @@
 #X connect 13 0 12 0;
 #X connect 13 1 14 0;
 #X connect 15 0 1 0;
-#X connect 16 0 18 0;
+#X connect 16 0 26 0;
 #X connect 17 0 16 0;
 #X connect 18 0 19 0;
+#X connect 19 0 20 0;
+#X connect 19 1 21 0;
+#X connect 19 2 22 0;
+#X connect 19 3 23 0;
+#X connect 19 4 24 0;
+#X connect 19 5 25 0;
