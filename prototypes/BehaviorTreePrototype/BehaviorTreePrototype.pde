@@ -58,6 +58,7 @@ void setup() {
   board.addTask(new OscBlackboardTask("sensor", "/bitalino/0"));
   board.addTask(new ConditionBlackboardTask("spacebar", new KeyCondition(' ')));
   root = createTree();
+  playing = false;
 }
 
 State rootState = State.RUNNING;
