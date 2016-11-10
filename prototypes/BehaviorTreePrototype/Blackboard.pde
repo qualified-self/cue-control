@@ -3,6 +3,8 @@ class Blackboard extends ConcurrentHashMap<String, Object>
 {
 	Pattern pattern1 = Pattern.compile("(\\$(\\w+))");
 	Pattern pattern2 = Pattern.compile("(\\$\\{(\\w+)\\})"); //" <-- this comment to avoid code-highlight issues in Atom
+	// Pattern pattern1 = Pattern.compile("([^\\\\]\\$(\\w+))");
+	// Pattern pattern2 = Pattern.compile("([^\\\\]\\$\\{(\\w+)\\})"); //" <-- this comment to avoid code-highlight issues in Atom
 
 	ArrayList<BlackboardTask> tasks;
 
@@ -38,13 +40,19 @@ class Blackboard extends ConcurrentHashMap<String, Object>
   	  String varName = matcher.group(2); // candidate var name in blackboard
   		if (containsKey(varName))
       {
-  			expr = matcher.replaceFirst(get(varName).toString());
+        String value = get(varName).toString();
+        // // Make sure to replace $ by \$ to prevent double-replacement of variables.
+        // value = value.replaceAll("[^\\\\]\\$", "\\$");
+        // println("::"+varName + " =" + value);
+  			expr = matcher.replaceFirst(value);
         matcher = pattern.matcher(expr);
       }
   		else
   			println("Blackboard variable not found: " + varName);
 		}
+    // println("final exrepssion: " + expr.replaceAll("\\\\\\$", "$"));
 		return expr;
+//		return expr.replaceAll("\\\\\\$", "$");
 	}
 
 }
