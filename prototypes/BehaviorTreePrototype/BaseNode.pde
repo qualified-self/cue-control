@@ -6,6 +6,10 @@ abstract class BaseNode
 
   Decorator decorator;
 
+  boolean needsInit;
+
+  CompositeNode parent;
+
   BaseNode()
   {
     this(null);
@@ -13,13 +17,16 @@ abstract class BaseNode
 
   BaseNode(String description)
   {
+    this.parent = null;
     this.description = description;
     state = State.UNDEFINED;
+    needsInit = true;
   }
 
   public BaseNode setDecorator(Decorator decorator) {
     decorator.setNode(this);
     this.decorator = decorator;
+    needsInit = true;
     return this;
   }
 
@@ -27,7 +34,21 @@ abstract class BaseNode
 
   public Decorator getDecorator() { return decorator; }
 
+  public BaseNode setParent(CompositeNode parent) {
+    if (hasParent()) {
+      println("Cannot set parent: already has one. Remove it first.");
+    }
+    else
+      this.parent = parent;
+    return this;
+  }
+
+  public boolean hasParent() { return parent != null; }
+
+  public CompositeNode getParent() { return parent; }
+
   public void init(Blackboard agent) {
+    needsInit = false;
     if (hasDecorator())
       decorator.init(agent);
     else
@@ -36,6 +57,9 @@ abstract class BaseNode
 
   public State execute(Blackboard agent)
   {
+    if (needsInit) {
+      init(agent);
+    }
     if (hasDecorator())
       state = decorator.execute(agent);
     else

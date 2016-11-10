@@ -52,12 +52,12 @@ int drawNode(PApplet app, BaseNode node, int x, int y)
     y = drawDecorator(app, node.getDecorator(), x, y);
   }
 
-  // Draw node.
-	drawItem(app, x, y, stateToColor(node.getState()), !node.hasDecorator(), true, selectedNode == node);
-
   // Check for clicking on node.
   if (click.rectButtonWasClicked(x, y, width-INDENT, y+NODE_HEIGHT))
-    nextSelectedNode = node;
+    selectedNode = node;
+
+  // Draw node.
+	drawItem(app, x, y, stateToColor(node.getState()), !node.hasDecorator(), true, selectedNode == node);
 
   // Animation for running nodes.
   if (node.getState() == State.RUNNING) {

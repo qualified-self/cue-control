@@ -67,17 +67,20 @@ void draw() {
   background(0);
 
   // Draw tree.
-  nextSelectedNode = null;
+  if (click.wasClicked())
+    selectedNode = null;
   drawTree(this, root, INDENT, NODE_HEIGHT);
-  if (nextSelectedNode != null)
-    selectedNode = nextSelectedNode;
+  click.reset();
 
-  // Execute blackboard tasks.
-  board.execute();
+  if (playing) {
 
-  // Execute (if running).
-  if (rootState == State.RUNNING) {
-    rootState = root.execute(board);
+    // Execute blackboard tasks.
+    board.execute();
+
+    // Execute (if running).
+    if (rootState == State.RUNNING) {
+      rootState = root.execute(board);
+    }
   }
 }
 
@@ -114,7 +117,46 @@ MouseClick click = new MouseClick();
 
 void mouseClicked()
 {
+  // Register click.
   click.click();
+}
+
+void keyPressed() {
+  println("key pressed " + key + " " + keyCode);
+  println(key == CODED);
+  switch (key)
+  {
+    case ' ':                togglePlay(); break;
+    case ENTER: case RETURN: addSibling(); break;
+    case DELETE:             removeNode(); break;
+    case CODED: {
+      switch (keyCode) {
+        default:
+      }
+    }
+    break;
+
+    default:
+  }
+}
+
+void togglePlay() {
+  playing = !playing;
+}
+
+void addSibling() {
+  if (selectedNode != null && selectedNode.hasParent()) {
+    BaseNode newNode = new SequentialNode();
+    selectedNode.getParent().insertChild(selectedNode, newNode);
+    selectedNode = newNode;
+  }
+}
+
+void removeNode() {
+  if (selectedNode != null && selectedNode.hasParent()) {
+    selectedNode.getParent().removeChild(selectedNode);
+    selectedNode = null;
+  }
 }
 
 void oscEvent(OscMessage msg) {
