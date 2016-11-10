@@ -13,6 +13,8 @@ Minim minim;
 Blackboard board = new Blackboard();
 BaseNode root;
 
+NodeFactory factory;
+
 final int INDENT = 50;
 final int NODE_HEIGHT = 25;
 final int NODE_SPACING = 5;
@@ -41,6 +43,9 @@ void setup() {
 
   noStroke();
 //  frameRate(5);
+
+  // Create factory.
+  factory = new NodeFactory(this);
 
   // start oscP5, listening for incoming messages.
   oscP5 = new OscP5(this, OSC_RECV_PORT);
