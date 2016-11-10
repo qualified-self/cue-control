@@ -15,7 +15,7 @@ class Blackboard extends ConcurrentHashMap<String, Object>
 		tasks.add(task);
 		return this;
 	}
-	
+
 	void execute() {
 		for (BlackboardTask task : tasks)
 			task.execute(this);
@@ -33,13 +33,16 @@ class Blackboard extends ConcurrentHashMap<String, Object>
 
 	String _processPattern(Pattern pattern, String expr) {
 		Matcher matcher = pattern.matcher(expr);
-		if (matcher.find())
+		while (matcher.find())
 		{
-			String varName = matcher.group(2); // candidate var name in blackboard
-			if (containsKey(varName))
-				expr = matcher.replaceAll(get(varName).toString());
-			else
-				println("Blackboard variable not found: " + varName);
+  	  String varName = matcher.group(2); // candidate var name in blackboard
+  		if (containsKey(varName))
+      {
+  			expr = matcher.replaceFirst(get(varName).toString());
+        matcher = pattern.matcher(expr);
+      }
+  		else
+  			println("Blackboard variable not found: " + varName);
 		}
 		return expr;
 	}
