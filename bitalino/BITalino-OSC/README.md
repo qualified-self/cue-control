@@ -34,5 +34,13 @@ Use main.py to make the OSC convertion. In my case, for example, that is the com
 python main.py /dev/tty.bitalino-DevB --host=127.0.0.1 --port=6448
 ```
 
+####Dependencies
+You might need to install the following Python modules:
+* pyserial
+* importlib
+* docopt
+
+You can install them using pip or easy_install.
+
 ###Step 3
 Open whenever client you want (e.g. bitalino-receiver.pd) and have fun! :)
