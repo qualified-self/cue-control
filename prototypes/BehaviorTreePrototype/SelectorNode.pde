@@ -3,15 +3,15 @@ class SelectorNode extends CompositeNode
   int currentPosition;
   boolean restart;
 
-  SelectorNode() {
+  public SelectorNode() {
     this(null, false);
   }
 
-  SelectorNode(boolean restart) {
+  public SelectorNode(boolean restart) {
     this(null, restart);
   }
 
-  SelectorNode(String description, boolean restart)
+  public SelectorNode(String description, boolean restart)
   {
     super(description);
     currentPosition = -1;
@@ -57,7 +57,7 @@ class SelectorNode extends CompositeNode
 
   void doInit(Blackboard agent)
   {
-//    currentPosition = -1;
+    currentPosition = -1;
     for (BaseNode node : children)
       node.init(agent);
   }

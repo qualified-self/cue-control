@@ -7,19 +7,19 @@ class ParallelNode extends CompositeNode
   int nFailure;
   int nSuccess;
 
-  ParallelNode() {
+  public ParallelNode() {
     this("");
   }
 
-  ParallelNode(boolean failOnAll, boolean succeedOnAll) {
+  public ParallelNode(boolean failOnAll, boolean succeedOnAll) {
     this("", failOnAll, succeedOnAll);
   }
 
-  ParallelNode(String description) {
+  public ParallelNode(String description) {
     this(description, true, true);
   }
 
-  ParallelNode(String description, boolean failOnAll, boolean succeedOnAll)
+  public ParallelNode(String description, boolean failOnAll, boolean succeedOnAll)
   {
     super(description);
     this.failOnAll = failOnAll;

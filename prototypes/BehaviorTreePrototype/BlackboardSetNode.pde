@@ -3,7 +3,7 @@ class BlackboardSetNode extends BaseNode {
 	String blackboardKey;
   Expression expression;
 
-  BlackboardSetNode(String blackboardKey, String expression) {
+  public BlackboardSetNode(String blackboardKey, Object expression) {
 		this.blackboardKey = blackboardKey;
     this.expression = new Expression(expression);
   }

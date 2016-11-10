@@ -4,11 +4,11 @@ class ProbabilityNode extends CompositeNode
 	float totalSum;
 	BaseNode currentNode;
 
-  ProbabilityNode() {
+  public ProbabilityNode() {
     this(null);
   }
 
-  ProbabilityNode(String description) {
+  public ProbabilityNode(String description) {
 		super(description);
 		weighting = new ArrayList<Expression>();
   }

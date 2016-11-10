@@ -5,9 +5,9 @@ ScriptEngine engine;
 /// Expression class which allows to compute javascript-style expressions with variables from the blackboard.
 class Expression {
 
-  String expression;
+  Object expression;
 
-  Expression(String expression) {
+  Expression(Object expression) {
     this.expression = expression;
     if (manager == null) {
       manager = new ScriptEngineManager();
@@ -25,11 +25,22 @@ class Expression {
 
   /// Computes expression using blackboard and returns result.
 	Object eval(Blackboard agent) throws ScriptException {
-    return engine.eval(agent.processExpression(expression));
+    if (expression instanceof String)
+      return engine.eval(agent.processExpression((String)expression));
+    else
+      return expression;
+	}
+
+  /// Eval without agent.
+  Object eval() throws ScriptException {
+    if (expression instanceof String)
+      return engine.eval((String)expression);
+    else
+      return expression;
 	}
 
   public String toString() {
-    return expression;
+    return expression.toString();
   }
 
 }

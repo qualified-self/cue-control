@@ -2,12 +2,12 @@ class SequentialNode extends CompositeNode
 {
   int currentPosition;
 
-  SequentialNode()
+  public SequentialNode()
   {
     this(null);
   }
 
-  SequentialNode(String description)
+  public SequentialNode(String description)
   {
     super(description);
     currentPosition = -1;
