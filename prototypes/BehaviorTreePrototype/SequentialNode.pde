@@ -48,7 +48,7 @@ class SequentialNode extends CompositeNode
 
   void doInit(Blackboard agent)
   {
-//    currentPosition = -1;
+    currentPosition = -1;
     for (BaseNode node : children)
       node.init(agent);
   }
