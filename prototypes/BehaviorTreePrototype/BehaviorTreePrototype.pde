@@ -6,15 +6,6 @@ import java.util.regex.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-OscP5 oscP5;
-NetAddress remoteLocation;
-Minim minim;
-
-Blackboard board = new Blackboard();
-BaseNode root;
-
-NodeFactory factory;
-
 final int INDENT = 50;
 final int NODE_HEIGHT = 25;
 final int NODE_SPACING = 5;
@@ -30,6 +21,17 @@ final color DECORATOR_TEXT_COLOR = #eeeeee;
 final color NODE_TEXT_COLOR = #000000;
 
 final color NODE_EXPANSION_BUTTON_COLOR = #333333;
+
+OscP5 oscP5;
+NetAddress remoteLocation;
+Minim minim;
+
+Blackboard board = new Blackboard();
+BaseNode root;
+
+NodeFactory factory;
+
+boolean playing;
 
 void settings() {
   size(displayWidth-BLACKBOARD_WIDTH, displayHeight);
