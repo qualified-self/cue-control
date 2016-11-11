@@ -34,6 +34,10 @@ abstract class CompositeNode extends BaseNode
     return (CompositeNode)super.setDecorator(decorator);
   }
 
+  int indexOf(BaseNode node) {
+    return children.indexOf(node);
+  }
+
   CompositeNode addChild(BaseNode node) {
     children.add(node);
     node.setParent(this);
@@ -51,6 +55,14 @@ abstract class CompositeNode extends BaseNode
   CompositeNode removeChild(BaseNode node) {
     children.remove(node);
     node.setParent(null);
+    needsInit = true;
+    return this;
+  }
+
+  CompositeNode moveChild(int from, int to) {
+    BaseNode node = children.get(from);
+    children.remove(from);
+    children.add(to, node);
     needsInit = true;
     return this;
   }

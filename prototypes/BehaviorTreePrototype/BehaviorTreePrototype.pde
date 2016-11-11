@@ -134,6 +134,8 @@ void keyPressed() {
     case DELETE:             removeNode(); break;
     case CODED: {
       switch (keyCode) {
+        case UP:             moveNodeWithinLevel(-1); break;
+        case DOWN:           moveNodeWithinLevel(+1); break;
         default:
       }
     }
@@ -159,6 +161,17 @@ void removeNode() {
   if (selectedNode != null && selectedNode.hasParent()) {
     selectedNode.getParent().removeChild(selectedNode);
     selectedNode = null;
+  }
+}
+
+void moveNodeWithinLevel(int move) {
+  println("Move withinlevel: " + move);
+  if (selectedNode != null && selectedNode.hasParent()) {
+    CompositeNode parent = selectedNode.getParent();
+    int index = parent.indexOf(selectedNode);
+    int nextIndex = constrain(index + move, 0, parent.nChildren()-1);
+    println("from " + index + " to "+nextIndex);
+    parent.moveChild(index, nextIndex);
   }
 }
 
