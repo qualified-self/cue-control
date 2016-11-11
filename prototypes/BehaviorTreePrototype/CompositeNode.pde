@@ -54,7 +54,7 @@ abstract class CompositeNode extends BaseNode
 
   CompositeNode removeChild(BaseNode node) {
     children.remove(node);
-    node.setParent(null);
+    node.removeParent();
     needsInit = true;
     return this;
   }

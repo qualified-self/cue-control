@@ -34,6 +34,10 @@ abstract class BaseNode
 
   public Decorator getDecorator() { return decorator; }
 
+  public void removeParent() {
+    parent = null;
+  }
+
   public BaseNode setParent(CompositeNode parent) {
     if (hasParent()) {
       println("Cannot set parent: already has one. Remove it first.");
