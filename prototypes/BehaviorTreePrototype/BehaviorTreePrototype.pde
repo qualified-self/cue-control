@@ -31,7 +31,14 @@ BaseNode root;
 
 NodeFactory factory;
 
+// Are we playing/paused.
 boolean playing;
+
+// Are we currently in the process of adding/editing a node.
+boolean editing;
+
+// Placeholder node used to add/edit new nodes.
+PlaceholderNode placeholderNode = new PlaceholderNode();
 
 void settings() {
   size(displayWidth-BLACKBOARD_WIDTH, displayHeight);
@@ -57,13 +64,17 @@ void setup() {
 
   minim = new Minim(this);
 
+  root = new SequentialNode();
   board.addTask(new OscBlackboardTask("sensor", "/bitalino/0"));
   board.addTask(new ConditionBlackboardTask("spacebar", new KeyCondition(' ')));
-  root = createTree();
-  playing = false;
+
+  setPlayState(false);
+  setEditState(false);
 }
 
 State rootState = State.RUNNING;
+
+int nSteps = 0;
 
 void draw() {
   // Reset background.
@@ -75,7 +86,8 @@ void draw() {
   drawTree(this, root, INDENT, NODE_HEIGHT);
   click.reset();
 
-  if (playing) {
+  if (isPlaying() && !isEditing()) {
+    println(nSteps);
 
     // Execute blackboard tasks.
     board.execute();
@@ -84,6 +96,8 @@ void draw() {
     if (rootState == State.RUNNING) {
       rootState = root.execute(board);
     }
+
+    nSteps++;
   }
 }
 
@@ -125,36 +139,107 @@ void mouseClicked()
 }
 
 void keyPressed() {
-  println("key pressed " + key + " " + keyCode);
-  println(key == CODED);
-  switch (key)
-  {
-    case ' ':                togglePlay(); break;
-    case ENTER: case RETURN: addSibling(); break;
-    case DELETE:             removeNode(); break;
-    case CODED: {
-      switch (keyCode) {
-        case UP:             moveNodeWithinLevel(-1); break;
-        case DOWN:           moveNodeWithinLevel(+1); break;
-        default:
-      }
+  // Special case: input information for new node.
+  if (isEditing()) {
+    switch (key)
+    {
+      case CODED: break;
+      case ENTER: case RETURN: submitNode(); break;
+      case DELETE:             cancelNode(); break;
+      case BACKSPACE:          placeholderNode.backspace(); break;
+      default:                 placeholderNode.append(key);
     }
-    break;
-
-    default:
   }
+
+  // Otherwise: normal commands.
+  else {
+    switch (key)
+    {
+      case ' ':                togglePlay(); break;
+      case 'R':                reset();      break;
+      case ENTER: case RETURN: addSibling(); break;
+      case TAB:                addChild(); break;
+      case DELETE:             removeNode(); break;
+      case CODED: {
+        switch (keyCode) {
+          case UP:             moveNodeWithinLevel(-1); break;
+          case DOWN:           moveNodeWithinLevel(+1); break;
+          default:
+        }
+      }
+      break;
+
+      default:
+    }
+  }
+}
+
+void reset() {
+  println("RESET");
+  root.init(board);
+  rootState = State.RUNNING;
+  pause();
+}
+
+boolean isPlaying() {
+  return playing;
+}
+
+boolean isEditing() {
+  return editing;
+}
+
+void setPlayState(boolean playing) {
+  this.playing = playing;
+}
+
+void setEditState(boolean editing) {
+  this.editing = editing;
 }
 
 void togglePlay() {
   playing = !playing;
 }
 
+void play() {
+  setPlayState(true);
+}
+
+void pause() {
+  setPlayState(false);
+}
+
 void addSibling() {
   if (selectedNode != null && selectedNode.hasParent()) {
-    BaseNode newNode = new SequentialNode();
-    selectedNode.getParent().insertChild(selectedNode, newNode);
-    selectedNode = newNode;
+    setEditState(true);
+    placeholderNode.reset();
+    selectedNode.getParent().insertChild(selectedNode, placeholderNode);
+    selectedNode = null;
+//    selectedNode = newNode;
   }
+}
+
+void addChild() {
+  if (selectedNode != null && selectedNode instanceof CompositeNode) {
+    setEditState(true);
+    placeholderNode.reset();
+    ((CompositeNode)selectedNode).addChild(placeholderNode);
+    selectedNode = null;
+//    selectedNode = newNode;
+  }
+}
+
+void submitNode() {
+  BaseNode newNode = placeholderNode.submit();
+  if (newNode != null) {
+   setEditState(false);
+   selectedNode = newNode;
+  }
+}
+
+void cancelNode() {
+  placeholderNode.cancel();
+  setEditState(false);
 }
 
 void removeNode() {

@@ -57,6 +57,9 @@ abstract class BaseNode
       decorator.init(agent);
     else
       doInit(agent);
+
+    // Reset previous state.
+    state = State.UNDEFINED;
   }
 
   public State execute(Blackboard agent)

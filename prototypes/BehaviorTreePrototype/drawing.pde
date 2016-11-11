@@ -56,46 +56,55 @@ int drawNode(PApplet app, BaseNode node, int x, int y)
   if (click.rectButtonWasClicked(x, y, width-INDENT, y+NODE_HEIGHT))
     selectedNode = node;
 
-  // Draw node.
-	drawItem(app, x, y, stateToColor(node.getState()), !node.hasDecorator(), true, selectedNode == node);
+  if (isEditing() && node == placeholderNode) {
+    // Generate text area.
+  	drawItem(app, x, y, color(#dddddd), true, true);
 
-  // Animation for running nodes.
-  if (node.getState() == State.RUNNING) {
-    final int SPREAD=100;
-    int start = x+frameCount%SPREAD;
-    int end   = width-INDENT-SPREAD;
-    for (int xx=start; xx<end; xx+=SPREAD) {
-      fill(255, 255, 255, map(xx, start, end, 100, 0));
-      rect(xx, y, xx+SPREAD*0.5, y+NODE_HEIGHT);
-    }
+  	// Draw item text.
+  	drawItemText(app, node.getDescription(), x, y, NODE_TEXT_COLOR);
   }
+  else {
+    // Draw node.
+  	drawItem(app, x, y, stateToColor(node.getState()), !node.hasDecorator(), true, selectedNode == node);
 
-	// Draw item text.
-	drawItemText(app, node.type() + " " + node.getDescription(), x, y, NODE_TEXT_COLOR);
+    // Animation for running nodes.
+    if (node.getState() == State.RUNNING) {
+      final int SPREAD=100;
+      int start = x+nSteps%SPREAD;
+      int end   = width-INDENT-SPREAD;
+      for (int xx=start; xx<end; xx+=SPREAD) {
+        fill(255, 255, 255, map(xx, start, end, 100, 0));
+        rect(xx, y, xx+SPREAD*0.5, y+NODE_HEIGHT);
+      }
+    }
 
-	// Draw expand button and deal with it.
-	if (node instanceof CompositeNode)
-	{
-		CompositeNode cn = (CompositeNode)node;
-		// Draw button.
-		app.fill(NODE_EXPANSION_BUTTON_COLOR);
-		app.pushMatrix();
-		app.translate(x+INDENT/4, y+NODE_HEIGHT/2);
-		app.scale(NODE_HEIGHT/4);
-		if (!cn.isExpanded())
-			app.rotate(radians(-90));
-		app.triangle(-1, -1, 1, -1, 0, 1);
-//		app.ellipse(x, y+NODE_HEIGHT/2, NODE_HEIGHT/2, NODE_HEIGHT/2);
-		app.popMatrix();
+  	// Draw item text.
+  	drawItemText(app, node.type() + " " + node.getDescription(), x, y, NODE_TEXT_COLOR);
 
-		// Check for click.
-		if (click.roundButtonWasClicked(x+INDENT/4, y+NODE_HEIGHT/2, NODE_HEIGHT/2))
-		{
-			cn.toggleExpanded();
-			click.reset();
-		}
+  	// Draw expand button and deal with it.
+  	if (node instanceof CompositeNode)
+  	{
+  		CompositeNode cn = (CompositeNode)node;
+  		// Draw button.
+  		app.fill(NODE_EXPANSION_BUTTON_COLOR);
+  		app.pushMatrix();
+  		app.translate(x+INDENT/4, y+NODE_HEIGHT/2);
+  		app.scale(NODE_HEIGHT/4);
+  		if (!cn.isExpanded())
+  			app.rotate(radians(-90));
+  		app.triangle(-1, -1, 1, -1, 0, 1);
+  //		app.ellipse(x, y+NODE_HEIGHT/2, NODE_HEIGHT/2, NODE_HEIGHT/2);
+  		app.popMatrix();
 
-	}
+  		// Check for click.
+  		if (click.roundButtonWasClicked(x+INDENT/4, y+NODE_HEIGHT/2, NODE_HEIGHT/2))
+  		{
+  			cn.toggleExpanded();
+  			click.reset();
+  		}
+
+  	}
+  }
 
   return (y + NODE_HEIGHT + NODE_SPACING);
 }
