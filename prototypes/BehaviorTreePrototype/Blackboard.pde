@@ -1,11 +1,6 @@
 /// Blackboard class.
 class Blackboard extends ConcurrentHashMap<String, Object>
 {
-	Pattern pattern1 = Pattern.compile("(\\$(\\w+))");
-	Pattern pattern2 = Pattern.compile("(\\$\\{(\\w+)\\})"); //" <-- this comment to avoid code-highlight issues in Atom
-	// Pattern pattern1 = Pattern.compile("([^\\\\]\\$(\\w+))");
-	// Pattern pattern2 = Pattern.compile("([^\\\\]\\$\\{(\\w+)\\})"); //" <-- this comment to avoid code-highlight issues in Atom
-
 	ArrayList<BlackboardTask> tasks;
 
 	Blackboard() {
@@ -28,31 +23,16 @@ class Blackboard extends ConcurrentHashMap<String, Object>
 	 * with values corresponding to these variables from the blackboard.
 	 */
 	String processExpression(String expr) {
-		expr = _processPattern(pattern1, expr);
-		expr = _processPattern(pattern2, expr);
+    expr += " "; // this is important for the regexp below
+
+    // Iterate over every variable.
+    for (Map.Entry<String, Object> entry : entrySet()) {
+      // Replace $varName by ${varName}.
+      expr = expr.replaceAll("\\$" + entry.getKey() + "([^\\w]+)", "\\$\\{" + entry.getKey() + "\\}$1");
+      // Replace ${varName} by actual value.
+      expr = expr.replaceAll("\\$\\{" + entry.getKey()+"\\}", entry.getValue().toString());
+    }
+    
 		return expr;
 	}
-
-	String _processPattern(Pattern pattern, String expr) {
-		Matcher matcher = pattern.matcher(expr);
-		while (matcher.find())
-		{
-  	  String varName = matcher.group(2); // candidate var name in blackboard
-  		if (containsKey(varName))
-      {
-        String value = get(varName).toString();
-        // // Make sure to replace $ by \$ to prevent double-replacement of variables.
-        // value = value.replaceAll("[^\\\\]\\$", "\\$");
-        // println("::"+varName + " =" + value);
-  			expr = matcher.replaceFirst(value);
-        matcher = pattern.matcher(expr);
-      }
-  		else
-  			println("Blackboard variable not found: " + varName);
-		}
-    // println("final exrepssion: " + expr.replaceAll("\\\\\\$", "$"));
-		return expr;
-//		return expr.replaceAll("\\\\\\$", "$");
-	}
-
 }
