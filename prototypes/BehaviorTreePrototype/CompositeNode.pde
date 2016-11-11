@@ -46,7 +46,7 @@ abstract class CompositeNode extends BaseNode
   }
 
   CompositeNode insertChild(BaseNode after, BaseNode node) {
-    children.add(children.indexOf(after)+1, node);
+    children.add(after == null ? 0 : children.indexOf(after)+1, node);
     node.setParent(this);
     needsInit = true;
     return this;
