@@ -52,12 +52,12 @@ class ParallelNode extends CompositeNode
 
     if (nSuccess == nChildren() || (!succeedOnAll && nSuccess >= 1))
     {
-      init(agent);
+      childrenRunning = null;
       return State.SUCCESS;
     }
     else if (nFailure == nChildren() || (!failOnAll && nFailure >= 1))
     {
-      init(agent);
+      childrenRunning = null;
       return State.FAILURE;
     }
     else

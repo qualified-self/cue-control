@@ -164,9 +164,9 @@ void keyPressed() {
     {
       case ' ':                togglePlay(); break;
       case 'R':                reset();      break;
-      case 'L':                serializer.load(); break;
-      case 'S':                serializer.save(); break;
-      case 'D':                serializer.saveAs(); break;
+      case 'L':                serializer.load(); reset(); break;
+      case 'S':                serializer.save(); reset(); break;
+      case 'D':                serializer.saveAs(); reset(); break;
       case ENTER: case RETURN: addSibling(); break;
       case TAB:                addChild(); break;
       case DELETE:             removeNode(); break;

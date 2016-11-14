@@ -38,6 +38,10 @@ public class Serializer {
 
       board = (Blackboard) ois.readObject();
       root  = (BaseNode)   ois.readObject();
+
+      board.build();
+      root.build();
+
       ois.close();
     } catch (Exception e) {
       println("ERROR saving to file: " + file + " [exception: " + e.toString() + "].");

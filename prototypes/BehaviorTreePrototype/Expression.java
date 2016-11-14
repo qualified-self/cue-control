@@ -1,16 +1,43 @@
 import javax.script.*;
+import java.io.Serializable;
 
 /// Expression class which allows to compute javascript-style expressions with variables from the blackboard.
-class Expression {
+class Expression implements Serializable {
 
 // Static components.
-  static ScriptEngineManager manager;
-  static ScriptEngine engine;
+  static transient ScriptEngineManager manager;
+  static transient ScriptEngine engine;
 
   Object expression;
 
   Expression(Object expression) {
     this.expression = expression;
+  }
+
+  /// Computes expression using blackboard and returns result.
+	Object eval(Blackboard agent) throws ScriptException {
+    _initManager();
+    if (expression instanceof String)
+      return engine.eval(agent.processExpression((String)expression));
+    else
+      return expression;
+	}
+
+  /// Eval without agent.
+  Object eval() throws ScriptException {
+    _initManager();
+    if (expression instanceof String)
+      return engine.eval((String)expression);
+    else
+      return expression;
+	}
+
+  public String toString() {
+    return expression.toString();
+  }
+
+
+  void _initManager() {
     if (manager == null) {
       manager = new ScriptEngineManager();
       engine = manager.getEngineByName("js");
@@ -26,24 +53,5 @@ class Expression {
     }
   }
 
-  /// Computes expression using blackboard and returns result.
-	Object eval(Blackboard agent) throws ScriptException {
-    if (expression instanceof String)
-      return engine.eval(agent.processExpression((String)expression));
-    else
-      return expression;
-	}
-
-  /// Eval without agent.
-  Object eval() throws ScriptException {
-    if (expression instanceof String)
-      return engine.eval((String)expression);
-    else
-      return expression;
-	}
-
-  public String toString() {
-    return expression.toString();
-  }
 
 }
