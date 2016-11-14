@@ -42,7 +42,7 @@ class CueNode extends BaseNode {
       step = 1;
     }
     else
-      println("Wrong step to call beginCue(): " + step);
+      System.out.println("Wrong step to call beginCue(): " + step);
 
     return true;
   }
@@ -125,7 +125,7 @@ class CueNode extends BaseNode {
   public String type() { return "CUE"; }
 
   float currentTime() {
-    return (chrono.elapsed())/1000.0f;
+    return (chrono.seconds());
   }
 
 }

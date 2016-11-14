@@ -1,5 +1,6 @@
+import java.util.ArrayList;
 
-abstract class CompositeNode extends BaseNode
+public abstract class CompositeNode extends BaseNode
 {
   ArrayList<BaseNode> children;
 
@@ -15,6 +16,14 @@ abstract class CompositeNode extends BaseNode
     super(description);
     children = new ArrayList<BaseNode>();
     expanded = true;
+    build();
+  }
+
+  void build() {
+    if (children != null) {
+      for (BaseNode node : children)
+        node.build();
+    }
   }
 
   CompositeNode setExpanded(boolean expanded) {
@@ -30,7 +39,7 @@ abstract class CompositeNode extends BaseNode
     expanded = !expanded;
   }
 
-  public CompositeNode setDecorator(Decorator decorator) {
+  CompositeNode setDecorator(Decorator decorator) {
     return (CompositeNode)super.setDecorator(decorator);
   }
 
@@ -74,6 +83,9 @@ abstract class CompositeNode extends BaseNode
     needsInit = true;
     return this;
   }
+
+  ArrayList<BaseNode> getChildren() { return children; }
+  // CompositeNode insertChild(... )
 
   int nChildren() { return children.size(); }
 }

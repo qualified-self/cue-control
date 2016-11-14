@@ -1,3 +1,5 @@
+import ddf.minim.AudioPlayer;
+
 class SoundCueNode extends CueNode {
 
   AudioPlayer player;
@@ -12,8 +14,8 @@ class SoundCueNode extends CueNode {
 
   public SoundCueNode(String description, String fileName, float preWait, float postWait) {
     super(description, preWait, 0, postWait);
-    player = minim.loadFile(fileName);
-    runningTime = player.getMetaData().length() / 1000.0;
+    player = BehaviorTreePrototype.instance().minim().loadFile(fileName);
+    runningTime = player.getMetaData().length() / 1000.0f;
   }
 
   boolean doBeginCue(Blackboard agent) {

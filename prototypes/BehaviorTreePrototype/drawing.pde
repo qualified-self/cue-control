@@ -120,7 +120,7 @@ int drawTree(PApplet app, BaseNode node, int x, int y)
 
 		if (cn.isExpanded())
 		{
-	    for (BaseNode child : cn.children)
+	    for (BaseNode child : cn.getChildren())
 			{
 	      y = drawTree(app, child, x+INDENT, y);
 	    }

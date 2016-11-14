@@ -1,3 +1,6 @@
+import oscP5.*;
+import oscP5.*;
+
 class OscSendNode extends CueNode {
 
   String addrPattern;
@@ -31,9 +34,9 @@ class OscSendNode extends CueNode {
     {
       if (argExpression != null)
         message.add(new Object[] { argExpression.eval(agent) });
-      oscP5.send(message, remoteLocation);
+      BehaviorTreePrototype.instance().oscP5().send(message, BehaviorTreePrototype.instance().remoteLocation());
     } catch (Exception e) {
-      println("Exception " + e.toString());
+      BehaviorTreePrototype.instance().println("Exception " + e.toString());
       return false; // fails
     }
 

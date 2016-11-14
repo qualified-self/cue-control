@@ -1,12 +1,14 @@
+import java.io.Serializable;
 
-abstract class BaseNode
+public abstract class BaseNode implements Serializable
 {
-  State state = State.SUCCESS;
+  transient State state = State.SUCCESS;
+
   String description;
 
   Decorator decorator;
 
-  boolean needsInit;
+  transient boolean needsInit;
 
   CompositeNode parent;
 
@@ -19,39 +21,44 @@ abstract class BaseNode
   {
     this.parent = null;
     this.description = description;
+    build();
+  }
+
+  void build() {
     state = State.UNDEFINED;
     needsInit = true;
   }
 
-  public BaseNode setDecorator(Decorator decorator) {
+  BaseNode setDecorator(Decorator decorator) {
     decorator.setNode(this);
     this.decorator = decorator;
     needsInit = true;
     return this;
   }
 
-  public boolean hasDecorator() { return decorator != null; }
+  boolean hasDecorator() { return decorator != null; }
 
-  public Decorator getDecorator() { return decorator; }
+  Decorator getDecorator() { return decorator; }
 
-  public void removeParent() {
+  void removeParent() {
     parent = null;
   }
 
-  public BaseNode setParent(CompositeNode parent) {
+  BaseNode setParent(CompositeNode parent) {
     if (hasParent()) {
-      println("Cannot set parent: already has one. Remove it first.");
+//      System.out.println("Cannot set parent: already has one. Remove it first.");
+      new Exception().printStackTrace();
     }
     else
       this.parent = parent;
     return this;
   }
 
-  public boolean hasParent() { return parent != null; }
+  boolean hasParent() { return parent != null; }
 
-  public CompositeNode getParent() { return parent; }
+  CompositeNode getParent() { return parent; }
 
-  public void init(Blackboard agent) {
+  void init(Blackboard agent) {
     needsInit = false;
     if (hasDecorator())
       decorator.init(agent);
@@ -62,7 +69,7 @@ abstract class BaseNode
     state = State.UNDEFINED;
   }
 
-  public State execute(Blackboard agent)
+  State execute(Blackboard agent)
   {
     if (needsInit) {
       init(agent);
@@ -79,7 +86,7 @@ abstract class BaseNode
 
   String getDefaultDescription() { return ""; }
 
-  public abstract State doExecute(Blackboard agent);
-  public abstract void doInit(Blackboard agent);
-  public abstract String type();
+  abstract State doExecute(Blackboard agent);
+  abstract void doInit(Blackboard agent);
+  abstract String type();
 }

@@ -1,12 +1,14 @@
 import java.lang.reflect.*;
+import javax.script.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /// Allows the dynamic creation of nodes.
 class NodeFactory {
 
-  PApplet app;
-
-  NodeFactory(PApplet app) {
-    this.app = app;
+  NodeFactory() {
   }
 
   /// Creates a new node based on description string. Returns null if error.
@@ -20,7 +22,7 @@ class NodeFactory {
 
     // Wrong statement.
     if (list.isEmpty()) {
-      app.println("Invalid empty string.");
+      System.out.println("Invalid empty string.");
       return null;
     }
 
@@ -42,24 +44,24 @@ class NodeFactory {
     int nArguments = arguments.length;
     Object[] argumentObjects = new Object[nArguments+1];
     Class[] argumentClasses  = new Class[nArguments+1];
-    argumentObjects[0] = app;
-    argumentClasses[0] = app.getClass();
+    // argumentObjects[0] = app;
+    // argumentClasses[0] = app.getClass();
     for (int i=0; i<nArguments; i++) {
       try {
         Expression expr = new Expression(arguments[i]);
         Object obj = expr.eval();
-        argumentObjects[i+1] = obj;
-        argumentClasses[i+1] = obj.getClass();
+        argumentObjects[i] = obj;
+        argumentClasses[i] = obj.getClass();
       } catch (ScriptException e) {
-        argumentObjects[i+1] = arguments[i];
-        argumentClasses[i+1] = String.class;
+        argumentObjects[i] = arguments[i];
+        argumentClasses[i] = String.class;
       }
     }
 
     // Try to generate new instance.
     try {
       // Gather all constructors.
-      classType = app.getClass().getName() + "$" + classType;
+      //classType = app.getClass().getName() + "$" + classType;
       Class<?> nodeClass = Class.forName(classType);
       Constructor<?>[] constructors = nodeClass.getConstructors();
       for (Constructor<?> c : constructors)
@@ -70,15 +72,15 @@ class NodeFactory {
         }
         catch (IllegalArgumentException e) {}
       }
-      app.println("No valid constructor found for arguments.");
-      app.println("Classtype = " + classType);
-      app.println("Arguments = " + argumentObjects);
+      // app.println("No valid constructor found for arguments.");
+      // app.println("Classtype = " + classType);
+      // app.println("Arguments = " + argumentObjects);
 
       return null;
       // Call constructor.
     } catch (Exception e) {
-        app.println("ERROR: error creating node of class " + classType + ".");
-        app.println(e);
+        // app.println("ERROR: error creating node of class " + classType + ".");
+        // app.println(e);
         return null;
     }
   }

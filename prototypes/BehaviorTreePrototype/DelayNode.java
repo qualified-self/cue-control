@@ -1,3 +1,5 @@
+import processing.core.PApplet;
+
 class DelayNode extends BaseNode {
 
 	Chrono chrono;
@@ -17,7 +19,7 @@ class DelayNode extends BaseNode {
 		if (!chrono.isRunning())
 			chrono.restart();
 
-		return (chrono.hasPassed(ceil(timeOut*1000)) ? State.SUCCESS : State.RUNNING);
+		return (chrono.hasPassed(PApplet.ceil(timeOut*1000)) ? State.SUCCESS : State.RUNNING);
   }
 
   public void doInit(Blackboard agent)
@@ -29,7 +31,7 @@ class DelayNode extends BaseNode {
 
   String getDefaultDescription() {
 		float timeLeft = timeOut - chrono.elapsed()/1000.0f;
-		return nf(max(timeLeft, 0), 0, 1);
+		return PApplet.nf(PApplet.max(timeLeft, 0), 0, 1);
   }
 
 }

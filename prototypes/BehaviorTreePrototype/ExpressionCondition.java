@@ -12,7 +12,7 @@ class ExpressionCondition extends Condition {
       return ((Boolean)expression.eval(agent)).booleanValue();
     }
     catch (Exception e) {
-      println("ERROR: " + e.toString());
+//      println("ERROR: " + e.toString());
       return false;
     }
   }

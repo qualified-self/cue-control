@@ -1,9 +1,11 @@
-// Static components.
-ScriptEngineManager manager;
-ScriptEngine engine;
+import javax.script.*;
 
 /// Expression class which allows to compute javascript-style expressions with variables from the blackboard.
 class Expression {
+
+// Static components.
+  static ScriptEngineManager manager;
+  static ScriptEngine engine;
 
   Object expression;
 
@@ -14,11 +16,12 @@ class Expression {
       engine = manager.getEngineByName("js");
       try {
         // Load library for math operations.
-        java.util.Scanner s = new java.util.Scanner(new java.net.URL("file://" + dataPath("math.js")).openStream()).useDelimiter("\\A");
+        String mathFilePath = BehaviorTreePrototype.instance().dataPath("math.js");
+        java.util.Scanner s = new java.util.Scanner(new java.net.URL("file://" + mathFilePath).openStream()).useDelimiter("\\A");
         engine.eval(s.hasNext() ? s.next() : "");
       }
       catch (Exception e) {
-        println(e);
+        System.out.println(e);
       }
     }
   }

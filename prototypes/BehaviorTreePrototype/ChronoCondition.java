@@ -1,5 +1,7 @@
+import processing.core.PApplet;
+
 /// Condition that triggers when a certain time has passed.
-class ChronoCondition extends Condition {
+public class ChronoCondition extends Condition {
 
 	Chrono chrono;
 
@@ -18,7 +20,7 @@ class ChronoCondition extends Condition {
 
   public String toString() {
 		float timeLeft = timeOut - chrono.elapsed()/1000.0f;
-		return "Time left: " + nf(max(timeLeft, 0), 0, 1) + "s";
+		return "Time left: " + PApplet.nf(PApplet.max(timeLeft, 0), 0, 1) + "s";
   }
 
 }

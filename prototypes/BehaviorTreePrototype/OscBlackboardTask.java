@@ -1,6 +1,7 @@
-class OscBlackboardTask extends BlackboardTask
+public class OscBlackboardTask extends BlackboardTask
 {
 	String varName;
+  String message;
 	Object value;
 
 	boolean valueReceived;
@@ -9,13 +10,19 @@ class OscBlackboardTask extends BlackboardTask
 	OscBlackboardTask(String message, String varName)
 	{
 		this.varName = varName;
+    this.message = message;
 
 		value = null;
 		valueReceived = false;
 		hasStarted = false;
 
-		oscP5.plug(this, "process", message);
+    build();
 	}
+
+  void build() {
+    if (message != null)
+		  BehaviorTreePrototype.instance().oscP5().plug(this, "process", message);
+  }
 
 	void process(int value) {
 		process(new Integer(value));
@@ -35,12 +42,16 @@ class OscBlackboardTask extends BlackboardTask
 
 	void process(Object value)
 	{
-		println("OSC blackboard task received: " + value);
+		BehaviorTreePrototype.instance().println("OSC blackboard task received: " + value);
 		this.value = value;
 		valueReceived = true;
 	}
 
-	void execute(Blackboard agent)
+  void init(Blackboard agent)
+  {
+  }
+
+  void execute(Blackboard agent)
 	{
 		if (valueReceived)
 		{

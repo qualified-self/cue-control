@@ -9,7 +9,8 @@ class KeyCondition extends Condition {
 
   boolean check(Blackboard agent)
   {
-    return (keyPressed && key == hotKey);
+    return (BehaviorTreePrototype.instance().keyPressed &&
+            BehaviorTreePrototype.instance().key == hotKey);
   }
 
   public String toString() {

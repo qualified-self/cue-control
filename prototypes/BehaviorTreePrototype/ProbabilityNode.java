@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import processing.core.PApplet;
+import javax.script.*;
+
 class ProbabilityNode extends CompositeNode
 {
 	ArrayList<Expression> weighting;
@@ -52,13 +56,13 @@ class ProbabilityNode extends CompositeNode
 		float totalSum = 0;
 		try {
 			for (int i=0; i<nChildren(); i++)
-				totalSum += ( frozenWeighting[i] = max((float) ((Number)weighting.get(i).eval(agent)).doubleValue(), 0) );
+				totalSum += ( frozenWeighting[i] = PApplet.max((float) ((Number)weighting.get(i).eval(agent)).doubleValue(), 0) );
 		} catch (ScriptException e) {
 			return State.FAILURE;
 		}
 
 		// Generate a number between 0 and the sum of the weights
-		float chosen = (float)random(totalSum);
+		float chosen = (float)BehaviorTreePrototype.instance().random(totalSum);
 
 		float sum = 0;
 		for (int i=0; i<nChildren(); i++)
@@ -76,7 +80,7 @@ class ProbabilityNode extends CompositeNode
 			}
 		}
 
-		println("ERROR: This shouldn't happen");
+		//println("ERROR: This shouldn't happen");
 		return State.FAILURE;
   }
 

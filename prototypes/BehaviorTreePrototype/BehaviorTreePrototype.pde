@@ -1,10 +1,9 @@
 import oscP5.*;
 import netP5.*;
 import ddf.minim.*;
-import javax.script.*;
 import java.util.regex.*;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.io.*;
 
 final int INDENT = 50;
 final int NODE_HEIGHT = 25;
@@ -25,6 +24,7 @@ final color NODE_EXPANSION_BUTTON_COLOR = #333333;
 OscP5 oscP5;
 NetAddress remoteLocation;
 Minim minim;
+Serializer serializer = new Serializer();
 
 Blackboard board = new Blackboard();
 BaseNode root;
@@ -40,6 +40,10 @@ boolean editing;
 // Placeholder node used to add/edit new nodes.
 PlaceholderNode placeholderNode = new PlaceholderNode();
 
+public OscP5 oscP5() { return oscP5; }
+public Minim minim() { return minim; }
+public NetAddress remoteLocation() { return remoteLocation; }
+
 void settings() {
   size(displayWidth-BLACKBOARD_WIDTH, displayHeight);
 }
@@ -50,11 +54,14 @@ void setup() {
   BlackboardApplet sa = new BlackboardApplet();
 //  PApplet.runSketch(args, sa);
 
+  // Iniialize instance.
+  inst = this;
+
   noStroke();
 //  frameRate(5);
 
   // Create factory.
-  factory = new NodeFactory(this);
+  factory = new NodeFactory();
 
   // start oscP5, listening for incoming messages.
   oscP5 = new OscP5(this, OSC_RECV_PORT);
@@ -157,6 +164,9 @@ void keyPressed() {
     {
       case ' ':                togglePlay(); break;
       case 'R':                reset();      break;
+      case 'L':                serializer.load(); break;
+      case 'S':                serializer.save(); break;
+      case 'D':                serializer.saveAs(); break;
       case ENTER: case RETURN: addSibling(); break;
       case TAB:                addChild(); break;
       case DELETE:             removeNode(); break;
@@ -265,4 +275,17 @@ void oscEvent(OscMessage msg) {
   print("### received an osc message.");
   print(" addrpattern: "+msg.addrPattern());
   println(" typetag: "+msg.typetag());
+}
+
+public static String stateToString(State state) {
+	if (state == State.RUNNING) return "RUNNING";
+	else if (state == State.SUCCESS) return "SUCCESS";
+	else if (state == State.FAILURE) return "FAILURE";
+	else return "UNDEFINED";
+}
+
+private static BehaviorTreePrototype inst;
+
+public static BehaviorTreePrototype instance() {
+  return inst;
 }

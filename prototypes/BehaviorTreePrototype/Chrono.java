@@ -32,7 +32,6 @@ class Chrono {
 		this(true);
 	}
 
-
   Chrono(boolean startNow) {
 	  if (startNow)
 	    restart();
@@ -47,9 +46,8 @@ class Chrono {
 	}
 
 	void restart(long offset) {
-	  _startTime = millis();
 	  _offset    = offset;
-	  _isRunning = true;
+    resume();
 	}
 
 	void stop() {
@@ -58,7 +56,7 @@ class Chrono {
 	}
 
 	void resume() {
-	  _startTime = millis();
+	  _startTime = BehaviorTreePrototype.instance().millis();
 	  _isRunning = true;
 	}
 
@@ -76,7 +74,7 @@ class Chrono {
 	}
 
 	long elapsed() {
-	  return _offset + (_isRunning ? (millis() - _startTime) : 0);
+	  return _offset + (_isRunning ? (BehaviorTreePrototype.instance().millis() - _startTime) : 0);
 	}
 
 	boolean hasPassed(long timeout)
@@ -96,7 +94,7 @@ class Chrono {
 	}
 
 	float seconds() {
-	  return (millis()/1000.0f);
+	  return (elapsed() / 1000.0f);
 	}
 
   // Keeps track of start time (in chosen time unit).

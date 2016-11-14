@@ -1,6 +1,7 @@
-class OscReceiveNode extends BaseNode
+public class OscReceiveNode extends BaseNode
 {
 	String varName;
+  String message;
 	Object value;
 
 	float timeOut;
@@ -36,13 +37,19 @@ class OscReceiveNode extends BaseNode
 		this.varName = varName;
 		this.stateOnNoValueReceived = stateOnNoValueReceived;
 		this.timeOut = timeOut*1000;
+    this.message = message;
 
 		chrono = new Chrono(false);
 
 		hasStarted = false;
 
-		oscP5.plug(this, "process", message);
+    build();
 	}
+
+  void build() {
+    if (message != null)
+		  BehaviorTreePrototype.instance().oscP5().plug(this, "process", message);
+  }
 
 	void process(int value) {
 		process(new Integer(value));
@@ -62,7 +69,7 @@ class OscReceiveNode extends BaseNode
 
 	void process(Object value)
 	{
-		println("OSC received: " + value);
+//		println("OSC received: " + value);
 		if (hasStarted)
 		{
 			this.value = value;

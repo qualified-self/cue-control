@@ -1,11 +1,21 @@
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.Map;
+import java.io.Serializable;
+
 /// Blackboard class.
-class Blackboard extends ConcurrentHashMap<String, Object>
+public class Blackboard extends ConcurrentHashMap<String, Object> implements Serializable
 {
 	ArrayList<BlackboardTask> tasks;
 
 	Blackboard() {
 		tasks = new ArrayList<BlackboardTask>();
 	}
+
+  void build() {
+		for (BlackboardTask task : tasks)
+			task.build();
+  }
 
 	Blackboard addTask(BlackboardTask task)
 	{
@@ -32,7 +42,7 @@ class Blackboard extends ConcurrentHashMap<String, Object>
       // Replace ${varName} by actual value.
       expr = expr.replaceAll("\\$\\{" + entry.getKey()+"\\}", entry.getValue().toString());
     }
-    
+
 		return expr;
 	}
 }

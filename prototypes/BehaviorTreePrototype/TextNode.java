@@ -1,4 +1,4 @@
-class TextNode extends BaseNode {
+public class TextNode extends BaseNode {
 
 	String text;
 
@@ -10,11 +10,11 @@ class TextNode extends BaseNode {
 
 	State doExecute(Blackboard agent)
 	{
-		println(agent.processExpression(text));
+		System.out.println(agent.processExpression(text));
 		return State.SUCCESS;
 	}
 
 	void doInit(Blackboard agent) {}
 
-	String type() { return "TXT"; }
+	public String type() { return "TXT"; }
 }
