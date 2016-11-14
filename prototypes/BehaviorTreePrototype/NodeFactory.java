@@ -42,10 +42,10 @@ class NodeFactory {
   {
     // Convert constructor arguments to objects.
     int nArguments = arguments.length;
-    Object[] argumentObjects = new Object[nArguments+1];
-    Class[] argumentClasses  = new Class[nArguments+1];
-    // argumentObjects[0] = app;
-    // argumentClasses[0] = app.getClass();
+    Object[] argumentObjects = new Object[nArguments];
+    Class[] argumentClasses  = new Class[nArguments];
+    // argumentObjects[0] = this;
+    // argumentClasses[0] = this.getClass();
     for (int i=0; i<nArguments; i++) {
       try {
         Expression expr = new Expression(arguments[i]);

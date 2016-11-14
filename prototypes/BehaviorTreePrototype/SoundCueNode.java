@@ -2,7 +2,9 @@ import ddf.minim.AudioPlayer;
 
 class SoundCueNode extends CueNode {
 
-  AudioPlayer player;
+  transient AudioPlayer player;
+
+  String fileName;
 
   public SoundCueNode(String fileName) {
     this(fileName, fileName, 0, 0);
@@ -14,8 +16,15 @@ class SoundCueNode extends CueNode {
 
   public SoundCueNode(String description, String fileName, float preWait, float postWait) {
     super(description, preWait, 0, postWait);
-    player = BehaviorTreePrototype.instance().minim().loadFile(fileName);
-    runningTime = player.getMetaData().length() / 1000.0f;
+    this.fileName = fileName;
+    build();
+  }
+
+  void build() {
+    if (fileName != null) {
+      player = BehaviorTreePrototype.instance().minim().loadFile(fileName);
+      runningTime = player.getMetaData().length() / 1000.0f;
+    }
   }
 
   boolean doBeginCue(Blackboard agent) {
