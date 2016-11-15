@@ -37,6 +37,9 @@ boolean playing;
 // Are we currently in the process of adding/editing a node.
 boolean editing;
 
+// Vertical offset (for scrolling)
+float yOffset = 0;
+
 // Placeholder node used to add/edit new nodes.
 PlaceholderNode placeholderNode = new PlaceholderNode();
 
@@ -91,7 +94,7 @@ void draw() {
   // Draw tree.
   if (click.wasClicked())
     selectedNode = null;
-  drawTree(this, root, INDENT, NODE_HEIGHT);
+  drawTree(this, root, INDENT, (int)yOffset+NODE_HEIGHT);
   click.reset();
 
   if (isPlaying() && !isEditing()) {
@@ -183,6 +186,10 @@ void keyPressed() {
       default:
     }
   }
+}
+
+void mouseWheel(MouseEvent e) {
+  yOffset += e.getCount() * NODE_HEIGHT;
 }
 
 void reset() {
