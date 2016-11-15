@@ -74,6 +74,7 @@ void setup() {
   root = new SequentialNode();
   board.addTask(new OscBlackboardTask("sensor", "/bitalino/0"));
   board.addTask(new ConditionBlackboardTask("spacebar", new KeyCondition(' ')));
+  reset();
 
   setPlayState(false);
   setEditState(false);
