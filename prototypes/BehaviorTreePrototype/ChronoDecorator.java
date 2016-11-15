@@ -7,10 +7,12 @@ class ChronoDecorator extends WhileDecorator {
   ChronoDecorator(float timeOut) {
 		super(new ChronoCondition(timeOut));
 		chrono = ((ChronoCondition)condition).getChrono();
+//    chrono.stop();
 	}
 
   public void doInit(Blackboard agent) {
     super.doInit(agent);
+//    chrono.stop();
   }
 
   public State doExecute(Blackboard agent) {
@@ -21,7 +23,7 @@ class ChronoDecorator extends WhileDecorator {
 
 		State status = super.doExecute(agent);
 		if (status != State.RUNNING)
-			chrono.stop();
+      chrono.stop();
 
 		return status;
   }
