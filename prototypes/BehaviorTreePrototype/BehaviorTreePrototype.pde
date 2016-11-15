@@ -74,9 +74,22 @@ void setup() {
 
   minim = new Minim(this);
 
-  root = new SequentialNode();
-  board.addTask(new OscBlackboardTask("sensor", "/bitalino/0"));
-  board.addTask(new ConditionBlackboardTask("spacebar", new KeyCondition(' ')));
+
+//  root = new SequentialNode();
+//  root = factory.createNode("SelectorNode \"Go man!\" false");
+  root = createTreeOtherSelf();
+//  root = simpleTest();
+//  root = createTreeOct25();
+//  root = createTreeOct25();
+
+  // board.put("test1", "1");
+  // board.put("test2", "2");
+  // board.put("test3", "3");
+
+  board.addTask(new OscBlackboardTask("/test/sync", "raw_sync"));
+  // board.addTask(new ConditionBlackboardTask("spacebar", new ExpressionCondition("$test1 == 1 && $test1 > 0 && $test2 == 2 && $test3 == 3")));
+  // board.addTask(new ConditionBlackboardTask("spacebar", new KeyCondition(' ')));
+
   reset();
 
   setPlayState(false);
