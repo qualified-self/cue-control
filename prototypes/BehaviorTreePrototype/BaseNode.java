@@ -78,6 +78,10 @@ public abstract class BaseNode implements Serializable
       state = decorator.execute(agent);
     else
       state = doExecute(agent);
+
+    if (state != State.RUNNING)
+      needsInit = true;
+
     return state;
   }
 
@@ -89,4 +93,6 @@ public abstract class BaseNode implements Serializable
   abstract State doExecute(Blackboard agent);
   abstract void doInit(Blackboard agent);
   abstract String type();
+
+  void scheduleInit() { needsInit = true; }
 }

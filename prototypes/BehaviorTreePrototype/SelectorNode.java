@@ -14,18 +14,18 @@ class SelectorNode extends CompositeNode
   public SelectorNode(String description, boolean restart)
   {
     super(description);
-    currentPosition = -1;
     this.restart = restart;
   }
 
   public State doExecute(Blackboard agent)
   {
-    if (currentPosition == -1) //starting out
-    {
-      init(agent);
-      currentPosition = 0;
-    }
-    else if (restart) // restart on running
+    // if (currentPosition == -1) //starting out
+    // {
+    //   init(agent);
+    //   currentPosition = 0;
+    // }
+    // else
+    if (restart) // restart on running
     {
       currentPosition = 0;
     }
@@ -40,7 +40,7 @@ class SelectorNode extends CompositeNode
       currentPosition++;
       if (currentPosition == nChildren()) //all of the children failed
       {
-        currentPosition = -1;
+        //currentPosition = -1;
         return State.FAILURE;
       } else
         currentlyRunningNode = children.get(currentPosition);
@@ -50,13 +50,14 @@ class SelectorNode extends CompositeNode
       return State.RUNNING;
     else
     {
-      currentPosition = -1;
+//      currentPosition = -1;
       return State.SUCCESS;
     }
   }
 
   void doInit(Blackboard agent)
   {
+    currentPosition = 0;
 //    currentPosition = -1;
     for (BaseNode node : children)
       node.init(agent);

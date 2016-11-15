@@ -27,22 +27,28 @@ class WhileDecorator extends Decorator {
         running = true;
       else
       {
-        init(agent);
+        scheduleInit();
         return State.SUCCESS; // default if no loop
       }
     }
 
     // Running.
     State status = node.doExecute(agent);
+
     if (status == State.SUCCESS) {
+      node.scheduleInit();
+
       if (condition.check(agent))
         status = State.RUNNING;
       else
       {
-        init(agent);
+        scheduleInit();
         status = State.SUCCESS;
       }
     }
+    
+    else if (status == State.FAILURE)
+      node.scheduleInit();
 
     return status;
   }

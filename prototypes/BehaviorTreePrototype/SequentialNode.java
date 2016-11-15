@@ -15,12 +15,6 @@ class SequentialNode extends CompositeNode
 
   public State doExecute(Blackboard agent)
   {
-    if (currentPosition == -1) //starting out
-    {
-      init(agent);
-      currentPosition = 0;
-    }
-
     if (nChildren() == 0)
       return State.SUCCESS;
 
@@ -31,7 +25,6 @@ class SequentialNode extends CompositeNode
     {
       if (currentPosition == nChildren()-1) //finished last task
       {
-        currentPosition = -1; //indicate we are not running anything
         return State.SUCCESS;
       }
       else
@@ -41,14 +34,16 @@ class SequentialNode extends CompositeNode
         result = currentTask.execute(agent);
       }
     }
-    if (result == State.FAILURE)
-      currentPosition = -1;
+
+    // if (result == State.FAILURE)
+    //   done();
+
     return result;
   }
 
   void doInit(Blackboard agent)
   {
-    currentPosition = -1;
+    currentPosition = 0;
     for (BaseNode node : children)
       node.init(agent);
   }

@@ -30,9 +30,9 @@ class ParallelNode extends CompositeNode
 
   public State doExecute(Blackboard agent)
   {
-    // This means init() wasn't called...
-    if (childrenRunning == null || childrenRunning.size() != nChildren())
-      init(agent);
+    // // This means init() wasn't called...
+    // if (childrenRunning == null || childrenRunning.size() != nChildren())
+    //   init(agent);
 
     // go through all children and update the childrenRunning
     // TODO: implement avec ceci: https://github.com/NetEase/pomelo-bt/blob/master/lib/node/parallel.js
@@ -52,12 +52,12 @@ class ParallelNode extends CompositeNode
 
     if (nSuccess == nChildren() || (!succeedOnAll && nSuccess >= 1))
     {
-      childrenRunning = null;
+//      childrenRunning = null;
       return State.SUCCESS;
     }
     else if (nFailure == nChildren() || (!failOnAll && nFailure >= 1))
     {
-      childrenRunning = null;
+//      childrenRunning = null;
       return State.FAILURE;
     }
     else

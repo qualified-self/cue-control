@@ -41,7 +41,8 @@ class GuardDecorator extends Decorator {
     // Running.
     State status = node.doExecute(agent);
     if (status != State.RUNNING)
-      init(agent);
+      node.scheduleInit();
+
     return status;
   }
 
