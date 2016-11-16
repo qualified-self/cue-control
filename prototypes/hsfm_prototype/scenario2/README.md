@@ -31,10 +31,10 @@ These actuators are controlled via OSC in a MAX/MSP patch (to be uploaded here).
 
 #The scenario
 This new scenario was written by Sofian. It is presented [here](https://github.com/qualified-self/documents/blob/master/cue-trigger-system/Scenarios.md). My corresponding HFSM structure is implemented as follows:
-![image](hfsm-scenario-2.jpg)
+![image](hfsm-scenario-2.jpeg)
 
 (still missing pictures of the sub state machines)
 
 #The UI
 The UI has changed a little bit since the first scenario. Follows a screenshot:
-![image](hfsm-screenshot-2.jpg)
+![image](hfsm-screenshot-2.jpeg)
