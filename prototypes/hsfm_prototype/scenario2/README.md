@@ -31,10 +31,18 @@ These actuators are controlled via OSC in a MAX/MSP patch (to be uploaded here).
 
 #The scenario
 This new scenario was written by Sofian. It is presented [here](https://github.com/qualified-self/documents/blob/master/cue-trigger-system/Scenarios.md). My corresponding HFSM structure is implemented as follows:
+
 ![image](hfsm-scenario-2.jpeg)
 
 (still missing pictures of the sub state machines)
 
 #The UI
 The UI has changed a little bit since the first scenario. Follows a screenshot:
+
 ![image](hfsm-screenshot-2.jpeg)
+
+To note:
+
+- Key ' ' executes the demo. The 's' key stops the execution;
+- Keys '1', '2', and '3' change the state machine which is being currently exhibited. A label on the top left represents the State Machine is is being presented in the moment. This label should allow navigation between different state machines (not implemented);
+- States are now initialized in a random x/y position, but they can be dragged to whatever position users find convenient.
