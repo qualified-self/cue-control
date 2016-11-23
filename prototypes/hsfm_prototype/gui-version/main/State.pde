@@ -44,6 +44,14 @@ public class State {
     this.is_actual = false;
   }
 
+  //constructor
+  public State(String name, int x, int y) {
+    this(name);
+    this.x = x;
+    this.y = y;
+
+  }
+
   String get_name() {
     return this.name;
   }
@@ -214,13 +222,22 @@ public class State {
 
   //remove a task t from this state
   void remove_task(Task t) {
-    if (tasks.contains(t))
+    if (tasks.contains(t)) {
+      //removes the physical task
       this.tasks.removeElement(t);
-    else
+      //removes the task in gui
+      this.remove_task_in_accordion_gui(t);
+    } else
       if (debug) println("Unable to remove task " + t.name + " from state " + this.name);
 
     //updates the gui
     remove_task_in_accordion_gui(t);
+  }
+
+  //removes all tasks associated to this state
+  void remove_all_tasks() {
+    for (Task t : tasks)
+      this.remove_task(t);
   }
 
   //add a connection to this state

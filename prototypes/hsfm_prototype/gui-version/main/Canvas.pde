@@ -41,13 +41,14 @@ class Canvas {
   //creates a new state and adds its to the root state machine
   void create_state() {
     println("creates a state");
-    State newState = new State("NEW_STATE_" + ((int)random(0, 1000)));
+    State newState = new State("NEW_STATE_" + ((int)random(0, 1000)), mouseX, mouseY);
     root.add_state(newState);
   }
 
   //gets the state where the mouse is hoving and removes it form the root state machine
   void remove_state() {
     println("remove a state");
+    root.remove_state(mouseX, mouseY);
   }
 
   void keyPressed(){

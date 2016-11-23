@@ -215,10 +215,27 @@ public class StateMachine extends Task {
 
   //remove a state s from this State_Machine
   void remove_state(State s) {
-    if (states.contains(s))
+    if (states.contains(s)) {
+      //remove the state fmor the list
       this.states.removeElement(s);
-    else
+      //remove all tasks associated with the deleted state
+      s.remove_all_tasks();
+      //removes its ui components
+      cp5.remove(s.name);
+    } else
       println("Unable to remove state " + s.name + " from State_Machine " + this.name);
+  }
+  //removes a state based on a certain x y position in the screen
+  void remove_state(int x, int y) {
+    //iterates over all states
+    for (State s : states)
+      //if it intersects with a certain x y position
+      if (s.intersects_gui(x, y)) {
+        //removes this state
+        this.remove_state(s);
+        //and breaks (one remotion per time))
+        return;
+      }
   }
 
   //add a task t to the initialization of this State_Machine
