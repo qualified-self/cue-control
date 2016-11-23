@@ -12,7 +12,8 @@
 //Testing_Connection    t = new Testing_Connection(this);
 //Scenario t = new Scenario(this);
 //Testing_Conditions    t = new Testing_Conditions(this);
-Scenario t    = new Scenario(this);
+//Scenario t    = new Scenario(this);
+Canvas t      = new Canvas(this);
 Blackboard bb = new Blackboard();
 
 boolean debug = false;

@@ -9,6 +9,8 @@
 //importing whatever we need
 import java.util.*;
 
+boolean is_dragging_someone = false;
+
 ////////////////////////////////////////
 //the state class
 public class State {
@@ -286,17 +288,21 @@ public class State {
     //if mouse if moving
     if (mousePressed) {
       //if intersects for the first time
-      if (this.intersects_gui(mouseX, mouseY))
+      if (this.intersects_gui(mouseX, mouseY) & !is_dragging_someone) {
         //set move equals true
         moving= true;
+        is_dragging_someone = true;
+      }
 
       //if is moving, updates the value
       if (moving)
         set_position_gui(mouseX, mouseY);
       //if mouse is released
-    } else
+    } else {
       //stops moving
       moving = false;
+      is_dragging_someone = false;
+    }
   }
 
   //inits gui elements related to controlP5
@@ -367,7 +373,7 @@ public class State {
   void draw_status() {
     noStroke();
 
-    if(is_actual) 
+    if(is_actual)
     //if (status==Status.RUNNING)
     //if (status==Status.RUNNING | (status==Status.DONE & is_actual))
       fill (0, green+75, 0);

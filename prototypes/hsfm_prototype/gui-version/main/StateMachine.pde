@@ -39,6 +39,9 @@ public class StateMachine extends Task {
   //run all tasks associated to this node
   void run () {
     this.status = Status.RUNNING;
+
+    update_actual(begin);
+
     reset_state_timer();
     actual.run();
     println("running the State_Machine " + this.name);
@@ -56,7 +59,8 @@ public class StateMachine extends Task {
 
     //updating the actual
     //actual = begin;
-    update_actual(begin);
+    //update_actual(begin);
+    update_actual(null);
 
     //resets the stateTimer for this state machine
     reset_state_timer();
@@ -80,6 +84,7 @@ public class StateMachine extends Task {
     //updating the actual
     //actual = begin;
     //update_actual(begin);
+    update_actual(null);
 
     //resets the stateTimer for this state machine
     reset_state_timer();
@@ -91,6 +96,10 @@ public class StateMachine extends Task {
 
   void update_actual (State next) {
     actual.is_actual = false;
+
+    //does nothing if the actuall will be null
+    if (next==null) return;
+
     //updating the actual
     actual = next;
 
@@ -258,5 +267,9 @@ public class StateMachine extends Task {
       this.stateTimerMilestone = (float)millis()/1000;
       this.stateTimer          = 0;
       update_global_variables();
+  }
+
+  int get_states_size() {
+    return this.states.size();
   }
 }
