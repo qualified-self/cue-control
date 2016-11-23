@@ -209,8 +209,16 @@ public class StateMachine extends Task {
 
   //add a state s to this State_Machine
   void add_state(State s) {
-    states.addElement(s);
-    println("State " + s.name + " added to State_Machine " + this.name);
+    //check if there is already a state with the same name
+    State result = get_state_by_name(s.name);
+
+    //in case there isn't
+    if (result==null) {
+      states.addElement(s);
+      println("State " + s.name + " added to State_Machine " + this.name);
+    } else {
+      println("There is alrealdy a state with this same name. Please, pick another name!");
+    }
   }
 
   //remove a state s from this State_Machine
@@ -236,6 +244,26 @@ public class StateMachine extends Task {
         //and breaks (one remotion per time))
         return;
       }
+  }
+
+  //returns a state by its name. returns null if not available
+  State get_state_by_name(String name) {
+      State result = null;
+
+      if (this.begin.name.equalsIgnoreCase(name)) result=this.begin;
+      if (this.end.name.equalsIgnoreCase(name))   result=this.end;
+
+      //iterates over all states
+      for (State s : states)
+        if (s.name.equalsIgnoreCase(name)) result=s;
+
+      if (result!=null)
+        println("found! " + result.toString());
+      else
+        println("problem!");
+
+      //returns the proper result
+      return result;
   }
 
   //add a task t to the initialization of this State_Machine

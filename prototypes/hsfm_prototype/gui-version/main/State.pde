@@ -27,7 +27,8 @@ public class State {
   private final int size = 50;
   //accordion that stores the tasks
   private Accordion accordion;
-  private Textlabel label;
+  //private Textlabel label;
+  private Textfield label;
 
   //constructor
   public State(String name) {
@@ -322,6 +323,17 @@ public class State {
     }
   }
 
+  //updates the name of this state
+  void update_name (String newName) {
+    //removes the old gui label
+    cp5.remove(this.name);
+    //updates the name
+    this.name = newName.toUpperCase();
+    //creates a new gui element for it
+    this.init_state_name_gui();
+    //label.setFocus(false);
+  }
+
   //inits gui elements related to controlP5
   void init_gui() {
     textSize(cp5.getFont().getSize());
@@ -343,10 +355,16 @@ public class State {
 
   //inits the label with the name of the state
   void init_state_name_gui() {
-    label = cp5.addTextlabel(this.name)
+    label = cp5.addTextfield(this.name)
       .setText(this.name)
-      .setColorValue(color(255))
-      //.hide()
+      .setColorValue(color(255, 255))
+      .setColorBackground(color(0, 255))
+      .setColorForeground(color(0, 255))
+      //.align(ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER)
+      .setWidth((int)(textWidth(this.name)*1.25))
+      .setFocus(false)
+      .setAutoClear(false)
+      .setLabel("")
       ;
   }
 
@@ -441,7 +459,7 @@ public class State {
     label.align(ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER);
     float textwidth = textWidth(name);
     textwidth = textwidth/2;
-    label.setPosition(x-textwidth-(textwidth/5), y-5);
+    label.setPosition(x-textwidth-(textwidth/5), y-7);
 
 
     //moving the tasks

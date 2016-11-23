@@ -5,6 +5,8 @@
  ************************************************
  ************************************************/
 
+
+
 class Canvas {
 
 
@@ -21,6 +23,9 @@ class Canvas {
   void setup(){
     root      = new StateMachine(this.p, "root");
     states    = new Vector<State>();
+
+    textSize(cp5.getFont().getSize());
+    textFont(cp5.getFont().getFont());
 
     root.show();
   }
@@ -67,5 +72,29 @@ class Canvas {
       root.stop();
       break;
     }
+  }
+}
+
+//processes the text field related to the states
+void controlEvent(ControlEvent theEvent) {
+  if(theEvent.isAssignableFrom(Textfield.class)) {
+    String oldName = theEvent.getName();
+    String newName = theEvent.getStringValue();
+
+    //checks if there is already a state with the very same future name
+    State is_there_a_state_with_the_new_name = t.root.get_state_by_name(newName);
+    State result                             = t.root.get_state_by_name(oldName);
+
+    //if there is, prints an error and change does not occur!
+    if (is_there_a_state_with_the_new_name != null) {
+      println("There is alrealdy a state with this same name. Please, pick another name!");
+      result.update_name(oldName);
+      return;
+    }
+
+    if (result != null)
+      result.update_name(newName);
+    else
+      println("a state with name " + oldName + " could not be found! ");
   }
 }
