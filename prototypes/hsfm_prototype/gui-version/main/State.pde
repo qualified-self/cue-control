@@ -365,6 +365,14 @@ public class State {
       .setFocus(false)
       .setAutoClear(false)
       .setLabel("")
+      .onReleaseOutside(new CallbackListener() {
+                public void controlEvent(CallbackEvent theEvent) {
+                  //if the user leaves the textfield without pressing enter
+                  if (!label.getText().equalsIgnoreCase(name))
+                    //resets the label
+                    init_state_name_gui();
+                }
+              })
       ;
   }
 
