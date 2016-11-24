@@ -1,4 +1,4 @@
-/************************************************ //<>// //<>// //<>// //<>// //<>//
+/************************************************
  ** Audio task class ****************************
  ************************************************
  ** implementing a task for audio
@@ -12,10 +12,16 @@
 class AudioTask extends Task {
 
   //audio variables
-  private Minim       minim;
   private AudioPlayer soundfile;
   private String filename;
 
+  //contructor loading the file
+  public AudioTask (String taskname, String filename) {
+    super(taskname);
+    this.filename  = filename;
+    this.soundfile = minim.loadFile(filename);
+  }
+  /*
   //contructor loading the file
   public AudioTask (PApplet p, String taskname, String filename) {
     super(p, taskname);
@@ -23,9 +29,10 @@ class AudioTask extends Task {
     this.filename  = filename;
     this.soundfile = minim.loadFile(filename);
   }
+  */
 
   AudioTask clone() {
-    return new AudioTask(this.p, this.name, this.filename);
+    return new AudioTask(this.name, this.filename);
   }
 
   //implementing the execute method (play the music)

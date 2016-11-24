@@ -16,6 +16,23 @@ public class StateMachine extends Task {
   //State_Machine_Preview preview;
 
   //contructor
+  public StateMachine (String name) {
+    super (name);
+    begin   = new State("BEGIN_" + name);
+    end     = new State("END_"+name);
+    states  = new Vector<State>();
+    //preview = new State_Machine_Preview(this);
+
+    actual = begin;
+
+    //sets the global variables related to this blackboard
+    init_global_variables();
+
+    if (debug)  println("State_Machine " + this.name + " is inited!");
+  }
+
+  /*
+  //contructor
   public StateMachine (PApplet p, String name) {
     super (p, name);
     begin   = new State("BEGIN_" + name);
@@ -30,6 +47,7 @@ public class StateMachine extends Task {
 
     if (debug)  println("State_Machine " + this.name + " is inited!");
   }
+  */
 
   //so far not using this method
   StateMachine clone() {
@@ -346,12 +364,12 @@ public class StateMachine extends Task {
   //reinit any name the user was trying to change it
   void reset_all_names_gui() {
     //resets the begin and the end states
-    this.begin.init_state_name_gui();
-    this.end.init_state_name_gui();
-    
+    this.begin.reset_name();
+    this.end.reset_name();
+
     //iterates over the remaining states
     for (State s : states)
       //reinit the name in case the user was trying to change it
-      s.init_state_name_gui();
+      s.reset_name();
   }
 }

@@ -9,6 +9,16 @@ class OSCTask extends Task {
   private Object[]  content;
 
   //contructor loading the file
+  public OSCTask (String taskname, int port, String ip, Object[] content) {
+    super(taskname);
+    //this.oscP5     = new OscP5(p, port+1);
+    this.broadcast = new NetAddress(ip, port);
+    this.content   = content;
+    //this.update_message(content);
+  }
+
+  /*
+  //contructor loading the file
   public OSCTask (PApplet p, String taskname, int port, String ip, Object[] content) {
     super(p, taskname);
     //this.oscP5     = new OscP5(p, port+1);
@@ -16,9 +26,16 @@ class OSCTask extends Task {
     this.content   = content;
     //this.update_message(content);
   }
+  */
+
+  /*
+  public OSCTask () {
+
+  }
+  */
 
   OSCTask clone() {
-    return new OSCTask(this.p, this.name, this.broadcast.port(), this.broadcast.address(), this.content);
+    return new OSCTask(this.name, this.broadcast.port(), this.broadcast.address(), this.content);
   }
 
   void run () {

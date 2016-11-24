@@ -196,7 +196,7 @@ class PieMenu {
     return (Math.pow(tx-x, 2)+Math.pow(ty-y, 2)<Math.pow(r, 2));
   }
 
-  int get_selected() {
+  int get_selection() {
     return selected;
   }
 }

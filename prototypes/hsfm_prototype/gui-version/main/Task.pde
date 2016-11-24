@@ -15,15 +15,24 @@
 public abstract class Task {
   protected Status status;
   protected String name;
-  protected PApplet  p;
+  //protected PApplet  p;
 
-  public Task (PApplet p, String taskname) {
-    this.p = p;
+  public Task (String taskname) {
+    //this.p = p;
     this.name   = taskname;
     this.status = Status.INACTIVE;
 
     println("task " + this.toString() + " created!");
   }
+  /*
+  public Task (PApplet p, String taskname) {
+    //this.p = p;
+    this.name   = taskname;
+    this.status = Status.INACTIVE;
+
+    println("task " + this.toString() + " created!");
+  }
+  */
 
   void set_name(String newname) {
     this.name = newname;

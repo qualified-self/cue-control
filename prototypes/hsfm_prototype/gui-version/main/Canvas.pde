@@ -9,19 +9,17 @@
 
 class Canvas {
 
-
-  PApplet       p;    //my PApplet
   StateMachine  root; //my basic state machine
   Vector<State> states; //vector that store my states
 
   //contructor
-  public Canvas (PApplet p) {
-    this.p = p;
+  public Canvas () {
+
   }
 
   //init my variables
   void setup(){
-    root      = new StateMachine(this.p, "root");
+    root      = new StateMachine("root");
     states    = new Vector<State>();
 
     textSize(cp5.getFont().getSize());
@@ -112,14 +110,6 @@ class Canvas {
       root.end.run();
       root.stop();
       break;
-    case 'z':
-        root.end.show_pie();
-        //root.stop();
-        break;
-    case 'x':
-        root.end.hide_pie();
-        //root.stop();
-        break;
     }
   }
 }

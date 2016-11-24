@@ -8,13 +8,20 @@ class SetBBTask extends Task {
 
   Object value;
 
+  public SetBBTask (String taskname, Object value) {
+    super(taskname);
+    this.value = value;
+  }
+
+  /*
   public SetBBTask (PApplet p, String taskname, Object value) {
     super(p, taskname);
     this.value = value;
   }
+  */
 
   SetBBTask clone() {
-    return new SetBBTask(this.p, this.name, this.value);
+    return new SetBBTask(this.name, this.value);
   }
 
   void run() {

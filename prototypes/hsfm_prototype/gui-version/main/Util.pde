@@ -27,6 +27,9 @@ OscP5 oscP5;
 //my controlP5 variable for gui
 ControlP5 cp5;
 
+//my minim variable
+Minim       minim;
+
 
 //system's default port for receiveing osc messages
 final int OSC_RECV_PORT = 12001;
@@ -35,6 +38,7 @@ final int OSC_RECV_PORT = 12001;
 void setup_util() {
   setup_osc();
   setup_control_p5();
+  setup_minim();
 }
 
 //function for setting up osc
@@ -46,6 +50,11 @@ void setup_osc () {
 //function for setting up controlp5
 void setup_control_p5 () {
   cp5 = new ControlP5(this);
+}
+
+//sets the minim up
+void setup_minim() {
+  minim = new Minim(this);
 }
 
 //rounds a float to two decimals for the gui

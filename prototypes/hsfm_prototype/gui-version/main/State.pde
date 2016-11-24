@@ -280,7 +280,7 @@ public class State {
    ** GUI FUNCTIONS ***************************
    ********************************************/
   void draw() {
-    pie.draw();
+    draw_pie();
     update_cordinates_gui();
     draw_connections();
     draw_state();
@@ -340,6 +340,11 @@ public class State {
     //label.setFocus(false);
   }
 
+  //resets the name of this state
+  void reset_name () {
+    this.update_name(this.name);
+  }
+
   //inits gui elements related to controlP5
   void init_gui() {
     textSize(cp5.getFont().getSize());
@@ -364,15 +369,11 @@ public class State {
 
     CallbackListener cb = new CallbackListener() {
           public void controlEvent(CallbackEvent theEvent) {
-            println("eventou!");
             //if the user leaves the textfield without pressing enter
             if (!label.getText().equalsIgnoreCase(name))
             //resets the label
-              init_state_name_gui();
-            //otherwise
-            //else
-            //disables the focus
-            //  label.setFocus(false);
+            //init_state_name_gui();
+              reset_name();
           }
     };
 
@@ -608,6 +609,10 @@ public class State {
     text("[ "+priority+" ] : "  + c.get_expression().toString(), x, y-125);
   }
 
+  void draw_pie() {
+    verify_if_user_picked_a_pie_option();
+    pie.draw();
+  }
   //show the attached pie
   void show_pie() {
     pie.show();
@@ -620,11 +625,41 @@ public class State {
 
   //gets what option of the pie has been selected. returns -1 if none is selected
   int get_pie_option() {
-    return pie.get_selected();
+    return pie.get_selection();
   }
 
   //returns if the pie menu is currently open or not
   boolean is_pie_menu_open () {
-    return pie.is_showing;
+    return (pie.is_showing&&(!pie.down));
+  }
+
+  //boolean
+
+  //verifies if the user selected a option inside the pie menu
+  void verify_if_user_picked_a_pie_option() {
+    //if the menu is not open or the mouse is not clicked, returns
+    if (!is_pie_menu_open() || !mousePressed) return;
+
+    int selected = get_pie_option();
+
+    //if the mouse is pressed & the button is over a option & is not dragging
+    if (mousePressed && selected > -1 && !is_dragging_someone) {
+      hide_pie();
+      //println(pie.options[selected] + " (option " + selected + ") selected in state " + this.name);
+      switch(selected) {
+        case 0: //OSC
+          println(selected + " " + pie.options[selected]);
+          break;
+        case 1: //Audio
+          println(selected + " " + pie.options[selected]);
+          break;
+        case 2: //StateMachine
+          println(selected + " " + pie.options[selected]);
+          break;
+        case 3: //SetBlackboard
+          println(selected + " " + pie.options[selected]);
+          break;
+        }
+    }
   }
 }
