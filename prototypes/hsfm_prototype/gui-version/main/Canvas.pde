@@ -56,13 +56,54 @@ class Canvas {
     root.remove_state(mouseX, mouseY);
   }
 
+  //processes the multiple interpretations of the '+' key
+  void process_plus_key_pressed() {
+
+    //reinit any name the user was trying to change it
+    root.reset_all_names_gui();
+
+    //verifies if the mouse intersects a state
+    State result = root.intersects_gui(mouseX, mouseY);
+
+    //if it does not, creates a new state
+    if (result==null)
+      create_state();
+    //otherwise, opens the pie menu
+    else
+      //shows the pie
+      result.show_pie();
+
+  }
+
+  //processes the multiple interpretations of the '-' key
+  void process_minus_key_pressed() {
+
+    //reinit any name the user was trying to change it
+    root.reset_all_names_gui();
+
+    //verifies if the mouse intersects a state
+    State result = root.intersects_gui(mouseX, mouseY);
+
+    //if it intersects no one, return
+    if (result==null) return;
+
+    //first tries to close the pie menu
+    if (result.is_pie_menu_open())
+      result.hide_pie();
+    //otherwise, removes the state
+    else
+      remove_state();
+  }
+
   void keyPressed(){
     switch(key) {
     case '+':
-      create_state();
+      //create_state();
+      process_plus_key_pressed();
       break;
     case '-':
-      remove_state();
+      //remove_state();
+      process_minus_key_pressed();
       break;
     case ' ':
       root.run();
@@ -71,6 +112,14 @@ class Canvas {
       root.end.run();
       root.stop();
       break;
+    case 'z':
+        root.end.show_pie();
+        //root.stop();
+        break;
+    case 'x':
+        root.end.hide_pie();
+        //root.stop();
+        break;
     }
   }
 }

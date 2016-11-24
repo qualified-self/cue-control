@@ -18,6 +18,7 @@ public class State {
   private Vector<Task>       tasks;
   private String             name;
   private Status             status;
+  private PieMenu            pie;
 
   public boolean             is_actual;
 
@@ -38,6 +39,7 @@ public class State {
     this.connections = new Vector<Connection>();
     this.x = (int)random(10, 1024);
     this.y = (int)random(10, 768);
+    this.pie = new PieMenu(x, y, size);
 
     init_gui();
     hide_gui();
@@ -50,7 +52,7 @@ public class State {
     this(name);
     this.x = x;
     this.y = y;
-
+    pie.set_position(x,y);
   }
 
   String get_name() {
@@ -278,6 +280,7 @@ public class State {
    ** GUI FUNCTIONS ***************************
    ********************************************/
   void draw() {
+    pie.draw();
     update_cordinates_gui();
     draw_connections();
     draw_state();
@@ -287,6 +290,9 @@ public class State {
   void set_position_gui(int newx, int newy) {
     this.x = newx;
     this.y = newy;
+    this.pie.set_position(x, y);
+    //disables the focus
+    //label.setFocus(false);
   }
 
   //checks if a certain position (often the mouse) intersects this state in the screen
@@ -355,6 +361,21 @@ public class State {
 
   //inits the label with the name of the state
   void init_state_name_gui() {
+
+    CallbackListener cb = new CallbackListener() {
+          public void controlEvent(CallbackEvent theEvent) {
+            println("eventou!");
+            //if the user leaves the textfield without pressing enter
+            if (!label.getText().equalsIgnoreCase(name))
+            //resets the label
+              init_state_name_gui();
+            //otherwise
+            //else
+            //disables the focus
+            //  label.setFocus(false);
+          }
+    };
+
     label = cp5.addTextfield(this.name)
       .setText(this.name)
       .setColorValue(color(255, 255))
@@ -365,14 +386,8 @@ public class State {
       .setFocus(false)
       .setAutoClear(false)
       .setLabel("")
-      .onReleaseOutside(new CallbackListener() {
-                public void controlEvent(CallbackEvent theEvent) {
-                  //if the user leaves the textfield without pressing enter
-                  if (!label.getText().equalsIgnoreCase(name))
-                    //resets the label
-                    init_state_name_gui();
-                }
-              })
+      .onReleaseOutside(cb)
+      //.onDrag(cb)
       ;
   }
 
@@ -591,5 +606,25 @@ public class State {
     fill(180);
     textAlign(CENTER, CENTER);
     text("[ "+priority+" ] : "  + c.get_expression().toString(), x, y-125);
+  }
+
+  //show the attached pie
+  void show_pie() {
+    pie.show();
+  }
+
+  //close the attached pie
+  void hide_pie() {
+    pie.hide();
+  }
+
+  //gets what option of the pie has been selected. returns -1 if none is selected
+  int get_pie_option() {
+    return pie.get_selected();
+  }
+
+  //returns if the pie menu is currently open or not
+  boolean is_pie_menu_open () {
+    return pie.is_showing;
   }
 }

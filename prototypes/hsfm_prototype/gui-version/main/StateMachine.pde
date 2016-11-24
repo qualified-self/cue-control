@@ -233,6 +233,7 @@ public class StateMachine extends Task {
     } else
       println("Unable to remove state " + s.name + " from State_Machine " + this.name);
   }
+
   //removes a state based on a certain x y position in the screen
   void remove_state(int x, int y) {
     //iterates over all states
@@ -302,19 +303,55 @@ public class StateMachine extends Task {
     //println("update variable " + this.stateTimer);
   }
 
-  //updates the stateTimer variable realted to this state machine
+  //updates the stateTimer variable related to this state machine
   void update_state_timer() {
       this.stateTimer = ((float)millis()/1000)-stateTimerMilestone;
   }
 
-  //resets the stateTimer variable realted to this state machine
+  //resets the stateTimer variable related to this state machine
   void reset_state_timer() {
       this.stateTimerMilestone = (float)millis()/1000;
       this.stateTimer          = 0;
       update_global_variables();
   }
 
+  //returns how many states we have in this state machine
   int get_states_size() {
     return this.states.size();
+  }
+
+  //returns a state that intersect test_x, test_y positions
+  State intersects_gui(int test_x, int test_y) {
+    State result = null;
+
+    //println("testing intersection... " + test_x + " " + test_y);
+
+    //testing the begin & end states
+    if (this.begin.intersects_gui(test_x, test_y))  return this.begin;
+    if (this.end.intersects_gui(test_x, test_y))    return this.end;
+
+    //iterates over the remaining states
+    for (State s : states)
+      //if intersects...
+      if (s.intersects_gui(test_x, test_y)) {
+        println("i found someone to be intersected");
+        //updates the result
+        result = s;
+        break;
+      }
+
+    return result;
+  }
+
+  //reinit any name the user was trying to change it
+  void reset_all_names_gui() {
+    //resets the begin and the end states
+    this.begin.init_state_name_gui();
+    this.end.init_state_name_gui();
+    
+    //iterates over the remaining states
+    for (State s : states)
+      //reinit the name in case the user was trying to change it
+      s.init_state_name_gui();
   }
 }
