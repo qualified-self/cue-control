@@ -372,4 +372,42 @@ public class StateMachine extends Task {
       //reinit the name in case the user was trying to change it
       s.reset_name();
   }
+
+  Group load_gui_elements(State s) {
+    Group g = cp5.addGroup(s.name + " " + this.get_name())
+      .setHeight(12)
+      .setBackgroundHeight(130)
+      //.setWidth(100)
+      .setColorBackground(color(255, 50)) //color of the task
+      .setBackgroundColor(color(255, 25)) //color of task when openned
+      .setLabel(this.get_prefix() + "   " + this.get_name())
+      ;
+
+    g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+
+    int localx = 10, localy = 15, localoffset = 40;
+    int w = g.getWidth()-10;
+
+    cp5.addTextfield("name_s_m")
+      .setPosition(localx, localy)
+      .setSize(w, 15)
+      .setGroup(g)
+      .setAutoClear(false)
+      .setLabel("name")
+      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
+    ;
+
+    //StateMachinePreview p = new StateMachinePreview(localx, localy+localoffset, g.getWidth());
+    //g.addCanvas((controlP5.Canvas)p);
+
+    cp5.addButton("open preview")
+      .setPosition(localx, localy+15+(2*localoffset))
+      .setSize(w, 15)
+      .setValue(0)
+      .setGroup(g)
+      ;
+
+    return g;
+  }
+
 }

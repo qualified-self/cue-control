@@ -41,4 +41,39 @@ class SetBBTask extends Task {
   void update_status() {
   }
 
+  Group load_gui_elements(State s) {
+    Group g = cp5.addGroup(s.name + " " + this.get_name())
+      .setColorBackground(color(255, 50)) //color of the task
+      .setBackgroundColor(color(255, 25)) //color of task when openned
+      .setBackgroundHeight(90)
+      .setLabel(this.get_prefix() + "   " + this.get_name())
+      .setHeight(12)
+    ;
+
+  g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+
+  int localx = 10, localy = 15, localoffset = 40;
+  int w = g.getWidth()-10;
+
+  cp5.addTextfield("name")
+    .setPosition(localx, localy)
+    .setSize(w, 15)
+    .setGroup(g)
+    .setAutoClear(false)
+    .setLabel("name")
+    .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
+  ;
+
+  cp5.addTextfield("value")
+    .setPosition(localx, localy+localoffset)
+    .setSize(w, 15)
+    .setGroup(g)
+    .setAutoClear(false)
+    .setLabel("value")
+    .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
+    ;
+
+    return g;
+  }
+
 }

@@ -94,4 +94,63 @@ class OSCTask extends Task {
   void update_status() {
   }
 
+  Group load_gui_elements(State s) {
+
+    //creates the group
+    Group g = cp5.addGroup(s.name + " " + this.get_name())
+      .setColorBackground(color(255, 50)) //color of the task
+      .setBackgroundColor(color(255, 25)) //color of task when openned
+      .setBackgroundHeight(180)
+      .setLabel(this.get_prefix() + "   " + this.get_name())
+      .setHeight(12)
+      ;
+
+    int w = g.getWidth()-10;
+
+    g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+
+    int localx = 10, localy = 15, localoffset = 40;
+
+    cp5.addTextfield("ip")
+      .setPosition(localx, localy)
+      .setSize(w, 15)
+      .setGroup(g)
+      .setAutoClear(false)
+      .setLabel("ip address")
+      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
+      ;
+
+    Numberbox port = cp5.addNumberbox("port")
+      .setPosition(localx, localy+localoffset)
+      .setSize(w, 15)
+      .setValue(0)
+      .setGroup(g)
+      .setLabel("port")
+      ;
+
+    port.getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
+
+    makeEditable( port );
+
+    cp5.addTextfield("message")
+      .setPosition(localx, localy+(2*localoffset))
+      .setSize(w, 15)
+      .setGroup(g)
+      .setAutoClear(false)
+      .setLabel("message")
+      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
+      ;
+
+    cp5.addTextfield("parameters")
+      .setPosition(localx, localy+(3*localoffset))
+      .setSize(w, 15)
+      .setAutoClear(false)
+      .setGroup(g)
+      .setLabel("parameters")
+      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
+      ;
+
+    return g;
+  }
+
 }

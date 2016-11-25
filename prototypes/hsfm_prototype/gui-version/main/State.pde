@@ -456,26 +456,9 @@ public class State {
 
   //adds a task from the accordion
   void add_task_in_accordion_gui(Task t) {
-    //CallbackListener cb = new CallbackListener() {
-    //      public void controlEvent(CallbackEvent theEvent) {
-    //          println("entrei!");
-    //      }
-    //};
 
     //creates a new group
-    Group g = cp5.addGroup(this.name + " " + t.get_name())
-      .setColorBackground(color(255, 50)) //color of the task
-      .setBackgroundColor(color(255, 25)) //color of task when openned
-      .setBackgroundHeight(50) //
-      .setLabel(t.get_prefix() + "   " + t.get_name())
-      //.onEnter(cb)
-      ;
-
-    cp5.addBang("bang_" + this.name + " " + t.get_name())
-      .setPosition(10, 20)
-      .setSize(10, 10)
-      .moveTo(g)
-      ;
+    Group g = t.load_gui_elements(this);
 
     //adds this group to the accordion
     accordion.addItem(g);

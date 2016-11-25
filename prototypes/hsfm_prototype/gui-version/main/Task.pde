@@ -89,4 +89,8 @@ public abstract class Task {
   abstract void update_status();
   abstract void stop();
   abstract Task clone();
+
+  Group load_gui_elements(State s) {
+    return null;
+  }
 }
