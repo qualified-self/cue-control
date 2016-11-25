@@ -275,6 +275,45 @@ public class State {
     return this.tasks.size();
   }
 
+  //method that generates a random name for the demo task
+  String generate_random_name() {
+    return ("/" + this.name + "/exmpl/"+((int)random(-100, 100)));
+  }
+
+
+  //method that initializes a random demo osc task
+  void init_random_osc_task () {
+    String taskname = generate_random_name();
+    OSCTask t = new OSCTask(taskname, 12000, "localhost", new Object[]{0});
+    this.add_task(t);
+    //println(selected + " " + pie.options[selected]);
+
+  }
+
+  //method that initializes a random demo audio task
+  void init_random_audio_task () {
+    String taskname = generate_random_name();
+    AudioTask t = new AudioTask(taskname, "123go.mp3");
+    this.add_task(t);
+    //println(selected + " " + pie.options[selected]);
+  }
+
+  //method that initializes a random demo state machine task
+  void init_random_state_machine_task () {
+    String taskname = generate_random_name();
+    StateMachine t = new StateMachine(taskname);
+    this.add_task(t);
+    //println(selected + " " + pie.options[selected]);
+  }
+
+  //method that initializes a random demo set balckboard task
+  void init_random_set_blackboard_task () {
+    String taskname = generate_random_name();
+    SetBBTask t = new SetBBTask(taskname, 0);
+    this.add_task(t);
+    //println(selected + " " + pie.options[selected]);
+  }
+
 
   /*******************************************
    ** GUI FUNCTIONS ***************************
@@ -647,17 +686,17 @@ public class State {
       hide_pie();
       //println(pie.options[selected] + " (option " + selected + ") selected in state " + this.name);
       switch(selected) {
-        case 0: //OSC
-          println(selected + " " + pie.options[selected]);
-          break;
-        case 1: //Audio
-          println(selected + " " + pie.options[selected]);
-          break;
-        case 2: //StateMachine
-          println(selected + " " + pie.options[selected]);
+        case 0: //StateMachine
+          init_random_state_machine_task();
           break;
         case 3: //SetBlackboard
-          println(selected + " " + pie.options[selected]);
+          init_random_set_blackboard_task();
+          break;
+        case 4: //Audio
+          init_random_audio_task();
+          break;
+        case 5: //OSC
+          init_random_osc_task();
           break;
         }
     }

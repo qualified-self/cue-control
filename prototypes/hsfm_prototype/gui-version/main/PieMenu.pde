@@ -8,7 +8,7 @@
  *****************************************************************************/
 
 //this is the variable that stores all the possible tasks
-String[] task_list = {"OSC", "Audio", "Set Blackboard", "State Machine"};
+String[] task_list = {"State Machine","", "", "Set Blackboard", "Audio", "OSC"};
 
 
 class PieMenu {
@@ -44,7 +44,6 @@ class PieMenu {
     this.size             = 0;
     this.startTime        = millis();
     this.maxTime          = 0.4;
-
   }
 
   //another constructor
@@ -75,10 +74,10 @@ class PieMenu {
 
   //hides this pie menu
   void hide() {
-     startTime  = millis();
-     size = 1;
-     down = true;
-     up = false;
+    startTime  = millis();
+    size = 1;
+    down = true;
+    up = false;
   }
 
   void update_timer() {
@@ -89,12 +88,12 @@ class PieMenu {
 
       /*
       if (size > 2) {
-        println("WTF! ");
-        println("  millis after: " + temp);
-        println("  startTime: " + startTime);
-        println("  maxTime: " + maxTime);
-      }
-      */
+       println("WTF! ");
+       println("  millis after: " + temp);
+       println("  startTime: " + startTime);
+       println("  maxTime: " + maxTime);
+       }
+       */
 
       //if finished
       if (size > 1)
@@ -107,7 +106,7 @@ class PieMenu {
       size = maxTime-size;
 
       //if finished
-      if (size < 0)  {
+      if (size < 0) {
         down = false;
         is_showing = false;
       }
@@ -143,7 +142,7 @@ class PieMenu {
     popMatrix();
   }
 
-//draws the pie menu
+  //draws the pie menu
   void draw_menu() {
     //if it' not showing, return!
     if (!is_showing) return;
@@ -158,16 +157,22 @@ class PieMenu {
     this.selected = -1;
 
     for (int i=0; i<options.length; i++) {
+      //compute the proper angles
       float s = i/op-(PI/this.options.length);
       float e = (i+0.98)/op-(PI/this.options.length);
-      //float s = i/op-PI*0.125;
-      //float e = (i+0.98)/op-PI*0.125;
-      if (piTheta>= s && piTheta <= e && is_a_point_inside_the_menu(mouseX, mouseY) && (!is_a_point_inside_the_core_circle(mouseX, mouseY))) {
-        fill(active_color);
-        selected = i;
-      } else
-        fill(background_color);
 
+      //if it's a empty option, make it black
+      if (this.options[i].equals("")) fill(0);
+      //otherwise, make it interactive as part of the pie menu
+      else {
+        //float s = i/op-PI*0.125;
+        //float e = (i+0.98)/op-PI*0.125;
+        if (piTheta>= s && piTheta <= e && is_a_point_inside_the_menu(mouseX, mouseY) && (!is_a_point_inside_the_core_circle(mouseX, mouseY))) {
+            fill(active_color);
+            selected = i;
+        } else
+          fill(background_color);
+      }
       //arc(this.x, this.y, diam, diam, s, e);
       arc(0, 0, diam, diam, s, e);
       //should fill the same color as the background

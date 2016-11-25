@@ -17,6 +17,8 @@ class OSCTask extends Task {
     //this.update_message(content);
   }
 
+  //method that returns if this OSC Task is curerntly initialized
+
   /*
   //contructor loading the file
   public OSCTask (PApplet p, String taskname, int port, String ip, Object[] content) {
