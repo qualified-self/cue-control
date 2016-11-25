@@ -234,13 +234,15 @@ public class State {
       if (debug) println("Unable to remove task " + t.name + " from state " + this.name);
 
     //updates the gui
-    remove_task_in_accordion_gui(t);
+    //remove_task_in_accordion_gui(t);
   }
 
   //removes all tasks associated to this state
   void remove_all_tasks() {
-    for (Task t : tasks)
-      this.remove_task(t);
+    //iterating over the array backwards
+    for (int i = tasks.size()-1; i >=0 ; i--) {
+      this.remove_task(tasks.get(i));
+    }
   }
 
   //add a connection to this state
@@ -320,7 +322,7 @@ public class State {
    ********************************************/
   void draw() {
     draw_pie();
-    update_cordinates_gui();
+    update_gui();
     draw_connections();
     draw_state();
   }
@@ -341,6 +343,16 @@ public class State {
     int R = size-25;
 
     return (dx*dx)+(dy*dy) <= R*R;
+  }
+
+  //functions that updates the gui
+  void update_gui() {
+    //verifies if the user picked an option in the pie menu
+    verify_if_user_picked_a_pie_option();
+    //removes the task, if necessary
+    remove_task_in_gui_if_necessary();
+    //updates the gui cordinates, if necessary
+    update_cordinates_gui();
   }
 
   //aux variable to handle the state moving on the screen
@@ -372,11 +384,14 @@ public class State {
   void update_name (String newName) {
     //removes the old gui label
     cp5.remove(this.name);
+    //removes all tasks from the gui
+    this.remove_all_tasks_from_gui();
     //updates the name
     this.name = newName.toUpperCase();
     //creates a new gui element for it
     this.init_state_name_gui();
-    //label.setFocus(false);
+    //adds all tasks with the updated name
+    this.add_all_tasks_to_gui();
   }
 
   //resets the name of this state
@@ -441,12 +456,19 @@ public class State {
 
   //adds a task from the accordion
   void add_task_in_accordion_gui(Task t) {
+    //CallbackListener cb = new CallbackListener() {
+    //      public void controlEvent(CallbackEvent theEvent) {
+    //          println("entrei!");
+    //      }
+    //};
+
     //creates a new group
     Group g = cp5.addGroup(this.name + " " + t.get_name())
       .setColorBackground(color(255, 50)) //color of the task
       .setBackgroundColor(color(255, 25)) //color of task when openned
       .setBackgroundHeight(50) //
       .setLabel(t.get_prefix() + "   " + t.get_name())
+      //.onEnter(cb)
       ;
 
     cp5.addBang("bang_" + this.name + " " + t.get_name())
@@ -462,9 +484,9 @@ public class State {
   //removes a task from the accordion
   void remove_task_in_accordion_gui(Task t) {
     //looks for the group
-    Group g = cp5.get(Group.class, this.name + " " + t.get_name());
+    //Group g = cp5.get(Group.class, this.name + " " + t.get_name());
     //removes this task from the accordion
-    accordion.removeItem(g);
+    cp5.getGroup(this.name + " " + t.get_name()).remove();
   }
 
   //draws the status of this state
@@ -649,7 +671,6 @@ public class State {
   }
 
   void draw_pie() {
-    verify_if_user_picked_a_pie_option();
     pie.draw();
   }
   //show the attached pie
@@ -701,4 +722,55 @@ public class State {
         }
     }
   }
+
+  //checks if the user released the key minus
+  boolean user_pressed_minus_over_a_task () {
+    boolean result = keyReleased && key=='-';
+
+    //returns the result
+    return result;
+  }
+
+  //verifies if the mouse is over a certain task, returning this task
+  Task verifies_if_mouse_is_over_a_task () {
+    Task to_be_removed = null;
+
+    //iterates of all tasks related to this state
+    for (Task t : tasks) {
+      //gets the group related to this task
+      Group g = cp5.get(Group.class, this.name + " " + t.get_name());
+
+      //verifies if the menu item is selected and the user pressed '-'
+      if (g.isMouseOver() && user_pressed_minus_over_a_task ()) {
+        //stores the item to be removed
+        to_be_removed = t;
+        break;
+      }
+    }
+
+    return to_be_removed;
+  }
+
+  void remove_task_in_gui_if_necessary () {
+    Task to_be_removed = verifies_if_mouse_is_over_a_task();
+    //if there is someone to be removed
+    if (to_be_removed!=null)
+    //removes this item
+      remove_task(to_be_removed);
+  }
+
+  //removes all tasks from the gui (used whenever the state name needs to change)
+  void remove_all_tasks_from_gui () {
+    //iterates of all tasks related to this state
+    for (Task t : tasks)
+      remove_task_in_accordion_gui(t);
+  }
+
+  //adds all tasks to the gui (used whenever the state name needs to change)
+  void add_all_tasks_to_gui () {
+    //iterates of all tasks related to this state
+    for (Task t : tasks)
+      add_task_in_accordion_gui(t);
+  }
+
 }

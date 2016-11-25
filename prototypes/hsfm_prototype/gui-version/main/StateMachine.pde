@@ -242,12 +242,12 @@ public class StateMachine extends Task {
   //remove a state s from this State_Machine
   void remove_state(State s) {
     if (states.contains(s)) {
-      //remove the state fmor the list
-      this.states.removeElement(s);
       //remove all tasks associated with the deleted state
       s.remove_all_tasks();
       //removes its ui components
       cp5.remove(s.name);
+      //remove the state fmor the list
+      this.states.removeElement(s);
     } else
       println("Unable to remove state " + s.name + " from State_Machine " + this.name);
   }

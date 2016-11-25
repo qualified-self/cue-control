@@ -17,6 +17,7 @@ Canvas t      = new Canvas();
 Blackboard bb = new Blackboard();
 
 boolean debug = false;
+boolean keyReleased = false;
 
 void setup() {
   size(1024, 748);
@@ -34,8 +35,14 @@ void draw() {
   t.draw();
   //draws the blackboard
   bb.draw();
+
+  if (keyReleased) keyReleased = false;
 }
 
 void keyPressed() {
   t.keyPressed();
+}
+
+void keyReleased() {
+  keyReleased = true;
 }

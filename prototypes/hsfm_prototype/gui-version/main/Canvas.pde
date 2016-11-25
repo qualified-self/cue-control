@@ -52,6 +52,7 @@ class Canvas {
   void remove_state() {
     println("remove a state");
     root.remove_state(mouseX, mouseY);
+
   }
 
   //processes the multiple interpretations of the '+' key
@@ -91,6 +92,7 @@ class Canvas {
     //otherwise, removes the state
     else
       remove_state();
+
   }
 
   void keyPressed(){
