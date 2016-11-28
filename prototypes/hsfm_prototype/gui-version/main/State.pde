@@ -418,10 +418,35 @@ public class State {
     accordion.show();
   }
 
-  //inits the label with the name of the state
-  void init_state_name_gui() {
 
-    CallbackListener cb = new CallbackListener() {
+  CallbackListener generate_callback_enter() {
+    return new CallbackListener() {
+          public void controlEvent(CallbackEvent theEvent) {
+
+              String newName = theEvent.getController().getValueLabel().getText();
+              String oldName = name;
+
+              //checks if there is already a state with the very same future name
+              State is_there_a_state_with_the_new_name = t.root.get_state_by_name(newName);
+              State result                             = t.root.get_state_by_name(oldName);
+
+              //if there is, prints an error and change does not occur!
+              if (is_there_a_state_with_the_new_name != null) {
+                println("There is alrealdy a state with this same name. Please, pick another name!");
+                result.update_name(oldName);
+                return;
+              }
+
+              if (result != null)
+                result.update_name(newName);
+              else
+                println("a state with name " + oldName + " could not be found! ");
+          }
+    };
+  }
+
+  CallbackListener generate_callback_leave() {
+    return new CallbackListener() {
           public void controlEvent(CallbackEvent theEvent) {
             //if the user leaves the textfield without pressing enter
             if (!label.getText().equalsIgnoreCase(name))
@@ -430,6 +455,13 @@ public class State {
               reset_name();
           }
     };
+  }
+
+  //inits the label with the name of the state
+  void init_state_name_gui() {
+
+    CallbackListener cb_enter = generate_callback_enter();
+    CallbackListener cb_leave = generate_callback_leave();
 
     label = cp5.addTextfield(this.name)
       .setText(this.name)
@@ -441,7 +473,8 @@ public class State {
       .setFocus(false)
       .setAutoClear(false)
       .setLabel("")
-      .onReleaseOutside(cb)
+      .onChange(cb_enter)
+      .onReleaseOutside(cb_leave)
       //.onDrag(cb)
       ;
   }
