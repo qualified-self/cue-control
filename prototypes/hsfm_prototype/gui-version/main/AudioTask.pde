@@ -14,12 +14,14 @@ class AudioTask extends Task {
   //audio variables
   private AudioPlayer soundfile;
   private String filename;
+  private float  volume;
 
   //contructor loading the file
   public AudioTask (String taskname, String filename) {
     super(taskname);
     this.filename  = filename;
     this.soundfile = minim.loadFile(filename);
+    //this.volume = 1.;
   }
   /*
   //contructor loading the file
@@ -33,6 +35,19 @@ class AudioTask extends Task {
 
   AudioTask clone() {
     return new AudioTask(this.name, this.filename);
+  }
+
+  void update_name(String name) {
+    this.filename = name;
+    this.name     = name;
+    this.soundfile = minim.loadFile(this.filename);
+  }
+
+  //input is in between 0 and one. result is between -80 and 14 (dB).
+  void set_volume(float newvolume) {
+    float mapped_volume = map(newvolume, 0., 1., -70., 14.);
+    if (soundfile!=null)
+      soundfile.setGain(mapped_volume);
   }
 
   //implementing the execute method (play the music)
@@ -57,8 +72,61 @@ class AudioTask extends Task {
       this.status = Status.DONE;
   }
 
+  CallbackListener generate_callback_enter() {
+    return new CallbackListener() {
+          public void controlEvent(CallbackEvent theEvent) {
+
+            String s = theEvent.getController().getName();
+
+            if (s.equals(get_gui_id() + "/filename")) {
+                String newFilename = theEvent.getController().getValueLabel().getText();
+                update_name(newFilename);
+                println(s + " " + newFilename);
+            }
+            if (s.equals(get_gui_id() + "/volume")) {
+                float newvolume = theEvent.getController().getValue();
+                set_volume(newvolume);
+                println(s + " " + newvolume);
+            }
+          }
+    };
+  }
+
+  CallbackListener generate_callback_leave() {
+    return new CallbackListener() {
+          public void controlEvent(CallbackEvent theEvent) {
+            //println(name + " was unfocused");
+
+            String s = theEvent.getController().getName();
+
+            if (s.equals(get_gui_id() + "/filename")) {
+                String newFilename = theEvent.getController().getValueLabel().getText();
+                String oldFilename = filename;
+
+                println(newFilename +  " - " + oldFilename);
+
+                //if the user tried to change but did not press enter
+                if (!newFilename.equals(oldFilename)) {
+                  //resets the test for the original
+                  Textfield t = (Textfield)cp5.get(s);
+                  t.setText(oldFilename);
+                }
+            }
+          }
+    };
+  }
+
   Group load_gui_elements(State s) {
-    Group g = cp5.addGroup(s.name + " " + this.get_name())
+    //do we really need this?
+    //this.parent = s;
+
+    CallbackListener cb_enter = generate_callback_enter();
+    CallbackListener cb_leave = generate_callback_leave();
+
+    this.set_gui_id(s.name + " " + this.get_name());
+    String g_name = this.get_gui_id();
+
+    Group g = cp5.addGroup(g_name)
     //.setPosition(x, y) //change that?
     .setHeight(12)
     .setBackgroundHeight(50)
@@ -72,29 +140,34 @@ class AudioTask extends Task {
     int localx = 10, localy = 15, localoffset = 40;
     int w = g.getWidth()-10;
 
-    cp5.addTextfield("filename")
+    cp5.addTextfield(g_name+ "/filename")
       .setPosition(localx, localy)
       .setSize(w, 15)
       .setGroup(g)
       .setAutoClear(false)
       .setLabel("filename")
-      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
+      .setText(this.filename)
+      .onChange(cb_enter)
+      .onReleaseOutside(cb_leave)
+      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
     ;
 
     // add a vertical slider
-    cp5.addSlider("volume")
+    cp5.addSlider(g_name+ "/volume")
       .setPosition(localx, localy+localoffset)
       .setSize(w, 15)
       .setRange(0, 1)
       .setGroup(g)
       .setValue(1)
       .setLabel("volume")
+      .onChange(cb_enter)
+      .onReleaseOutside(cb_leave)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
     ;
 
     // reposition the Label for controller 'slider'
-    cp5.getController("volume").getValueLabel().align(ControlP5.RIGHT, ControlP5.BOTTOM_OUTSIDE).setPaddingX(0);
-    cp5.getController("volume").getCaptionLabel().align(ControlP5.LEFT, ControlP5.BOTTOM_OUTSIDE).setPaddingX(0);
+    cp5.getController(g_name+ "/volume").getValueLabel().align(ControlP5.RIGHT, ControlP5.BOTTOM_OUTSIDE).setPaddingX(0);
+    cp5.getController(g_name+ "/volume").getCaptionLabel().align(ControlP5.LEFT, ControlP5.BOTTOM_OUTSIDE).setPaddingX(0);
     return g;
   }
 

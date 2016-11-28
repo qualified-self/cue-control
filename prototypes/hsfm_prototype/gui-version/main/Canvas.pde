@@ -118,6 +118,11 @@ class Canvas {
 
 //processes the text field related to the states
 void controlEvent(ControlEvent theEvent) {
+  //println("isGroup() "+ theEvent.isTab());
+  //println("isTab() "+ theEvent.isTab());
+  //println("getTab() "+ theEvent.getTab());
+  //println("getGroup() "+ theEvent.getGroup());
+
   if(theEvent.isAssignableFrom(Textfield.class)) {
     String oldName = theEvent.getName();
     String newName = theEvent.getStringValue();
@@ -138,4 +143,18 @@ void controlEvent(ControlEvent theEvent) {
     else
       println("a state with name " + oldName + " could not be found! ");
   }
+
+  /*
+  if (theEvent.isGroup()) {
+    println("got an event from group "
+      +theEvent.getGroup().getName()
+      +", isOpen? "+theEvent.getGroup().isOpen()
+      );
+  } else if (theEvent.isController()) {
+    println("got something from a controller "
+      +theEvent.getController().getName()
+      );
+  }
+  */
+
 }

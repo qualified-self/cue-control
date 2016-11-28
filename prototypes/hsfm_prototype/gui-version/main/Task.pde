@@ -14,7 +14,9 @@
 //this is the abstract class every task needs to implement
 public abstract class Task {
   protected Status status;
-  protected String name;
+  protected String name; //@TODO THIS SHOULD BE AN ID INSTEAD!!!
+  protected String group_gui_id;
+  //protected State  parent;
   //protected PApplet  p;
 
   public Task (String taskname) {
@@ -40,6 +42,14 @@ public abstract class Task {
 
   String get_name() {
     return this.name;
+  }
+
+  String get_gui_id() {
+    return this.group_gui_id;
+  }
+
+  void set_gui_id(String g_name) {
+    this.group_gui_id = g_name;
   }
 
   Status get_status () {
@@ -89,6 +99,8 @@ public abstract class Task {
   abstract void update_status();
   abstract void stop();
   abstract Task clone();
+  abstract CallbackListener generate_callback_leave();
+  abstract CallbackListener generate_callback_enter();
 
   Group load_gui_elements(State s) {
     return null;

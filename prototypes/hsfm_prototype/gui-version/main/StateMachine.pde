@@ -8,6 +8,7 @@
 public class StateMachine extends Task {
   State begin, end, actual;
   Vector<State> states;
+  String title; //this should be the name. the super name should be an id instead.
 
   float stateTimerMilestone = 0;
   float stateTimer          = 0;
@@ -18,6 +19,7 @@ public class StateMachine extends Task {
   //contructor
   public StateMachine (String name) {
     super (name);
+    title   = name;
     begin   = new State("BEGIN_" + name);
     end     = new State("END_"+name);
     states  = new Vector<State>();
@@ -111,6 +113,11 @@ public class StateMachine extends Task {
     if (debug)  println("iterrupting State_Machine" + this.name);
   }
 
+  void update_title(String newtitle) {
+    bb.remove(this.title+"_stateTimer");
+    this.title = newtitle.replace(" ", "_");
+    init_global_variables();
+  }
 
   void update_actual (State next) {
     actual.is_actual = false;
@@ -311,13 +318,13 @@ public class StateMachine extends Task {
 
   //inits the global variables related to this blackboard
   void init_global_variables() {
-    bb.put(this.name+"_stateTimer", 0);
+    bb.put(this.title+"_stateTimer", 0);
   }
 
   //updates the global variable related to this blackboard
   void update_global_variables() {
     update_state_timer();
-    bb.replace(this.name+"_stateTimer", this.stateTimer);
+    bb.replace(this.title+"_stateTimer", this.stateTimer);
     //println("update variable " + this.stateTimer);
   }
 
@@ -373,8 +380,57 @@ public class StateMachine extends Task {
       s.reset_name();
   }
 
+
+  CallbackListener generate_callback_enter() {
+    return new CallbackListener() {
+          public void controlEvent(CallbackEvent theEvent) {
+
+            String s = theEvent.getController().getName();
+            println(s + " was entered");
+
+            if (s.equals(get_gui_id() + "/name")) {
+                String text = theEvent.getController().getValueLabel().getText();
+                update_title(text);
+                println(s + " " + text);
+            }
+          }
+    };
+  }
+
+    CallbackListener generate_callback_leave() {
+      return new CallbackListener() {
+            public void controlEvent(CallbackEvent theEvent) {
+
+              String s = theEvent.getController().getName();
+
+              String newtext = theEvent.getController().getValueLabel().getText();
+              String oldtext = "";
+
+              if (s.equals(get_gui_id() + "/name"))
+                oldtext = title;
+              else  return;
+
+              //if the user tried to change but did not press enter
+              if (!newtext.replace(" ", "").equals(oldtext)) {
+                //resets the test for the original
+                Textfield t = (Textfield)cp5.get(s);
+                t.setText(oldtext);
+              }
+            }
+      };
+  }
+
+
+
+
   Group load_gui_elements(State s) {
-    Group g = cp5.addGroup(s.name + " " + this.get_name())
+    //creating the callbacks
+    CallbackListener cb_enter = generate_callback_enter();
+		CallbackListener cb_leave = generate_callback_leave();
+		String g_name = s.name + " " + this.get_name();
+    this.set_gui_id(g_name);
+
+    Group g = cp5.addGroup(g_name)
       .setHeight(12)
       .setBackgroundHeight(130)
       //.setWidth(100)
@@ -388,22 +444,26 @@ public class StateMachine extends Task {
     int localx = 10, localy = 15, localoffset = 40;
     int w = g.getWidth()-10;
 
-    cp5.addTextfield("name_s_m")
+    cp5.addTextfield(g_name+"/name")
       .setPosition(localx, localy)
       .setSize(w, 15)
       .setGroup(g)
       .setAutoClear(false)
       .setLabel("name")
+      .setText(this.name+"")
+      .onChange(cb_enter)
+      .onReleaseOutside(cb_leave)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
     ;
 
     //StateMachinePreview p = new StateMachinePreview(localx, localy+localoffset, g.getWidth());
     //g.addCanvas((controlP5.Canvas)p);
 
-    cp5.addButton("open preview")
+    cp5.addButton(g_name+"/open_preview")
       .setPosition(localx, localy+15+(2*localoffset))
       .setSize(w, 15)
       .setValue(0)
+      .setLabel("open preview")
       .setGroup(g)
       ;
 

@@ -286,7 +286,7 @@ public class State {
   //method that initializes a random demo osc task
   void init_random_osc_task () {
     String taskname = generate_random_name();
-    OSCTask t = new OSCTask(taskname, 12000, "localhost", new Object[]{0});
+    OSCTask t = new OSCTask(taskname, "/test/value", 12000, "localhost", new Object[]{0, 12});
     this.add_task(t);
     //println(selected + " " + pie.options[selected]);
 
