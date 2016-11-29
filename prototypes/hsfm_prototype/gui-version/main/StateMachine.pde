@@ -479,35 +479,37 @@ public class StateMachine extends Task {
     return g;
   }
 
-  //boolean lastMousePressed = false;
+  void connect_state_if_demanded_by_user (State s) {
+    //println("verify: mouse is hiting a new state or not?");
+
+    //unfreezes state s
+    s.unfreeze_movement_and_untrigger_connection();
+
+    State intersected = this.intersects_gui(mouseX, mouseY);
+    //if there is someone to connect to
+    if (intersected!=null)
+    //connects
+      s.connect(new Expression ("true"), intersected);
+  }
 
   //verifies on the gui if the user wants to create a new connection
   void update_state_connections_on_gui () {
 
     //updates the begin state
-    if (this.begin.verify_if_user_released_mouse_while_temporary_connecting()) {
-      println("verify: mouse is hiting a new state or not?");
-      this.begin.unfreeze_movement_and_untrigger_connection();
-      //return;
-    }
+    if (this.begin.verify_if_user_released_mouse_while_temporary_connecting())
+      connect_state_if_demanded_by_user(this.begin);
 
     //updates the begin state
-    if (this.end.verify_if_user_released_mouse_while_temporary_connecting()) {
-      println("verify: mouse is hiting a new state or not?");
-      this.end.unfreeze_movement_and_untrigger_connection();
-      //return;
-    }
+    if (this.end.verify_if_user_released_mouse_while_temporary_connecting())
+      connect_state_if_demanded_by_user(this.end);
 
     //iterates over the remaining states
-    for (State s : states) {
+    for (State s : states)
         //if the mouse was released and there is a temporary connection on gui
         if (s.verify_if_user_released_mouse_while_temporary_connecting()) {
-          println("verify: mouse is hiting a new state or not?");
-          //sets the state free
-          s.unfreeze_movement_and_untrigger_connection();
+          connect_state_if_demanded_by_user(s);
           break;
         }
-    }
 
     //updates the last mouse position
     //lastMousePressed = mousePressed;
