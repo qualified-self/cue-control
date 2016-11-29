@@ -57,4 +57,13 @@ public class Connection {
   Expression get_expression() {
     return this.expression;
   }
+
+
+  /*******************************************
+   ** GUI FUNCTIONS ***************************
+   ********************************************/
+
+   Group return label () {
+     
+   }
 }

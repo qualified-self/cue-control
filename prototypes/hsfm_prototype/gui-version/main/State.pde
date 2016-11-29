@@ -683,6 +683,7 @@ public class State {
     //sets text color
     fill(180);
     textAlign(CENTER, CENTER);
+    //replace that by draw on the connection class
     text("[ "+priority+" ] : " + label, 0, -30);
     //returns the matris to the regular position
     popMatrix();

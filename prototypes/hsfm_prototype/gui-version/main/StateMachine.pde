@@ -487,9 +487,11 @@ public class StateMachine extends Task {
 
     State intersected = this.intersects_gui(mouseX, mouseY);
     //if there is someone to connect to
-    if (intersected!=null)
-    //connects
+    if (intersected!=null) {
+      //connects
       s.connect(new Expression ("true"), intersected);
+      s.connect_anything_else_to_self();
+    }
   }
 
   //verifies on the gui if the user wants to create a new connection
