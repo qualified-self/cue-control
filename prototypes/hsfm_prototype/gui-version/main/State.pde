@@ -19,6 +19,7 @@ public class State {
   private String             name;
   private Status             status;
   private PieMenu            pie;
+  private MovementStatus     movement_status;
 
   public boolean             is_actual;
 
@@ -40,6 +41,7 @@ public class State {
     this.x = (int)random(10, 1024);
     this.y = (int)random(10, 768);
     this.pie = new PieMenu(x, y, size);
+    this.movement_status = MovementStatus.FREE;
 
     init_gui();
     hide_gui();
@@ -321,6 +323,7 @@ public class State {
    ** GUI FUNCTIONS ***************************
    ********************************************/
   void draw() {
+    draw_temp_connection();
     draw_pie();
     update_gui();
     draw_connections();
@@ -356,27 +359,31 @@ public class State {
   }
 
   //aux variable to handle the state moving on the screen
-  boolean moving = false;
+  //boolean moving = false;
 
   //updates the coords of the state in the screen in case mouse drags it
   void update_cordinates_gui() {
     //if mouse if moving
     if (mousePressed) {
       //if intersects for the first time
-      if (this.intersects_gui(mouseX, mouseY) & !is_dragging_someone) {
+      if (this.intersects_gui(mouseX, mouseY) && !is_dragging_someone && this.movement_status==MovementStatus.FREE) {
         //set move equals true
-        moving= true;
+        //moving= true;
+        movement_status = MovementStatus.MOVING;
         is_dragging_someone = true;
       }
 
       //if is moving, updates the value
-      if (moving)
+      if (movement_status==MovementStatus.MOVING)
         set_position_gui(mouseX, mouseY);
       //if mouse is released
     } else {
-      //stops moving
-      moving = false;
-      is_dragging_someone = false;
+      //if this state was moving before
+      if (movement_status==MovementStatus.MOVING) {
+        //stops moving
+        movement_status = MovementStatus.FREE;
+        is_dragging_someone = false;
+      }
     }
   }
 
@@ -627,14 +634,28 @@ public class State {
     }
   }
 
-  void draw_connection (Connection c, int priority) {
-    State ns = c.get_next_state();
+  boolean there_is_a_temporary_connection_on_gui () {
+    return (this.movement_status==MovementStatus.FREEZED);
+  }
+
+  boolean verify_if_user_released_mouse_while_temporary_connecting () {
+    return (there_is_a_temporary_connection_on_gui() && mouseReleased);
+  }
+
+  void draw_temp_connection() {
+    //if this state is freezed
+    if (there_is_a_temporary_connection_on_gui()) {
+        draw_generic_connection(mouseX, mouseY, connections.size()+1, "true");
+    }
+  }
+
+  void draw_generic_connection (int destx, int desty, int priority, String label) {
     //line color
     stroke(50);
     //the wieght of the line
     strokeWeight(5);
     //draws the line
-    line(x, y, ns.x, ns.y);
+    line(x, y, destx, desty);
     //saves the current matrix
     pushMatrix();
     //moving to where the arrow is going
@@ -642,8 +663,8 @@ public class State {
     //saves the current matrix
     pushMatrix();
     //computes the midpoint where the arrow is going to be
-    float newx = (ns.x-x)/2;
-    float newy = (ns.y-y)/2;
+    float newx = (destx-x)/2;
+    float newy = (desty-y)/2;
     //translate to the final position of the arrow
     translate(newx, newy);
 
@@ -651,7 +672,7 @@ public class State {
     pushMatrix();
 
     //computes the angle to rotate the arrow
-    float a = atan2(x-ns.x, ns.y-y);
+    float a = atan2(x-destx, desty-y);
     //rotates
     rotate(a);
     //draws the arr0w
@@ -662,10 +683,15 @@ public class State {
     //sets text color
     fill(180);
     textAlign(CENTER, CENTER);
-    text("[ "+priority+" ] : " + c.get_expression().toString(), 0, -30);
+    text("[ "+priority+" ] : " + label, 0, -30);
     //returns the matris to the regular position
     popMatrix();
     popMatrix();
+  }
+
+  void draw_connection (Connection c, int priority) {
+    State ns = c.get_next_state();
+    draw_generic_connection(ns.x, ns.y, priority, c.get_expression().toString());
   }
 
   void draw_connection_to_self(Connection c, int priority) {
@@ -787,6 +813,19 @@ public class State {
     //iterates of all tasks related to this state
     for (Task t : tasks)
       add_task_in_accordion_gui(t);
+  }
+
+  void freeze_movement_and_trigger_connection() {
+    println("freezing " + this.name);
+    this.movement_status = MovementStatus.FREEZED;
+    label.setFocus(false);
+  }
+
+  void unfreeze_movement_and_untrigger_connection() {
+    if(this.movement_status == MovementStatus.FREEZED) {
+      println("unfreezing " + this.name);
+      this.movement_status = MovementStatus.FREE;
+    }
   }
 
 }

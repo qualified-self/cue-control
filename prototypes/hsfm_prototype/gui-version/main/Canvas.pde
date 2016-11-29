@@ -113,5 +113,27 @@ class Canvas {
       root.stop();
       break;
     }
+    //println(keyCode);
   }
+
+  void mousePressed() {
+    //if the key is not pressed, i'm not interested
+    if (!keyPressed) return;
+
+    switch(keyCode) {
+    //in case the key it's shift
+    case 16:
+      //verifies if the mouse intersects a state
+      State result = root.intersects_gui(mouseX, mouseY);
+
+      //if it does not, creates a new state
+      if (result!=null) {
+          println("mouse was pressed while holding shift key in state " + result.get_name());
+          result.freeze_movement_and_trigger_connection();
+      }
+
+      break;
+    }
+  }
+
 }

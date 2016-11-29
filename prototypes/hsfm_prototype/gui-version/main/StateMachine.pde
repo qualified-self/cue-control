@@ -13,6 +13,7 @@ public class StateMachine extends Task {
   float stateTimerMilestone = 0;
   float stateTimer          = 0;
 
+
   //Input input_condition;
   //State_Machine_Preview preview;
 
@@ -154,40 +155,6 @@ public class StateMachine extends Task {
 
     //checks if currect actual has any empty transition
     //check_for_empty_transition();
-  }
-
-  void hide() {
-    begin.hide_gui();
-    for (State s : states)
-      s.hide_gui();
-    end.hide_gui();
-  }
-
-  void show() {
-    begin.show_gui();
-    for (State s : states)
-      s.show_gui();
-    end.show_gui();
-  }
-
-  //draws all states associated with this state_machine
-  void draw() {
-    //cleaning the background
-    background(0);
-
-    //drawing the entry state
-    begin.draw();
-    begin.draw_begin();
-    //drawing the states begining to this state machine
-    for (State s : states)
-      s.draw();
-    //drawing the end state
-    end.draw();
-    end.draw_end();
-
-    //drawing the actual, if running
-    if (this.status==Status.RUNNING)
-      actual.draw_actual();
   }
 
   //function called by State_Machine at every update looking for empty connections
@@ -345,6 +312,51 @@ public class StateMachine extends Task {
     return this.states.size();
   }
 
+  /*******************************************
+   ** GUI FUNCTIONS ***************************
+   ********************************************/
+
+   //draws all states associated with this state_machine
+   void draw() {
+     update_gui();
+
+     //cleaning the background
+     background(0);
+
+     //drawing the entry state
+     begin.draw();
+     begin.draw_begin();
+     //drawing the states begining to this state machine
+     for (State s : states)
+       s.draw();
+     //drawing the end state
+     end.draw();
+     end.draw_end();
+
+     //drawing the actual, if running
+     if (this.status==Status.RUNNING)
+       actual.draw_actual();
+   }
+
+    void update_gui () {
+      //verifies if user wants to create a new connection for this state
+      update_state_connections_on_gui();
+    }
+
+    void hide() {
+      begin.hide_gui();
+      for (State s : states)
+        s.hide_gui();
+      end.hide_gui();
+    }
+
+    void show() {
+      begin.show_gui();
+      for (State s : states)
+        s.show_gui();
+      end.show_gui();
+    }
+
   //returns a state that intersect test_x, test_y positions
   State intersects_gui(int test_x, int test_y) {
     State result = null;
@@ -420,9 +432,6 @@ public class StateMachine extends Task {
       };
   }
 
-
-
-
   Group load_gui_elements(State s) {
     //creating the callbacks
     CallbackListener cb_enter = generate_callback_enter();
@@ -468,6 +477,40 @@ public class StateMachine extends Task {
       ;
 
     return g;
+  }
+
+  //boolean lastMousePressed = false;
+
+  //verifies on the gui if the user wants to create a new connection
+  void update_state_connections_on_gui () {
+
+    //updates the begin state
+    if (this.begin.verify_if_user_released_mouse_while_temporary_connecting()) {
+      println("verify: mouse is hiting a new state or not?");
+      this.begin.unfreeze_movement_and_untrigger_connection();
+      //return;
+    }
+
+    //updates the begin state
+    if (this.end.verify_if_user_released_mouse_while_temporary_connecting()) {
+      println("verify: mouse is hiting a new state or not?");
+      this.end.unfreeze_movement_and_untrigger_connection();
+      //return;
+    }
+
+    //iterates over the remaining states
+    for (State s : states) {
+        //if the mouse was released and there is a temporary connection on gui
+        if (s.verify_if_user_released_mouse_while_temporary_connecting()) {
+          println("verify: mouse is hiting a new state or not?");
+          //sets the state free
+          s.unfreeze_movement_and_untrigger_connection();
+          break;
+        }
+    }
+
+    //updates the last mouse position
+    //lastMousePressed = mousePressed;
   }
 
 }

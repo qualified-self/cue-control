@@ -18,6 +18,7 @@ Blackboard bb = new Blackboard();
 
 boolean debug = false;
 boolean keyReleased = false;
+boolean mouseReleased = false;
 
 void setup() {
   size(1024, 748);
@@ -36,13 +37,22 @@ void draw() {
   //draws the blackboard
   bb.draw();
 
-  if (keyReleased) keyReleased = false;
+  if (keyReleased)     keyReleased = false;
+  if (mouseReleased) mouseReleased = false;
 }
 
 void keyPressed() {
   t.keyPressed();
 }
 
+void mousePressed() {
+  t.mousePressed();
+}
+
 void keyReleased() {
   keyReleased = true;
+}
+
+void mouseReleased() {
+  mouseReleased = true;
 }
