@@ -247,12 +247,31 @@ public class State {
     }
   }
 
+  void reload_connections_gui() {
+    for (Connection c : connections)
+      c.reload_gui_items();
+  }
+
   //add a connection to this state
   void connect(Expression expression, State next_state) {
+    //if there is already a connection next_state, do nothing
+    if (there_is_already_a_connection_to_state(next_state)) return;
+
+    int p = connections.size()+1;
 
     //in case the condition hasnt been used, create a new connection
-    Connection c = new Connection(next_state, expression, connections.size());
+    Connection c = new Connection(this, next_state, expression, p);
+    //@TODO add item from all dropdown lists
     connections.addElement(c);
+    //reload_connections_gui();
+
+    //if there is already a transition to self, and it's not the one we just created
+    if (there_is_already_a_connection_to_state(this) && next_state!=this) {
+      println("hey!");
+      //update its priority to the last
+      update_priority(p-1, p);
+    }
+
     if (debug)
       println("Connection created. If " + this.name + " receives " + expression.toString() + ", it goes to state " + next_state.name);
   }
@@ -264,14 +283,24 @@ public class State {
 
   //creates a "anything else" connection to self
   void connect_anything_else_to_self() {
-    connect(this);
+    this.connect(this);
+  }
+
+  boolean there_is_already_a_connection_to_state(State next) {
+    boolean result = false;
+
+    for (Connection c : connections)
+      if (next==c.next_state) result = true;
+
+    return result;
   }
 
   //remove a connection from this state
   void disconnect(Connection c) {
-    if (connections.contains(c))
+    if (connections.contains(c)) {
+      //@TODO remove item from all dropdown lists
       this.connections.removeElement(c);
-    else
+    } else
       if (debug) println("Unable to remove connection " + c.toString() + " from state " + this.name);
   }
 
@@ -318,6 +347,21 @@ public class State {
     //println(selected + " " + pie.options[selected]);
   }
 
+  void update_priority(int oldPriority, int newPriority) {
+    //change the position of the connection in the Vector
+    //udpate all connections
+    //reload gui elements
+
+    Connection item = connections.get(oldPriority-1);
+    connections.remove(oldPriority-1);
+    connections.add(newPriority-1, item);
+
+    println("updating priority. was" + oldPriority + " now is " + newPriority);
+
+    update_connections_gui();
+    reload_connections_gui();
+  }
+
 
   /*******************************************
    ** GUI FUNCTIONS ***************************
@@ -356,6 +400,8 @@ public class State {
     remove_task_in_gui_if_necessary();
     //updates the gui cordinates, if necessary
     update_cordinates_gui();
+    //update connecitons gui
+    //update_connections_gui();
   }
 
   //aux variable to handle the state moving on the screen
@@ -384,6 +430,13 @@ public class State {
         movement_status = MovementStatus.FREE;
         is_dragging_someone = false;
       }
+    }
+  }
+
+  void update_connections_gui () {
+    for (int i = 0; i < connections.size(); i++) {
+      Connection c = connections.get(i);
+      c.update_priority(i+1);
     }
   }
 
@@ -625,12 +678,12 @@ public class State {
   void draw_connections () {
     for (int i = 0; i < connections.size(); i++) {
       Connection c = connections.get(i);
-    //for (Connection c : connections) {
+      c.update_priority(i+1);
       if (c.get_next_state().get_name() == this.get_name())
-        draw_connection_to_self(c, i+1);
+        draw_connection_to_self(c);
 
       else
-        draw_connection(c, i+1);
+        draw_connection(c);
     }
   }
 
@@ -650,6 +703,10 @@ public class State {
   }
 
   void draw_generic_connection (int destx, int desty, int priority, String label) {
+    draw_generic_connection(destx, desty, priority, label, true);
+  }
+
+  void draw_generic_connection (int destx, int desty, int priority, String label, boolean print_label) {
     //line color
     stroke(50);
     //the wieght of the line
@@ -683,19 +740,30 @@ public class State {
     //sets text color
     fill(180);
     textAlign(CENTER, CENTER);
-    //replace that by draw on the connection class
-    text("[ "+priority+" ] : " + label, 0, -30);
+    if(print_label)
+      text("[ "+priority+" ] : " + label, 0, -30);
+    //c.set_gui_position(0, -30);
     //returns the matris to the regular position
     popMatrix();
     popMatrix();
   }
 
-  void draw_connection (Connection c, int priority) {
+  void draw_connection (Connection c) {
     State ns = c.get_next_state();
-    draw_generic_connection(ns.x, ns.y, priority, c.get_expression().toString());
+    float destx = ns.x;
+    float desty = ns.y;
+    draw_generic_connection(ns.x, ns.y, c.priority, c.get_expression().toString(), false);
+    float newx = (destx-x)/2;
+    float newy = (desty-y)/2;
+    //float a = atan2(x-destx, desty-y);
+    float a = atan2(destx-x, desty-y);
+    newx = newx+x;
+    newy = newy+y;
+    int x_offset = (int)c.get_label_width()/2;
+    c.set_gui_position((int)newx-x_offset, (int)newy-30);
   }
 
-  void draw_connection_to_self(Connection c, int priority) {
+  void draw_connection_to_self(Connection c) {
     //line color
     stroke(50);
     //the wieght of the line
@@ -709,8 +777,10 @@ public class State {
     line(x-5, y-100, x+5, y-110);
     //draw the input
     fill(180);
-    textAlign(CENTER, CENTER);
-    text("[ "+priority+" ] : "  + c.get_expression().toString(), x, y-125);
+    //textAlign(CENTER, CENTER);
+    //text("[ "+priority+" ] : "  + c.get_expression().toString(), x, y-125);
+    int x_offset = (int)c.get_label_width()/2;
+    c.set_gui_position(x-x_offset, y-125);
   }
 
   void draw_pie() {
