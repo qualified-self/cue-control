@@ -65,3 +65,12 @@ public static BigDecimal round(float d, int decimalPlace) {
     bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
     return bd;
 }
+
+
+//checks if the user released the key minus
+boolean user_pressed_minus () {
+  boolean result = keyReleased && key=='-';
+
+  //returns the result
+  return result;
+}

@@ -171,6 +171,17 @@ public class Connection {
    }
    */
 
+   boolean is_mouse_over () {
+     return t.isMouseOver() || d.isMouseOver();
+   }
+
+   boolean should_be_removed() {
+     if (user_pressed_minus() && is_mouse_over())
+        return true;
+     else
+        return false;
+   }
+
    CallbackListener generate_callback_dropdown() {
      return new CallbackListener() {
        public void controlEvent(CallbackEvent theEvent) {

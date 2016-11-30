@@ -149,6 +149,7 @@ public class State {
     //println("State " + this.name + "state was updated to " + this.status);
   }
 
+
   //function called everytime there is a new input
   State tick() {
     State my_return = this;
@@ -276,6 +277,28 @@ public class State {
       println("Connection created. If " + this.name + " receives " + expression.toString() + ", it goes to state " + next_state.name);
   }
 
+  void update_all_priorities () {
+    for (int i = 0; i < connections.size(); i++) {
+      Connection c = connections.get(i);
+      c.update_priority(i+1);
+    }
+  }
+
+  void update_priority(int oldPriority, int newPriority) {
+    //change the position of the connection in the Vector
+    //udpate all connections
+    //reload gui elements
+
+    Connection item = connections.get(oldPriority-1);
+    connections.remove(oldPriority-1);
+    connections.add(newPriority-1, item);
+
+    println("updating priority. was" + oldPriority + " now is " + newPriority);
+
+    update_all_priorities();
+    reload_connections_gui();
+  }
+
   //creates a "anything else" connection to next_state
   void connect(State next_state) {
     this.connect(new Expression("true"), next_state);
@@ -298,8 +321,15 @@ public class State {
   //remove a connection from this state
   void disconnect(Connection c) {
     if (connections.contains(c)) {
-      //@TODO remove item from all dropdown lists
+      //all connection gui items
+      c.remove_gui_items();
+      //remove the connection
       this.connections.removeElement(c);
+
+      //if there is only one connection left and it is a trnsition to self
+      if (this.connections.size()==1 && this.connections.get(0).next_state==this)
+      //removes everything
+        this.disconnect(this.connections.get(0));
     } else
       if (debug) println("Unable to remove connection " + c.toString() + " from state " + this.name);
   }
@@ -347,21 +377,6 @@ public class State {
     //println(selected + " " + pie.options[selected]);
   }
 
-  void update_priority(int oldPriority, int newPriority) {
-    //change the position of the connection in the Vector
-    //udpate all connections
-    //reload gui elements
-
-    Connection item = connections.get(oldPriority-1);
-    connections.remove(oldPriority-1);
-    connections.add(newPriority-1, item);
-
-    println("updating priority. was" + oldPriority + " now is " + newPriority);
-
-    update_connections_gui();
-    reload_connections_gui();
-  }
-
 
   /*******************************************
    ** GUI FUNCTIONS ***************************
@@ -402,6 +417,7 @@ public class State {
     update_cordinates_gui();
     //update connecitons gui
     //update_connections_gui();
+    remove_connection_if_necessary();
   }
 
   //aux variable to handle the state moving on the screen
@@ -433,11 +449,17 @@ public class State {
     }
   }
 
-  void update_connections_gui () {
-    for (int i = 0; i < connections.size(); i++) {
+  void remove_connection_if_necessary() {
+    for (int i = connections.size()-1; i >=0; i--) {
       Connection c = connections.get(i);
-      c.update_priority(i+1);
+      if (c.should_be_removed()) {
+        println("remove "+ c.toString());
+        this.disconnect(c);
+        this.update_all_priorities();
+        this.reload_connections_gui();
+      }
     }
+
   }
 
   //updates the name of this state
@@ -836,14 +858,6 @@ public class State {
     }
   }
 
-  //checks if the user released the key minus
-  boolean user_pressed_minus_over_a_task () {
-    boolean result = keyReleased && key=='-';
-
-    //returns the result
-    return result;
-  }
-
   //verifies if the mouse is over a certain task, returning this task
   Task verifies_if_mouse_is_over_a_task () {
     Task to_be_removed = null;
@@ -854,7 +868,7 @@ public class State {
       Group g = cp5.get(Group.class, this.name + " " + t.get_name());
 
       //verifies if the menu item is selected and the user pressed '-'
-      if (g.isMouseOver() && user_pressed_minus_over_a_task ()) {
+      if (g.isMouseOver() && user_pressed_minus ()) {
         //stores the item to be removed
         to_be_removed = t;
         break;
