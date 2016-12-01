@@ -115,7 +115,7 @@ public class StateMachine extends Task {
   }
 
   void update_title(String newtitle) {
-    bb.remove(this.title+"_stateTimer");
+    board.remove(this.title+"_stateTimer");
     this.title = newtitle.replace(" ", "_");
     init_global_variables();
   }
@@ -301,13 +301,13 @@ public class StateMachine extends Task {
 
   //inits the global variables related to this blackboard
   void init_global_variables() {
-    bb.put(this.title+"_stateTimer", 0);
+    board.put(this.title+"_stateTimer", 0);
   }
 
   //updates the global variable related to this blackboard
   void update_global_variables() {
     update_state_timer();
-    bb.replace(this.title+"_stateTimer", this.stateTimer);
+    board.replace(this.title+"_stateTimer", this.stateTimer);
     //println("update variable " + this.stateTimer);
   }
 

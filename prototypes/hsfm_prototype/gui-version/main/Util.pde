@@ -21,6 +21,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.io.Serializable;
+import java.io.*;
 
 //my osc variables
 OscP5 oscP5;

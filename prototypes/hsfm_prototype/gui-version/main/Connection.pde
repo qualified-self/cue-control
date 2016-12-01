@@ -38,7 +38,7 @@ public class Connection {
     Object ret = false;
 
     try {
-      ret = expression.eval(bb);
+      ret = expression.eval(board);
     }
     catch (ScriptException e) {
       println("Problems in processing certain transition condition. Expr: " + expression.toString() + " next state: " + next_state.toString());

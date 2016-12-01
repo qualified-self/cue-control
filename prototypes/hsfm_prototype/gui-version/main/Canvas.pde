@@ -17,6 +17,11 @@ class Canvas {
 
   }
 
+  void build() {
+    println("@TODO [CANVAS] verify what sorts of things needs to be initialize when loaded from file");
+    root.show();
+  }
+
   //init my variables
   void setup(){
     root      = new StateMachine("root");
@@ -53,6 +58,15 @@ class Canvas {
     println("remove a state");
     root.remove_state(mouseX, mouseY);
 
+  }
+
+  void run() {
+    root.run();
+  }
+
+  void stop() {
+    root.end.run();
+    root.stop();
   }
 
   //processes the multiple interpretations of the '+' key
@@ -92,47 +106,17 @@ class Canvas {
     //otherwise, removes the state
     else
       remove_state();
-
   }
 
-  void keyPressed(){
-    switch(key) {
-    case '+':
-      //create_state();
-      process_plus_key_pressed();
-      break;
-    case '-':
-      //remove_state();
-      process_minus_key_pressed();
-      break;
-    case ' ':
-      root.run();
-      break;
-    case 's':
-      root.end.run();
-      root.stop();
-      break;
-    }
-    //println(keyCode);
-  }
+  //processes ui in case the shfit key was pressed
+  void process_shift_key() {
+    //verifies if the mouse intersects a state
+    State result = root.intersects_gui(mouseX, mouseY);
 
-  void mousePressed() {
-    //if the key is not pressed, i'm not interested
-    if (!keyPressed) return;
-
-    switch(keyCode) {
-    //in case the key it's shift
-    case 16:
-      //verifies if the mouse intersects a state
-      State result = root.intersects_gui(mouseX, mouseY);
-
-      //if it does not, creates a new state
-      if (result!=null) {
-          println("mouse was pressed while holding shift key in state " + result.get_name());
-          result.freeze_movement_and_trigger_connection();
-      }
-
-      break;
+    //if it does not, creates a new state
+    if (result!=null) {
+        println("mouse was pressed while holding shift key in state " + result.get_name());
+        result.freeze_movement_and_trigger_connection();
     }
   }
 

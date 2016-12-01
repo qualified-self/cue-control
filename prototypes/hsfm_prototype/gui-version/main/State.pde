@@ -521,9 +521,9 @@ public class State {
               String newName = theEvent.getController().getValueLabel().getText();
               String oldName = name;
 
-              //checks if there is already a state with the very same future name
-              State is_there_a_state_with_the_new_name = t.root.get_state_by_name(newName);
-              State result                             = t.root.get_state_by_name(oldName);
+              //checks if there is already a state with the very same future name [BAD CODE!]
+              State is_there_a_state_with_the_new_name = canvas.root.get_state_by_name(newName);
+              State result                             = canvas.root.get_state_by_name(oldName);
 
               //if there is, prints an error and change does not occur!
               if (is_there_a_state_with_the_new_name != null) {

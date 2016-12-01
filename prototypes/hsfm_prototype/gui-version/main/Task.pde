@@ -85,7 +85,7 @@ public abstract class Task {
     // If added an expression, process it and save result in blackboard.
     if (o instanceof Expression) {
       try {
-        ret = ((Expression)o).eval(bb);
+        ret = ((Expression)o).eval(board);
       }
       catch (ScriptException e) {
         println("ScriptExpression thrown, unhandled update.");

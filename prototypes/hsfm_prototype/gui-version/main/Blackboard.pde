@@ -3,6 +3,9 @@
 ************************************************
 ** jeraman.info, Oct. 11 2016 ******************
 ************************************************
+** UPDATE: part of this code (support to expressions,
+** and the ConcurrentHashMap)was written by Sofian
+** and incorporated by him into the original code.
 ************************************************/
 
 /// Blackboard class.
@@ -32,6 +35,10 @@ class Blackboard extends ConcurrentHashMap<String, Object>
     //this.y = 20;
 
     init_global_variables();
+  }
+
+  void build() {
+    println("@TODO [BLACKBOARD] verify what sorts of things needs to be initialize when loaded from file");
   }
 
   void init_global_variables() {

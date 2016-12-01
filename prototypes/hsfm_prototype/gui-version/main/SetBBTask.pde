@@ -28,7 +28,7 @@ class SetBBTask extends Task {
 
   void run() {
     this.status = Status.RUNNING;
-    bb.put(variableName, evaluate_value(value));
+    board.put(variableName, evaluate_value(value));
     this.status = Status.DONE;
   }
 

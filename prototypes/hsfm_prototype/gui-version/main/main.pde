@@ -13,40 +13,65 @@
 //Scenario t = new Scenario(this);
 //Testing_Conditions    t = new Testing_Conditions(this);
 //Scenario t    = new Scenario(this);
-Canvas t      = new Canvas();
-Blackboard bb = new Blackboard();
+Canvas    canvas = new Canvas();
+Blackboard board = new Blackboard();
+Serializer s     = new Serializer();
 
 boolean debug = false;
 boolean keyReleased = false;
 boolean mouseReleased = false;
 
 void setup() {
-  size(1024, 748);
+  size(1280, 800);
   background(0);
   smooth();
   setup_util();
-  t.setup();
-  bb.set_gui_position(width-(bb.mywidth*3)-2, 20);
+  canvas.setup();
+  board.set_gui_position(width-(board.mywidth*3)-2, 20);
 }
 
 void draw() {
   //updates global variables in the bb
-  bb.update_global_variables();
+  board.update_global_variables();
   //draws the scenario
-  t.draw();
+  canvas.draw();
   //draws the blackboard
-  bb.draw();
+  board.draw();
 
   if (keyReleased)     keyReleased = false;
   if (mouseReleased) mouseReleased = false;
 }
 
-void keyPressed() {
-  t.keyPressed();
+void keyPressed(){
+  switch(key) {
+  case '+':
+    //create_state();
+    canvas.process_plus_key_pressed();
+    break;
+  case '-':
+    //remove_state();
+    canvas.process_minus_key_pressed();
+    break;
+  case ' ':
+    canvas.run();
+    break;
+  case 's':
+    canvas.stop();
+    break;
+  }
+  //println(keyCode);
 }
 
 void mousePressed() {
-  t.mousePressed();
+  //if the key is not pressed, i'm not interested
+  if (!keyPressed) return;
+
+  switch(keyCode) {
+  //in case the key it's shift
+  case 16:
+    canvas.process_shift_key();
+    break;
+  }
 }
 
 void keyReleased() {
