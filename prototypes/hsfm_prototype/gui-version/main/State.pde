@@ -248,6 +248,17 @@ public class State {
     }
   }
 
+  void remove_all_connections_to_a_state (State dest) {
+    //iterating over connections backwards
+    for (int i = connections.size()-1; i >=0 ; i--) {
+      Connection c = connections.get(i);
+      if (c.next_state==dest)
+        this.disconnect(c);
+    }
+
+    this.reload_connections_gui();
+  }
+
   void reload_connections_gui() {
     for (Connection c : connections)
       c.reload_gui_items();
@@ -330,6 +341,9 @@ public class State {
       if (this.connections.size()==1 && this.connections.get(0).next_state==this)
       //removes everything
         this.disconnect(this.connections.get(0));
+
+      //updates priorities of connections
+      this.update_all_priorities();
     } else
       if (debug) println("Unable to remove connection " + c.toString() + " from state " + this.name);
   }
@@ -455,7 +469,6 @@ public class State {
       if (c.should_be_removed()) {
         println("remove "+ c.toString());
         this.disconnect(c);
-        this.update_all_priorities();
         this.reload_connections_gui();
       }
     }

@@ -218,6 +218,10 @@ public class StateMachine extends Task {
     if (states.contains(s)) {
       //remove all tasks associated with the deleted state
       s.remove_all_tasks();
+
+      //remove all connections to this state
+      this.remove_all_connections_to_a_state(s);
+
       //removes its ui components
       cp5.remove(s.name);
       //remove the state fmor the list
@@ -237,6 +241,18 @@ public class StateMachine extends Task {
         //and breaks (one remotion per time))
         return;
       }
+  }
+
+  void remove_all_connections_to_a_state (State dest) {
+    println("removing all connections to " + dest.toString());
+
+    //removing all connection to a state in the begin and in the end
+    this.begin.remove_all_connections_to_a_state(dest);
+    this.end.remove_all_connections_to_a_state(dest);
+
+    //iterates over all states
+    for (State s : states)
+      s.remove_all_connections_to_a_state(dest);
   }
 
   //returns a state by its name. returns null if not available
