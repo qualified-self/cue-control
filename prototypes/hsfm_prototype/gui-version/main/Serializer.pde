@@ -32,10 +32,11 @@ public class Serializer {
     try {
       ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
       oos.writeObject(board);
-      oos.writeObject(canvas);
+      //oos.writeObject(canvas);
       oos.close();
     } catch (Exception e) {
       println("ERROR saving to file: " + file + " [exception: " + e.toString() + "].");
+      e.printStackTrace();
     }
   }
 
@@ -44,10 +45,10 @@ public class Serializer {
       ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 
       board    = (Blackboard) ois.readObject();
-      canvas     = (Canvas)   ois.readObject();
+      //canvas     = (Canvas)   ois.readObject();
 
       board.build();
-      canvas.build();
+      //canvas.build();
 
       ois.close();
     } catch (Exception e) {

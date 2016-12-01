@@ -14,7 +14,7 @@
 //Testing_Conditions    t = new Testing_Conditions(this);
 //Scenario t    = new Scenario(this);
 Canvas    canvas      = new Canvas();
-Blackboard board      = new Blackboard();
+Blackboard board      = new Blackboard(this);
 Serializer serializer = new Serializer();
 
 boolean debug = false;
@@ -32,11 +32,11 @@ void setup() {
 
 void draw() {
   //updates global variables in the bb
-  board.update_global_variables();
+  board.update_global_variables(this);
   //draws the scenario
   canvas.draw();
   //draws the blackboard
-  board.draw();
+  board.draw(this);
 
   if (keyReleased)     keyReleased = false;
   if (mouseReleased) mouseReleased = false;
