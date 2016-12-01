@@ -13,9 +13,9 @@
 //Scenario t = new Scenario(this);
 //Testing_Conditions    t = new Testing_Conditions(this);
 //Scenario t    = new Scenario(this);
-Canvas    canvas = new Canvas();
-Blackboard board = new Blackboard();
-Serializer s     = new Serializer();
+Canvas    canvas      = new Canvas();
+Blackboard board      = new Blackboard();
+Serializer serializer = new Serializer();
 
 boolean debug = false;
 boolean keyReleased = false;
@@ -57,6 +57,12 @@ void keyPressed(){
     break;
   case 's':
     canvas.stop();
+    break;
+  case 'z':
+    serializer.save();
+    break;
+  case 'x':
+    serializer.load();
     break;
   }
   //println(keyCode);
