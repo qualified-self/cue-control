@@ -10,21 +10,26 @@
  ************************************************
  ************************************************/
 
+import java.io.Serializable;
+import processing.core.PApplet;
+import controlP5.*;
+import javax.script.*;
+
 ////////////////////////////////////////
 //this is the abstract class every task needs to implement
-public abstract class Task {
+public abstract class Task implements Serializable {
   protected Status status;
   protected String name; //@TODO THIS SHOULD BE AN ID INSTEAD!!!
   protected String group_gui_id;
   //protected State  parent;
-  //protected PApplet  p;
+  transient protected PApplet  p;
 
-  public Task (String taskname) {
-    //this.p = p;
+  public Task (PApplet p, String taskname) {
+    this.p = p;
     this.name   = taskname;
     this.status = Status.INACTIVE;
 
-    println("task " + this.toString() + " created!");
+    System.out.println("task " + this.toString() + " created!");
   }
   /*
   public Task (PApplet p, String taskname) {
@@ -81,6 +86,7 @@ public abstract class Task {
   //function that tries to evaluates the value (if necessary) and returns the real value
   Object evaluate_value (Object o) {
     Object ret = o;
+    Blackboard board = HFSMPrototype.instance().board();
 
     // If added an expression, process it and save result in blackboard.
     if (o instanceof Expression) {
@@ -88,7 +94,7 @@ public abstract class Task {
         ret = ((Expression)o).eval(board);
       }
       catch (ScriptException e) {
-        println("ScriptExpression thrown, unhandled update.");
+        System.out.println("ScriptExpression thrown, unhandled update.");
       }
     }
 
@@ -96,13 +102,12 @@ public abstract class Task {
   }
 
   abstract void run();
+  abstract void build(PApplet p);
   abstract void update_status();
   abstract void stop();
-  abstract Task clone();
-  abstract CallbackListener generate_callback_leave();
-  abstract CallbackListener generate_callback_enter();
-
-  Group load_gui_elements(State s) {
-    return null;
-  }
+  abstract Task clone_it();
+  //abstract CallbackListener generate_callback_leave(){}
+  //abstract CallbackListener generate_callback_enter(){}
+  //Group load_gui_elements(State s) { return null; }
+  abstract Group load_gui_elements(State s);
 }

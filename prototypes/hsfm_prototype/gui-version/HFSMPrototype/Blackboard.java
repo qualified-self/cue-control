@@ -9,7 +9,6 @@
 ************************************************/
 
 import java.util.concurrent.ConcurrentHashMap;
-//import java.util.concurrent.Map;
 import java.io.Serializable;
 import processing.core.PApplet;
 import java.util.regex.*;
@@ -19,34 +18,35 @@ import oscP5.*;
 
 
 /// Blackboard class.
-public class Blackboard extends ConcurrentHashMap<String, Object> implements Serializable
-{
+public class Blackboard extends ConcurrentHashMap<String, Object> implements Serializable {
   int mywidth = 60;
   int myheight = 20;
   int x;
   int y;
   boolean debug = false;
 
-  //float stateTimerMilestone = 0;
+  transient private PApplet p;
 
   //contructor
   public Blackboard (PApplet p) {
     //this.x = width-(mywidth*3)-20;
     //this.x = width-(mywidth*3)-20;
     //this.y = 20;
-
-    init_global_variables(p);
+    this.build(p);
+    init_global_variables();
   }
 
   void set_debug (boolean b) {
     this.debug = b;
   }
 
-  void build() {
+  void build(PApplet p) {
     System.out.println("@TODO [BLACKBOARD] verify what sorts of things needs to be initialize when loaded from file");
+    this.p = p;
+    init_global_variables();
   }
 
-  void init_global_variables(PApplet p) {
+  void init_global_variables() {
       put("mouseX", p.mouseX);
       put("mouseY", p.mouseY);
       put("mousePressed", p.mousePressed);
@@ -56,34 +56,17 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
       //put("stateTimer", 0);
   }
 
-  void update_global_variables(PApplet p) {
-      replace("mouseX", p.mouseX);
-      replace("mouseY", p.mouseY);
-      replace("mousePressed", p.mousePressed);
-      replace("key", p.key);
-      replace("keyCode", p.keyCode);
-      replace("keyPressed", p.keyPressed);
+  void update_global_variables() {
+    //if the blackboard wasn't loaded yet
+    if (p==null) return;
 
-      /*
-      //in case the main state is running
-      if (t.get_status()==Status.RUNNING)
-        //updates the timer
-        update_state_timer();
-      else
-        reset_state_timer();
-      */
+    replace("mouseX", p.mouseX);
+    replace("mouseY", p.mouseY);
+    replace("mousePressed", p.mousePressed);
+    replace("key", p.key);
+    replace("keyCode", p.keyCode);
+    replace("keyPressed", p.keyPressed);
   }
-
-  /*
-  void update_state_timer() {
-      replace("stateTimer", ((float)millis()/1000)-stateTimerMilestone);
-  }
-
-  void reset_state_timer() {
-      this.stateTimerMilestone = (float)millis()/1000;
-      replace("stateTimer", 0);
-  }
-  */
 
   /**
   * Replaces variable names in expression with pattern "$varName" or "${varName}"
@@ -136,13 +119,17 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
   }
 
   //draws both the header and the items
-  void draw(PApplet p) {
-    draw_header_gui (p);
-    draw_bb_items (p);
+  void draw() {
+    //if the blackboard wasn't loaded yet
+    if (p==null) return;
+    draw_header_gui();
+    draw_bb_items();
   }
 
   //draws the header
-  void draw_header_gui (PApplet p) {
+  void draw_header_gui () {
+
+
     p.noStroke();
     p.fill(255, 200);
     p.rectMode(p.CENTER);
@@ -155,18 +142,19 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
   }
 
   //draws the items
-  void draw_bb_items (PApplet p) {
-    draw_header_gui(p);
+  void draw_bb_items () {
+    draw_header_gui();
     int i=0;
     for (ConcurrentHashMap.Entry<String, Object> element : entrySet()) {
-      drawItem(p, element, x, y+(myheight*(i+1))+i+1, mywidth, myheight);
+      drawItem(element, x, y+(myheight*(i+1))+i+1, mywidth, myheight);
       i++;
     }
   }
 
 
-  void drawItem(PApplet p, ConcurrentHashMap.Entry<String, Object> element, int posx, int posy, int mywidth, int myheight) {
+  void drawItem(ConcurrentHashMap.Entry<String, Object> element, int posx, int posy, int mywidth, int myheight) {
     int xoffset = mywidth+1;
+    //if the blackboard wasn't loaded yet
 
     //header
     p.noStroke();

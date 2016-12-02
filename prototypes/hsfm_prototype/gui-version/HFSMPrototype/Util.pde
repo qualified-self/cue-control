@@ -60,20 +60,10 @@ void setup_minim() {
   minim = new Minim(this);
 }
 
-
-
 //rounds a float to two decimals for the gui
 //retrieved from: http://stackoverflow.com/questions/8911356/whats-the-best-practice-to-round-a-float-to-2-decimals#8911683
 public static BigDecimal round(float d, int decimalPlace) {
     BigDecimal bd = new BigDecimal(Float.toString(d));
     bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
     return bd;
-}
-
-
-//checks if the user released the key minus
-boolean user_pressed_minus () {
-  boolean result = keyReleased && key=='-';
-  //returns the result
-  return result;
 }

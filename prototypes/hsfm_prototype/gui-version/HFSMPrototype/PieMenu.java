@@ -7,18 +7,19 @@
  *** jeraman.info, Nov. 23 2016 ***********************************************
  *****************************************************************************/
 
-//this is the variable that stores all the possible tasks
-String[] task_list = {"State Machine","", "", "Set Blackboard", "Audio", "OSC"};
-
+import processing.core.PApplet;
 
 class PieMenu {
+
+  //this is the variable that stores all the possible tasks
+  static String[] task_list = {"State Machine","", "", "Set Blackboard", "Audio", "OSC"};
 
   String[] options;
   private float    diam, textdiam, innerCircleDiam;
   private int      selected;
-  private color    background_color;
-  private color    font_color;
-  private color    active_color;
+  private int    background_color;
+  private int    font_color;
+  private int    active_color;
   private int      x;
   private int      y;
   private boolean  is_showing;
@@ -27,28 +28,30 @@ class PieMenu {
   private float    size;
   private float    startTime;
   private float    maxTime;
+  private PApplet  p;
 
   //basic constructor
-  public PieMenu () {
+  public PieMenu (PApplet p) {
+    this.p = p;
     this.options          = task_list;
-    this.background_color = color(50, 50, 50, 100);
-    this.active_color     = color(100);
-    this.font_color       = color(255);
-    this.x                = (int)width/2;
-    this.y                = (int)height/2;
+    this.background_color = p.color(50, 50, 50, 100);
+    this.active_color     = p.color(100);
+    this.font_color       = p.color(255);
+    this.x                = (int)p.width/2;
+    this.y                = (int)p.height/2;
     this.set_diam(200);
 
     this.is_showing       = false;
     this.up               = false;
     this.down             = false;
     this.size             = 0;
-    this.startTime        = millis();
-    this.maxTime          = 0.4;
+    this.startTime        = p.millis();
+    this.maxTime          = 0.4f;
   }
 
   //another constructor
-  public PieMenu (int x, int y, int innerCircleDiam) {
-    this();
+  public PieMenu (PApplet p, int x, int y, int innerCircleDiam) {
+    this(p);
     this.x = x;
     this.y = y;
     this.innerCircleDiam = innerCircleDiam;
@@ -66,7 +69,7 @@ class PieMenu {
   //shows this pie menu
   void show() {
     is_showing = true;
-    startTime  = millis();
+    startTime  = p.millis();
     size = 0;
     up = true;
     down = false;
@@ -74,7 +77,7 @@ class PieMenu {
 
   //hides this pie menu
   void hide() {
-    startTime  = millis();
+    startTime  = p.millis();
     size = 1;
     down = true;
     up = false;
@@ -84,7 +87,7 @@ class PieMenu {
 
     if (up) {
       //udpating the size
-      size =((float)millis() - startTime)/(maxTime*1000);
+      size =((float)p.millis() - startTime)/(maxTime*1000);
 
       /*
       if (size > 2) {
@@ -102,7 +105,7 @@ class PieMenu {
 
     if (down) {
       //udpating the size
-      size =((float)millis() - startTime)/(maxTime*1000);
+      size =((float)p.millis() - startTime)/(maxTime*1000);
       size = maxTime-size;
 
       //if finished
@@ -118,8 +121,8 @@ class PieMenu {
   //sets the diam and the textdiam
   void set_diam (int newdiam) {
     this.diam           = newdiam;
-    this.textdiam       = this.diam/2.5;
-    this.innerCircleDiam= this.diam/4;
+    this.textdiam       = this.diam/2.5f;
+    this.innerCircleDiam= this.diam/4f;
   }
 
   //sets the diam of the inner circle
@@ -134,12 +137,12 @@ class PieMenu {
   }
 
   void draw () {
-    pushMatrix();
-    translate(this.x, this.y);
+    p.pushMatrix();
+    p.translate(this.x, this.y);
     update_timer();
-    scale(size);
+    p.scale(size);
     draw_menu();
-    popMatrix();
+    p.popMatrix();
   }
 
   //draws the pie menu
@@ -147,45 +150,46 @@ class PieMenu {
     //if it' not showing, return!
     if (!is_showing) return;
 
-    noStroke();
-    fill(125);
+    p.noStroke();
+    p.fill(125);
 
-    float mouseTheta = atan2(mouseY-this.y, mouseX-this.x);
-    float piTheta    = mouseTheta>=0?mouseTheta:mouseTheta+TWO_PI;
-    float op         = options.length/TWO_PI;
+    float mouseTheta = p.atan2(p.mouseY-this.y, p.mouseX-this.x);
+    float piTheta    = mouseTheta>=0?mouseTheta:mouseTheta+p.TWO_PI;
+    float op         = options.length/p.TWO_PI;
 
     this.selected = -1;
 
     for (int i=0; i<options.length; i++) {
       //compute the proper angles
-      float s = i/op-(PI/this.options.length);
-      float e = (i+0.98)/op-(PI/this.options.length);
+      float s = i/op-(p.PI/this.options.length);
+      float e = (i+0.98f)/op-(p.PI/this.options.length);
 
       //if it's a empty option, make it black
-      if (this.options[i].equals("")) fill(0);
+      if (this.options[i].equals(""))
+        p.fill(0);
       //otherwise, make it interactive as part of the pie menu
       else {
         //float s = i/op-PI*0.125;
         //float e = (i+0.98)/op-PI*0.125;
-        if (piTheta>= s && piTheta <= e && is_a_point_inside_the_menu(mouseX, mouseY) && (!is_a_point_inside_the_core_circle(mouseX, mouseY))) {
-            fill(active_color);
+        if (piTheta>= s && piTheta <= e && is_a_point_inside_the_menu(p.mouseX, p.mouseY) && (!is_a_point_inside_the_core_circle(p.mouseX, p.mouseY))) {
+            p.fill(active_color);
             selected = i;
         } else
-          fill(background_color);
+          p.fill(background_color);
       }
       //arc(this.x, this.y, diam, diam, s, e);
-      arc(0, 0, diam, diam, s, e);
+      p.arc(0, 0, diam, diam, s, e);
       //should fill the same color as the background
       //fill(0);
       //ellipse(0, 0, innerCircleDiam, innerCircleDiam);
     }
 
-    fill(font_color);
-    textAlign(CENTER, CENTER);
+    p.fill(font_color);
+    p.textAlign(p.CENTER, p.CENTER);
 
     for (int i=0; i<options.length; i++) {
       float m = i/op;
-      text(options[i], cos(m)*textdiam, sin(m)*textdiam);
+      p.text(options[i], p.cos(m)*textdiam, p.sin(m)*textdiam);
       //text(options[i], this.x+cos(m)*textdiam, this.y+sin(m)*textdiam);
     }
   }
@@ -203,5 +207,13 @@ class PieMenu {
 
   int get_selection() {
     return selected;
+  }
+
+  boolean is_showing() {
+    return is_showing;
+  }
+
+  boolean is_fading_away() {
+    return down;
   }
 }

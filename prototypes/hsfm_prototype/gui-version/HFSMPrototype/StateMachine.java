@@ -5,6 +5,10 @@
  ************************************************
  ************************************************/
 
+import processing.core.PApplet;
+import java.util.Vector;
+import controlP5.*;
+
 public class StateMachine extends Task {
   State begin, end, actual;
   Vector<State> states;
@@ -12,18 +16,19 @@ public class StateMachine extends Task {
 
   float stateTimerMilestone = 0;
   float stateTimer          = 0;
-
+  public boolean debug;
 
   //Input input_condition;
   //State_Machine_Preview preview;
 
   //contructor
-  public StateMachine (String name) {
-    super (name);
+  public StateMachine (PApplet p, String name) {
+    super (p, name);
     title   = name;
-    begin   = new State("BEGIN_" + name);
-    end     = new State("END_"+name);
+    begin   = new State(p, "BEGIN_" + name);
+    end     = new State(p, "END_"+name);
     states  = new Vector<State>();
+    debug = HFSMPrototype.instance().debug();
     //preview = new State_Machine_Preview(this);
 
     actual = begin;
@@ -31,7 +36,8 @@ public class StateMachine extends Task {
     //sets the global variables related to this blackboard
     init_global_variables();
 
-    if (debug)  println("State_Machine " + this.name + " is inited!");
+    if (debug)
+      System.out.println("State_Machine " + this.name + " is inited!");
   }
 
   /*
@@ -52,8 +58,23 @@ public class StateMachine extends Task {
   }
   */
 
+  void build (PApplet p) {
+    this.p = p;
+
+    this.begin.build(p);
+    this.end.build(p);
+
+    for (State s : states)
+      s.build(p);
+
+    //sets the global variables related to this blackboard
+    init_global_variables();
+
+    //load_gui_elements();
+  }
+
   //so far not using this method
-  StateMachine clone() {
+  StateMachine clone_it() {
     return null;
   }
 
@@ -65,7 +86,7 @@ public class StateMachine extends Task {
 
     reset_state_timer();
     actual.run();
-    println("running the State_Machine " + this.name);
+    System.out.println("running the State_Machine " + this.name);
   }
 
   //stops all tasks associated to this node
@@ -89,7 +110,26 @@ public class StateMachine extends Task {
     this.status = Status.INACTIVE;
 
     if (debug)
-      println("stopping State_Machine" + this.name);
+      System.out.println("stopping State_Machine" + this.name);
+  }
+
+  void clear() {
+    this.stop();
+
+    //stopping all states...
+    for (State s : states) {
+      s.clear();
+      remove_state(s);
+    }
+
+    //stop begin and end
+    begin.clear();
+    end.clear();
+
+    //ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    //removes its ui components
+    //cp5.remove(begin.get_name());
+    //cp5.remove(end.get_name());
   }
 
   //stops all tasks associated to this node
@@ -111,10 +151,12 @@ public class StateMachine extends Task {
     reset_state_timer();
 
     this.status = Status.DONE;
-    if (debug)  println("iterrupting State_Machine" + this.name);
+    if (debug)
+      System.out.println("iterrupting State_Machine" + this.name);
   }
 
   void update_title(String newtitle) {
+    Blackboard board = HFSMPrototype.instance().board();
     board.remove(this.title+"_stateTimer");
     this.title = newtitle.replace(" ", "_");
     init_global_variables();
@@ -144,13 +186,15 @@ public class StateMachine extends Task {
     //if this state finished. test this condition, maybe you need to overload the comparison!
     if (actual==end) {
       this.status = Status.DONE;
-      if (debug)  println("State_Machine " + this.name +  " has reached its end and has successfully executed!");
+      if (debug)
+        System.out.println("State_Machine " + this.name +  " has reached its end and has successfully executed!");
     }
 
     //if there are no states associated to this State_Machine
-    if (states.size()==0 & begin.connections.size()==0) {
+    if (states.size()==0 & begin.get_number_of_connections()==0) {
       this.status = Status.DONE;
-      if (debug)  println("State_Machine " + this.name +  " is empty! Done!");
+      if (debug)
+        System.out.println("State_Machine " + this.name +  " is empty! Done!");
     }
 
     //checks if currect actual has any empty transition
@@ -187,10 +231,12 @@ public class StateMachine extends Task {
     if (next!=null && next!=actual) {
       //refreshing the stateTimer in the blackboard
       reset_state_timer();
-      if (debug) println("changing to a different state. reset stateTimer.");
+      if (debug)
+        System.out.println("changing to a different state. reset stateTimer.");
 
     } else {
-      if (debug) println("changing to the same state. do not reset stateTimer.");
+      if (debug)
+        System.out.println("changing to the same state. do not reset stateTimer.");
     }
 
     //in case next is not null, change state!
@@ -202,14 +248,14 @@ public class StateMachine extends Task {
   //add a state s to this State_Machine
   void add_state(State s) {
     //check if there is already a state with the same name
-    State result = get_state_by_name(s.name);
+    State result = get_state_by_name(s.get_name());
 
     //in case there isn't
     if (result==null) {
       states.addElement(s);
-      println("State " + s.name + " added to State_Machine " + this.name);
+      System.out.println("State " + s.get_name() + " added to State_Machine " + this.name);
     } else {
-      println("There is alrealdy a state with this same name. Please, pick another name!");
+      System.out.println("There is alrealdy a state with this same name. Please, pick another name!");
     }
   }
 
@@ -222,12 +268,13 @@ public class StateMachine extends Task {
       //remove all connections to this state
       this.remove_all_connections_to_a_state(s);
 
+      ControlP5 cp5 = HFSMPrototype.instance().cp5();
       //removes its ui components
-      cp5.remove(s.name);
+      cp5.remove(s.get_name());
       //remove the state fmor the list
       this.states.removeElement(s);
     } else
-      println("Unable to remove state " + s.name + " from State_Machine " + this.name);
+      System.out.println("Unable to remove state " + s.get_name() + " from State_Machine " + this.name);
   }
 
   //removes a state based on a certain x y position in the screen
@@ -244,7 +291,7 @@ public class StateMachine extends Task {
   }
 
   void remove_all_connections_to_a_state (State dest) {
-    println("removing all connections to " + dest.toString());
+    System.out.println("removing all connections to " + dest.toString());
 
     //removing all connection to a state in the begin and in the end
     this.begin.remove_all_connections_to_a_state(dest);
@@ -259,17 +306,17 @@ public class StateMachine extends Task {
   State get_state_by_name(String name) {
       State result = null;
 
-      if (this.begin.name.equalsIgnoreCase(name)) result=this.begin;
-      if (this.end.name.equalsIgnoreCase(name))   result=this.end;
+      if (this.begin.get_name().equalsIgnoreCase(name)) result=this.begin;
+      if (this.end.get_name().equalsIgnoreCase(name))   result=this.end;
 
       //iterates over all states
       for (State s : states)
-        if (s.name.equalsIgnoreCase(name)) result=s;
+        if (s.get_name().equalsIgnoreCase(name)) result=s;
 
       if (result!=null)
-        println("found! " + result.toString());
+        System.out.println("found! " + result.toString());
       else
-        println("problem!");
+        System.out.println("problem!");
 
       //returns the proper result
       return result;
@@ -278,47 +325,52 @@ public class StateMachine extends Task {
   //add a task t to the initialization of this State_Machine
   void add_initialization_task (Task t) {
     begin.add_task(t);
-    println("Task " + t.name + " added to the initialization of State_Machine " + this.name);
+    System.out.println("Task " + t.name + " added to the initialization of State_Machine " + this.name);
   }
 
   //remove a task t to the initialization of this State_Machine
   void remove_initialization_task (Task t) {
     begin.remove_task(t);
-    println("Task " + t.name + " removed from the initialization of State_Machine " + this.name);
+    System.out.println("Task " + t.name + " removed from the initialization of State_Machine " + this.name);
   }
 
   //add a task t to the initialization of this State_Machine
   void add_finalization_task (Task t) {
     end.add_task(t);
-    println("Task " + t.name + " added to the finalization of State_Machine " + this.name);
+    System.out.println("Task " + t.name + " added to the finalization of State_Machine " + this.name);
   }
 
   //remove a task t to the initialization of this State_Machine
   void remove_finalization_task (Task t) {
     end.remove_task(t);
-    println("Task " + t.name + " removed from the finalization of State_Machine " + this.name);
+    System.out.println("Task " + t.name + " removed from the finalization of State_Machine " + this.name);
   }
 
   //inits the global variables related to this blackboard
   void init_global_variables() {
-    board.put(this.title+"_stateTimer", 0);
+    HFSMPrototype.instance().board.put(this.title+"_stateTimer", 0);
   }
 
   //updates the global variable related to this blackboard
   void update_global_variables() {
     update_state_timer();
-    board.replace(this.title+"_stateTimer", this.stateTimer);
+    HFSMPrototype.instance().board.replace(this.title+"_stateTimer", this.stateTimer);
     //println("update variable " + this.stateTimer);
   }
 
   //updates the stateTimer variable related to this state machine
   void update_state_timer() {
-      this.stateTimer = ((float)millis()/1000)-stateTimerMilestone;
+    //if the PApplet wasn't loaded yet
+    if (p==null) return;
+      this.stateTimer = ((float)p.millis()/1000f)-stateTimerMilestone;
   }
 
   //resets the stateTimer variable related to this state machine
   void reset_state_timer() {
-      this.stateTimerMilestone = (float)millis()/1000;
+    //if the PApplet wasn't loaded yet
+    if (p==null) return;
+
+      this.stateTimerMilestone = (float)p.millis()/1000f;
       this.stateTimer          = 0;
       update_global_variables();
   }
@@ -334,10 +386,12 @@ public class StateMachine extends Task {
 
    //draws all states associated with this state_machine
    void draw() {
-     update_gui();
+     //if the Papplet wasn't loaded yet
+     if (p==null) return;
+     //else
+      //p.println(p.millis());
 
-     //cleaning the background
-     background(0);
+     update_gui();
 
      //drawing the entry state
      begin.draw();
@@ -387,7 +441,7 @@ public class StateMachine extends Task {
     for (State s : states)
       //if intersects...
       if (s.intersects_gui(test_x, test_y)) {
-        println("i found someone to be intersected");
+        System.out.println("i found someone to be intersected");
         //updates the result
         result = s;
         break;
@@ -414,12 +468,12 @@ public class StateMachine extends Task {
           public void controlEvent(CallbackEvent theEvent) {
 
             String s = theEvent.getController().getName();
-            println(s + " was entered");
+            System.out.println(s + " was entered");
 
             if (s.equals(get_gui_id() + "/name")) {
                 String text = theEvent.getController().getValueLabel().getText();
                 update_title(text);
-                println(s + " " + text);
+                System.out.println(s + " " + text);
             }
           }
     };
@@ -440,6 +494,7 @@ public class StateMachine extends Task {
 
               //if the user tried to change but did not press enter
               if (!newtext.replace(" ", "").equals(oldtext)) {
+                ControlP5 cp5 = HFSMPrototype.instance().cp5();
                 //resets the test for the original
                 Textfield t = (Textfield)cp5.get(s);
                 t.setText(oldtext);
@@ -452,15 +507,19 @@ public class StateMachine extends Task {
     //creating the callbacks
     CallbackListener cb_enter = generate_callback_enter();
 		CallbackListener cb_leave = generate_callback_leave();
-		String g_name = s.name + " " + this.get_name();
+    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+		String g_name = s.get_name() + " " + this.get_name();
     this.set_gui_id(g_name);
+
+    int c1 = p.color(255, 50);
+    int c2 = p.color(255, 25);
 
     Group g = cp5.addGroup(g_name)
       .setHeight(12)
       .setBackgroundHeight(130)
       //.setWidth(100)
-      .setColorBackground(color(255, 50)) //color of the task
-      .setBackgroundColor(color(255, 25)) //color of task when openned
+      .setColorBackground(c1) //color of the task
+      .setBackgroundColor(c2) //color of task when openned
       .setLabel(this.get_prefix() + "   " + this.get_name())
       ;
 
@@ -501,7 +560,7 @@ public class StateMachine extends Task {
     //unfreezes state s
     s.unfreeze_movement_and_untrigger_connection();
 
-    State intersected = this.intersects_gui(mouseX, mouseY);
+    State intersected = this.intersects_gui(p.mouseX, p.mouseY);
     //if there is someone to connect to
     if (intersected!=null) {
       //connects
@@ -531,6 +590,30 @@ public class StateMachine extends Task {
 
     //updates the last mouse position
     //lastMousePressed = mousePressed;
+  }
+
+  void remove_all_gui_connections_to_a_state (State dest) {
+
+    //removing all connection to a state in the begin and in the end
+    this.begin.remove_all_gui_connections_to_a_state(dest);
+    this.end.remove_all_gui_connections_to_a_state(dest);
+
+    //iterates over all states
+    for (State s : states)
+      s.remove_all_gui_connections_to_a_state(dest);
+  }
+
+
+
+  void init_all_gui_connections_to_a_state (State dest) {
+
+    //removing all connection to a state in the begin and in the end
+    this.begin.init_all_gui_connections_to_a_state(dest);
+    this.end.init_all_gui_connections_to_a_state(dest);
+
+    //iterates over all states
+    for (State s : states)
+      s.init_all_gui_connections_to_a_state(dest);
   }
 
 }

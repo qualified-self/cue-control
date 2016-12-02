@@ -5,6 +5,8 @@
 ** into my prototype in DEc. 1st *********************
 *****************************************************/
 
+boolean is_loading = false;
+
 public class Serializer {
 
   Serializer() {}
@@ -32,7 +34,7 @@ public class Serializer {
     try {
       ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
       oos.writeObject(board);
-      //oos.writeObject(canvas);
+      oos.writeObject(canvas);
       oos.close();
     } catch (Exception e) {
       println("ERROR saving to file: " + file + " [exception: " + e.toString() + "].");
@@ -42,15 +44,28 @@ public class Serializer {
 
   public void _load(File file) {
     try {
+      is_loading = true;
       ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 
-      board    = (Blackboard) ois.readObject();
-      //canvas     = (Canvas)   ois.readObject();
+      canvas.root.hide();
+      board.clear();
+      canvas.clear();
 
-      board.build();
-      //canvas.build();
+      board    = (Blackboard) ois.readObject();
+      canvas   = (MainCanvas) ois.readObject();
+
+      PApplet p = HFSMPrototype.instance();
+
+      board.build(p);
+      canvas.build(p);
 
       ois.close();
+
+      is_loading = false;
+      canvas.root.show();
+
+      println("done loading!");
+
     } catch (Exception e) {
       println("ERROR saving to file: " + file + " [exception: " + e.toString() + "].");
     }

@@ -7,20 +7,25 @@
  ************************************************
  ************************************************/
 
+import processing.core.PApplet;
+import ddf.minim.*;
+import controlP5.*;
+
 ////////////////////////////////////////
 
 class AudioTask extends Task {
 
   //audio variables
-  private AudioPlayer soundfile;
+  transient private AudioPlayer soundfile;
   private String filename;
   private float  volume;
 
   //contructor loading the file
-  public AudioTask (String taskname, String filename) {
-    super(taskname);
+  public AudioTask (PApplet p, String taskname, String filename) {
+    super(p, taskname);
     this.filename  = filename;
-    this.soundfile = minim.loadFile(filename);
+    //repeat what sofian did in his prototype
+    build(p);
     //this.volume = 1.;
   }
   /*
@@ -33,27 +38,37 @@ class AudioTask extends Task {
   }
   */
 
-  AudioTask clone() {
-    return new AudioTask(this.name, this.filename);
+  void build(PApplet p) {
+    this.p = p;
+    this.soundfile = HFSMPrototype.instance().minim().loadFile(filename);
+  }
+
+  AudioTask clone_it() {
+    return new AudioTask(this.p, this.name, this.filename);
   }
 
   void update_name(String name) {
     this.filename = name;
     this.name     = name;
-    this.soundfile = minim.loadFile(this.filename);
+    this.soundfile = HFSMPrototype.instance().minim().loadFile(this.filename);
   }
 
   //input is in between 0 and one. result is between -80 and 14 (dB).
   void set_volume(float newvolume) {
-    float mapped_volume = map(newvolume, 0., 1., -70., 14.);
+    float mapped_volume = map(newvolume, 0.f, 1.f, -70.f, 14.f);
     if (soundfile!=null)
       soundfile.setGain(mapped_volume);
+  }
+
+  //taken from https://forum.processing.org/one/topic/i-need-to-know-how-exactly-map-function-works.html
+  float map(float value, float istart, float istop, float ostart, float ostop) {
+    return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
   }
 
   //implementing the execute method (play the music)
   void run () {
     soundfile.play();
-    println("Task " + this + " playing!");
+    //println("Task " + this + " playing!");
     this.status = Status.RUNNING;
   }
 
@@ -81,12 +96,12 @@ class AudioTask extends Task {
             if (s.equals(get_gui_id() + "/filename")) {
                 String newFilename = theEvent.getController().getValueLabel().getText();
                 update_name(newFilename);
-                println(s + " " + newFilename);
+                System.out.println(s + " " + newFilename);
             }
             if (s.equals(get_gui_id() + "/volume")) {
                 float newvolume = theEvent.getController().getValue();
                 set_volume(newvolume);
-                println(s + " " + newvolume);
+                System.out.println(s + " " + newvolume);
             }
           }
     };
@@ -98,12 +113,13 @@ class AudioTask extends Task {
             //println(name + " was unfocused");
 
             String s = theEvent.getController().getName();
+            ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
             if (s.equals(get_gui_id() + "/filename")) {
                 String newFilename = theEvent.getController().getValueLabel().getText();
                 String oldFilename = filename;
 
-                println(newFilename +  " - " + oldFilename);
+                System.out.println(newFilename +  " - " + oldFilename);
 
                 //if the user tried to change but did not press enter
                 if (!newFilename.equals(oldFilename)) {
@@ -123,15 +139,17 @@ class AudioTask extends Task {
     CallbackListener cb_enter = generate_callback_enter();
     CallbackListener cb_leave = generate_callback_leave();
 
-    this.set_gui_id(s.name + " " + this.get_name());
+    this.set_gui_id(s.get_name() + " " + this.get_name());
     String g_name = this.get_gui_id();
+
+    ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
     Group g = cp5.addGroup(g_name)
     //.setPosition(x, y) //change that?
     .setHeight(12)
     .setBackgroundHeight(50)
-    .setColorBackground(color(255, 50)) //color of the task
-    .setBackgroundColor(color(255, 25)) //color of task when openned
+    .setColorBackground(p.color(255, 50)) //color of the task
+    .setBackgroundColor(p.color(255, 25)) //color of task when openned
     .setLabel(this.get_prefix() + "   " + this.get_name())
     ;
 

@@ -5,31 +5,40 @@
  ************************************************
  ************************************************/
 
-public class Connection {
+import java.io.Serializable;
+import processing.core.PApplet;
+import javax.script.*;
+import controlP5.*;
+
+public class Connection implements Serializable {
   private State      next_state;
   private Expression expression;
   private int        priority;
   private State      parent;
 
   //GUI ELEMENTS
-  DropdownList d;
-  Textfield    t;
-  //color background = color(50, 50, 50, 200);
-  color background = color(0, 0, 0, 50);
-  color foreground = color(0, 116, 217, 200);
-  //private ConnectionLabel gui_label;
+  int background;
+  int foreground;
+  transient PApplet p;
 
   //constructor for an empty transition
-  public Connection (State p, State ns, int priority) {
-    this(p, ns, new Expression("true"), priority);
+  public Connection (PApplet p, State par, State ns, int priority) {
+    this(p, par, ns, new Expression("true"), priority);
   }
 
   //constructor for a more complex transition
-  public Connection (State parent, State ns, Expression expression, int priority) {
+  public Connection (PApplet p, State parent, State ns, Expression expression, int priority) {
+    this.p = p;
     this.next_state = ns;
     this.priority   = priority;
     this.expression = expression;
     this.parent     = parent;
+    init_gui_items();
+  }
+
+  void build(PApplet p) {
+    this.p = p;
+    this.expression.build(p);
     init_gui_items();
   }
 
@@ -38,17 +47,17 @@ public class Connection {
     Object ret = false;
 
     try {
-      ret = expression.eval(board);
+      ret = expression.eval(HFSMPrototype.instance().board());
     }
     catch (ScriptException e) {
-      println("Problems in processing certain transition condition. Expr: " + expression.toString() + " next state: " + next_state.toString());
+      System.out.println("Problems in processing certain transition condition. Expr: " + expression.toString() + " next state: " + next_state.toString());
       ret = false;
     }
 
     if (ret instanceof Boolean)
       return (boolean)ret;
     else {
-      println("Expr: " + expression.toString() + " result is not a boolean. it is a " + ret.toString());
+      System.out.println("Expr: " + expression.toString() + " result is not a boolean. it is a " + ret.toString());
       return false;
     }
   }
@@ -73,6 +82,10 @@ public class Connection {
     return this.expression;
   }
 
+  int get_priority() {
+    return this.priority;
+  }
+
   /*******************************************
    ** GUI FUNCTIONS ***************************
    ********************************************/
@@ -80,7 +93,15 @@ public class Connection {
   void init_gui_items() {
     String gui_name = parent.get_name() + "_" + next_state.get_name();
 
-     d = cp5.addDropdownList(gui_name+"/priority")
+    ControlP5 cp5  = get_controlP5_gui();
+
+    p.println(cp5);
+
+    background = p.color(0, 0, 0, 50);
+    foreground = p.color(0, 116, 217, 200);
+    int white  = p.color(255, 255);
+
+     DropdownList d = cp5.addDropdownList(gui_name+"/priority")
        .setWidth(w)
        .setItemHeight(20)
        .setBarHeight(15)
@@ -92,13 +113,13 @@ public class Connection {
        .onChange(generate_callback_dropdown())
        ;
 
-     init_dropdown_list(parent.connections.size());
+     init_dropdown_list(parent.get_number_of_connections());
 
      String text = this.expression.toString();
 
-     t = cp5.addTextfield(gui_name+"/condition")
+     Textfield t = cp5.addTextfield(gui_name+"/condition")
        .setText(text)
-       .setColorValue(color(255, 255))
+       .setColorValue(white)
        .setColorBackground(background)
        .setColorForeground(background)
        .setWidth(get_label_width() - w)
@@ -115,7 +136,7 @@ public class Connection {
         d.lock();
         t.setUserInteraction(false);
         t.setText("anything else");
-        t.setWidth((int)((textWidth("anything else")*1.3)));
+        t.setWidth((int)((p.textWidth("anything else")*1.3)));
         t.lock();
       //otherwise, adds user interactivity
       } else  {
@@ -128,6 +149,7 @@ public class Connection {
      }
 
   void remove_gui_items() {
+    ControlP5 cp5 = get_controlP5_gui();
     String gui_name = parent.get_name() + "_" + next_state.get_name();
     cp5.remove(gui_name+"/priority");
     cp5.remove(gui_name+"/condition");
@@ -141,12 +163,32 @@ public class Connection {
 
   int get_label_width() {
     if (parent==next_state)
-      return (int)(w+(textWidth("anything else")*1.3));
+      return (int)(w+(p.textWidth("anything else")*1.3));
     else
-      return (int)(w+(textWidth(this.expression.toString())*1.3));
+      return (int)(w+(p.textWidth(this.expression.toString())*1.3));
   }
 
+  ControlP5 get_controlP5_gui() {
+    //String gui_name = parent.get_name() + "_" + next_state.get_name();
+    return HFSMPrototype.instance().cp5();
+  }
+
+  DropdownList get_dropdown_gui () {
+    String gui_name = parent.get_name() + "_" + next_state.get_name();
+    return (DropdownList)get_controlP5_gui().getController(gui_name+ "/priority");
+  }
+
+  Textfield get_textfield_gui () {
+    String gui_name = parent.get_name() + "_" + next_state.get_name();
+    return (Textfield)get_controlP5_gui().getController(gui_name+ "/condition");
+  }
+
+
    void set_gui_position (int newx, int newy) {
+
+    DropdownList d = get_dropdown_gui();
+    Textfield    t = get_textfield_gui();
+
      // if any of the gui elements is null, does nothing
      if (d ==null || t==null) return;
 
@@ -156,27 +198,20 @@ public class Connection {
 
 
    void init_dropdown_list(int n) {
+     DropdownList d = get_dropdown_gui();
      for (int i=1; i<=n; i++) {
        d.addItem(i+"", i);
      }
    }
 
-   /*
-   void add_item_to_dropdown (int i ) {
-     d.addItem(i+"", i);
-   }
-
-   void remove_item_to_dropdown (int i ) {
-     d.removeItem(i);
-   }
-   */
-
    boolean is_mouse_over () {
+     DropdownList d = get_dropdown_gui();
+     Textfield    t = get_textfield_gui();
      return t.isMouseOver() || d.isMouseOver();
    }
 
    boolean should_be_removed() {
-     if (user_pressed_minus() && is_mouse_over())
+     if (HFSMPrototype.instance().user_pressed_minus() && is_mouse_over())
         return true;
      else
         return false;
@@ -195,7 +230,7 @@ public class Connection {
    CallbackListener generate_callback_textfield_enter() {
      return new CallbackListener() {
        public void controlEvent(CallbackEvent theEvent) {
-         //else, executes the callback
+         Textfield    t = get_textfield_gui();
          t.setColorBackground(foreground);
          t.setColorForeground(foreground);
        }
@@ -205,6 +240,7 @@ public class Connection {
    CallbackListener generate_callback_textfield_leave() {
      return new CallbackListener() {
        public void controlEvent(CallbackEvent theEvent) {
+         Textfield    t = get_textfield_gui();
          t.setColorBackground(background);
          t.setColorForeground(background);
        }
@@ -215,7 +251,7 @@ public class Connection {
      return new CallbackListener() {
        public void controlEvent(CallbackEvent theEvent) {
          //@TODO implement the update
-         //println("next test is" + t.getText());
+         Textfield    t = get_textfield_gui();
          Expression exp = new Expression(t.getText());
          update_expression(exp);
          reload_gui_items();
@@ -227,6 +263,7 @@ public class Connection {
      return new CallbackListener() {
        public void controlEvent(CallbackEvent theEvent) {
          //@TODO implement the text to its old value (not updated)
+         Textfield    t = get_textfield_gui();
          String newText = theEvent.getController().getValueLabel().getText();
          String oldText = get_expression().toString();
          if (!oldText.equals(newText))

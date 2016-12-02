@@ -2,7 +2,7 @@
 // input handler for a Numberbox that allows the user to
 // key in numbers with the keyboard to change the value of the numberbox
 
-void makeEditable( Numberbox n ) {
+public void makeEditable( Numberbox n ) {
   // allows the user to click a numberbox and type in a number which is confirmed with RETURN
 
   final NumberboxInput nin = new NumberboxInput( n ); // custom input handler for the numberbox

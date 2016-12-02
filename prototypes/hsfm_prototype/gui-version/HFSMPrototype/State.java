@@ -8,40 +8,45 @@
 ////////////////////////////////////////
 //importing whatever we need
 import java.util.*;
-
-boolean is_dragging_someone = false;
+import java.io.Serializable;
+import processing.core.PApplet;
+import controlP5.*;
 
 ////////////////////////////////////////
 //the state class
-public class State {
+public class State implements Serializable {
   private Vector<Connection> connections;
   private Vector<Task>       tasks;
   private String             name;
   private Status             status;
-  private PieMenu            pie;
   private MovementStatus     movement_status;
-
   public boolean             is_actual;
+  public boolean             debug;
+  static boolean is_dragging_someone = false;
 
   //variables used for the gui
   public int x;
   public int y;
   private final int size = 50;
   //accordion that stores the tasks
-  private Accordion accordion;
-  //private Textlabel label;
-  private Textfield label;
+
+  //gui elements
+  transient private PieMenu   pie;
+  transient private Accordion accordion;
+  transient private Textfield label;
+  transient private PApplet   p;
 
   //constructor
-  public State(String name) {
+  public State(PApplet p, String name) {
+    this.p = p;
     this.name   = name.toUpperCase();
     this.status = Status.INACTIVE;
     this.tasks  = new Vector<Task>();
     this.connections = new Vector<Connection>();
-    this.x = (int)random(10, 1024);
-    this.y = (int)random(10, 768);
-    this.pie = new PieMenu(x, y, size);
+    this.x = (int)p.random(10, 1024);
+    this.y = (int)p.random(10, 768);
     this.movement_status = MovementStatus.FREE;
+    this.debug = HFSMPrototype.instance().debug();
 
     init_gui();
     hide_gui();
@@ -50,11 +55,28 @@ public class State {
   }
 
   //constructor
-  public State(String name, int x, int y) {
-    this(name);
+  public State(PApplet p, String name, int x, int y) {
+    this(p, name);
     this.x = x;
     this.y = y;
     pie.set_position(x,y);
+  }
+
+  //@TODO IMMPLEMENT BUILD THAT LOADS THE UI ELEMENTS OF THE STATE
+  void build (PApplet p) {
+    this.p = p;
+
+    //loads the gui
+    init_gui();
+    hide_gui();
+
+    //builds the tasks
+    for (Task t : tasks)
+      t.build(p);
+
+    //builds the tasks
+    for (Connection c : connections)
+      c.build(p);
   }
 
   String get_name() {
@@ -69,7 +91,7 @@ public class State {
     this.status = Status.RUNNING;
 
     if(debug)
-      println("running all the " + tasks.size() +" tasks from state " + this.name);
+      System.out.println("running all the " + tasks.size() +" tasks from state " + this.name);
   }
 
   //stops all tasks associated to this node
@@ -80,7 +102,18 @@ public class State {
     this.status = Status.INACTIVE;
 
     if(debug)
-      println("stopping all tasks from state " + this.name);
+      System.out.println("stopping all tasks from state " + this.name);
+  }
+
+  void clear() {
+    this.remove_all_tasks();
+    this.remove_all_tasks_from_gui();
+    this.remove_all_connections();
+    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    //removes the old gui label
+    cp5.remove(this.name);
+    cp5.remove("/acc_"+this.name);
+    //removes all tasks from the gui
   }
 
   //stops all tasks associated to this node
@@ -91,7 +124,7 @@ public class State {
     this.status = Status.DONE;
 
     if(debug)
-      println("interrupting all tasks from state " + this.name);
+      System.out.println("interrupting all tasks from state " + this.name);
   }
 
   //if it's entering a state, you need to refresh it
@@ -188,7 +221,7 @@ public class State {
         //if it's going to another state
         if (next_state != this) {
           if (debug)
-            println("State was " + this.name + " . Now it is changing to " + next_state.name);
+            System.out.println("State was " + this.name + " . Now it is changing to " + next_state.name);
           //interrupts current activities that are still going on
           this.interrupt();
           //refresh the next state
@@ -201,7 +234,7 @@ public class State {
         //if this is a transition to this very same state
         else {
           if (debug)
-            println("this is a transition to self!!! state: " + this.name);
+            System.out.println("this is a transition to self!!! state: " + this.name);
           //refreshes currently stopped tasks
           this.refresh_and_run_completed_tasks();
           break;
@@ -210,7 +243,8 @@ public class State {
     }
 
     if (next_state==null)
-      if (debug) println("State " + this.name + " doesn't have a connection for this input! this can be a bug!");
+      if (debug)
+        System.out.println("State " + this.name + " doesn't have a connection for this input! this can be a bug!");
 
     return next_state;
   }
@@ -220,7 +254,7 @@ public class State {
   void add_task(Task t) {
     tasks.addElement(t);
     if (debug)
-      println("Task " + t.name + " added to state " + this.name);
+      System.out.println("Task " + t.name + " added to state " + this.name);
 
     //updates the gui
     add_task_in_accordion_gui(t);
@@ -234,7 +268,8 @@ public class State {
       //removes the task in gui
       this.remove_task_in_accordion_gui(t);
     } else
-      if (debug) println("Unable to remove task " + t.name + " from state " + this.name);
+      if (debug)
+        System.out.println("Unable to remove task " + t.name + " from state " + this.name);
 
     //updates the gui
     //remove_task_in_accordion_gui(t);
@@ -252,7 +287,7 @@ public class State {
     //iterating over connections backwards
     for (int i = connections.size()-1; i >=0 ; i--) {
       Connection c = connections.get(i);
-      if (c.next_state==dest)
+      if (c.get_next_state()==dest)
         this.disconnect(c);
     }
 
@@ -272,20 +307,19 @@ public class State {
     int p = connections.size()+1;
 
     //in case the condition hasnt been used, create a new connection
-    Connection c = new Connection(this, next_state, expression, p);
+    Connection c = new Connection(this.p, this, next_state, expression, p);
     //@TODO add item from all dropdown lists
     connections.addElement(c);
     //reload_connections_gui();
 
     //if there is already a transition to self, and it's not the one we just created
-    if (there_is_already_a_connection_to_state(this) && next_state!=this) {
-      println("hey!");
+    if (there_is_already_a_connection_to_state(this) && next_state!=this)
       //update its priority to the last
       update_priority(p-1, p);
-    }
+  
 
     if (debug)
-      println("Connection created. If " + this.name + " receives " + expression.toString() + ", it goes to state " + next_state.name);
+      System.out.println("Connection created. If " + this.name + " receives " + expression.toString() + ", it goes to state " + next_state.name);
   }
 
   void update_all_priorities () {
@@ -304,7 +338,7 @@ public class State {
     connections.remove(oldPriority-1);
     connections.add(newPriority-1, item);
 
-    println("updating priority. was" + oldPriority + " now is " + newPriority);
+    System.out.println("updating priority. was" + oldPriority + " now is " + newPriority);
 
     update_all_priorities();
     reload_connections_gui();
@@ -324,7 +358,7 @@ public class State {
     boolean result = false;
 
     for (Connection c : connections)
-      if (next==c.next_state) result = true;
+      if (next==c.get_next_state()) result = true;
 
     return result;
   }
@@ -338,14 +372,15 @@ public class State {
       this.connections.removeElement(c);
 
       //if there is only one connection left and it is a trnsition to self
-      if (this.connections.size()==1 && this.connections.get(0).next_state==this)
+      if (this.connections.size()==1 && this.connections.get(0).get_next_state()==this)
       //removes everything
         this.disconnect(this.connections.get(0));
 
       //updates priorities of connections
       this.update_all_priorities();
     } else
-      if (debug) println("Unable to remove connection " + c.toString() + " from state " + this.name);
+      if (debug)
+      System.out.println("Unable to remove connection " + c.toString() + " from state " + this.name);
   }
 
   int get_number_of_tasks() {
@@ -354,14 +389,14 @@ public class State {
 
   //method that generates a random name for the demo task
   String generate_random_name() {
-    return ("/" + this.name + "/exmpl/"+((int)random(-100, 100)));
+    return ("/" + this.name + "/exmpl/"+((int)p.random(-100, 100)));
   }
 
 
   //method that initializes a random demo osc task
   void init_random_osc_task () {
     String taskname = generate_random_name();
-    OSCTask t = new OSCTask(taskname, "/test/value", 12000, "localhost", new Object[]{0, 12});
+    OSCTask t = new OSCTask(p, taskname, "/test/value", 12000, "localhost", new Object[]{0, 12});
     this.add_task(t);
     //println(selected + " " + pie.options[selected]);
 
@@ -370,7 +405,7 @@ public class State {
   //method that initializes a random demo audio task
   void init_random_audio_task () {
     String taskname = generate_random_name();
-    AudioTask t = new AudioTask(taskname, "123go.mp3");
+    AudioTask t = new AudioTask(p, taskname, "123go.mp3");
     this.add_task(t);
     //println(selected + " " + pie.options[selected]);
   }
@@ -378,7 +413,7 @@ public class State {
   //method that initializes a random demo state machine task
   void init_random_state_machine_task () {
     String taskname = generate_random_name();
-    StateMachine t = new StateMachine(taskname);
+    StateMachine t = new StateMachine(p, taskname);
     this.add_task(t);
     //println(selected + " " + pie.options[selected]);
   }
@@ -386,9 +421,13 @@ public class State {
   //method that initializes a random demo set balckboard task
   void init_random_set_blackboard_task () {
     String taskname = generate_random_name();
-    SetBBTask t = new SetBBTask(taskname, 0);
+    SetBBTask t = new SetBBTask(p, taskname, 0);
     this.add_task(t);
     //println(selected + " " + pie.options[selected]);
+  }
+
+  int get_number_of_connections() {
+    return connections.size();
   }
 
 
@@ -414,8 +453,8 @@ public class State {
 
   //checks if a certain position (often the mouse) intersects this state in the screen
   boolean intersects_gui(int test_x, int test_y) {
-    int dx = abs(test_x-x);
-    int dy = abs(test_y-y);
+    int dx = p.abs(test_x-x);
+    int dy = p.abs(test_y-y);
     int R = size-25;
 
     return (dx*dx)+(dy*dy) <= R*R;
@@ -440,9 +479,9 @@ public class State {
   //updates the coords of the state in the screen in case mouse drags it
   void update_cordinates_gui() {
     //if mouse if moving
-    if (mousePressed) {
+    if (p.mousePressed) {
       //if intersects for the first time
-      if (this.intersects_gui(mouseX, mouseY) && !is_dragging_someone && this.movement_status==MovementStatus.FREE) {
+      if (this.intersects_gui(p.mouseX, p.mouseY) && !is_dragging_someone && this.movement_status==MovementStatus.FREE) {
         //set move equals true
         //moving= true;
         movement_status = MovementStatus.MOVING;
@@ -451,7 +490,7 @@ public class State {
 
       //if is moving, updates the value
       if (movement_status==MovementStatus.MOVING)
-        set_position_gui(mouseX, mouseY);
+        set_position_gui(p.mouseX, p.mouseY);
       //if mouse is released
     } else {
       //if this state was moving before
@@ -463,11 +502,19 @@ public class State {
     }
   }
 
+  void remove_all_connections () {
+    for (int i = connections.size()-1; i >=0; i--) {
+      Connection c = connections.get(i);
+      this.disconnect(c);
+      this.reload_connections_gui();
+    }
+  }
+
   void remove_connection_if_necessary() {
     for (int i = connections.size()-1; i >=0; i--) {
       Connection c = connections.get(i);
       if (c.should_be_removed()) {
-        println("remove "+ c.toString());
+        System.out.println("remove "+ c.toString());
         this.disconnect(c);
         this.reload_connections_gui();
       }
@@ -477,16 +524,21 @@ public class State {
 
   //updates the name of this state
   void update_name (String newName) {
+    ControlP5 cp5 = HFSMPrototype.instance().cp5();
     //removes the old gui label
     cp5.remove(this.name);
     //removes all tasks from the gui
     this.remove_all_tasks_from_gui();
+    //remove all connections ui elements
+    this.remove_gui_connections_involving_this_state();
     //updates the name
     this.name = newName.toUpperCase();
     //creates a new gui element for it
     this.init_state_name_gui();
     //adds all tasks with the updated name
     this.add_all_tasks_to_gui();
+    //add all connections ui elements
+    this.init_gui_connections_involving_this_state();
   }
 
   //resets the name of this state
@@ -496,19 +548,28 @@ public class State {
 
   //inits gui elements related to controlP5
   void init_gui() {
-    textSize(cp5.getFont().getSize());
-    textFont(cp5.getFont().getFont());
+    this.pie = new PieMenu(p, x, y, size);
+
+    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+
+    p.textSize(cp5.getFont().getSize());
+    p.textFont(cp5.getFont().getFont());
     init_state_name_gui();
     init_accordion_gui();
     //init_tasks_gui();
   }
 
   void hide_gui() {
+    //if the PApplet wasn't loaded yet
+    if (label==null||accordion==null)return;
+
     label.hide();
     accordion.hide();
   }
 
   void show_gui() {
+    //if the PApplet wasn't loaded yet
+    if (label==null||accordion==null)return;
     label.show();
     accordion.show();
   }
@@ -521,13 +582,15 @@ public class State {
               String newName = theEvent.getController().getValueLabel().getText();
               String oldName = name;
 
+              MainCanvas canvas = HFSMPrototype.instance().canvas;
+
               //checks if there is already a state with the very same future name [BAD CODE!]
               State is_there_a_state_with_the_new_name = canvas.root.get_state_by_name(newName);
               State result                             = canvas.root.get_state_by_name(oldName);
 
               //if there is, prints an error and change does not occur!
               if (is_there_a_state_with_the_new_name != null) {
-                println("There is alrealdy a state with this same name. Please, pick another name!");
+                System.out.println("There is alrealdy a state with this same name. Please, pick another name!");
                 result.update_name(oldName);
                 return;
               }
@@ -535,7 +598,7 @@ public class State {
               if (result != null)
                 result.update_name(newName);
               else
-                println("a state with name " + oldName + " could not be found! ");
+                System.out.println("a state with name " + oldName + " could not be found! ");
           }
     };
   }
@@ -555,16 +618,21 @@ public class State {
   //inits the label with the name of the state
   void init_state_name_gui() {
 
+    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+
     CallbackListener cb_enter = generate_callback_enter();
     CallbackListener cb_leave = generate_callback_leave();
 
+    int c1 = p.color(255, 255);
+    int c2 = p.color(0, 255);
+
     label = cp5.addTextfield(this.name)
       .setText(this.name)
-      .setColorValue(color(255, 255))
-      .setColorBackground(color(0, 255))
-      .setColorForeground(color(0, 255))
+      .setColorValue(c1)
+      .setColorBackground(c2)
+      .setColorForeground(c2)
       //.align(ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER)
-      .setWidth((int)(textWidth(this.name)*1.25))
+      .setWidth((int)(p.textWidth(this.name)*1.25))
       .setFocus(false)
       .setAutoClear(false)
       .setLabel("")
@@ -576,6 +644,8 @@ public class State {
 
   //init the accordion that will store the tasks
   void init_accordion_gui() {
+    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+
     accordion = cp5.addAccordion("acc_"+this.name)
       .setWidth(110)
       //.hide()
@@ -594,6 +664,7 @@ public class State {
 
   //removes a task from the accordion
   void remove_task_in_accordion_gui(Task t) {
+    ControlP5 cp5 = HFSMPrototype.instance().cp5();
     //looks for the group
     //Group g = cp5.get(Group.class, this.name + " " + t.get_name());
     //removes this task from the accordion
@@ -602,18 +673,18 @@ public class State {
 
   //draws the status of this state
   void draw_status() {
-    noStroke();
+    p.noStroke();
 
     if(is_actual)
     //if (status==Status.RUNNING)
     //if (status==Status.RUNNING | (status==Status.DONE & is_actual))
-      fill (0, green+75, 0);
+      p.fill (0, green+75, 0);
     else if (status==Status.DONE)
-      fill (100, 0, 0);
+      p.fill (100, 0, 0);
     else if (status==Status.INACTIVE)
-      fill (100);
+      p.fill (100);
 
-    ellipse(x, y, size+25, size+25);
+    p.ellipse(x, y, size+25, size+25);
 
     //increments the status
     increment_status();
@@ -642,9 +713,9 @@ public class State {
     draw_status();
 
     //draws the main central ellipse
-    noStroke();
-    fill (0);
-    ellipse(x, y, size, size);
+    p.noStroke();
+    p.fill (0);
+    p.ellipse(x, y, size, size);
 
     //prints info such as tasks and name
     move_gui();
@@ -653,7 +724,7 @@ public class State {
   void move_gui() {
     //moving the label
     label.align(ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER);
-    float textwidth = textWidth(name);
+    float textwidth = p.textWidth(name);
     textwidth = textwidth/2;
     label.setPosition(x-textwidth-(textwidth/5), y-7);
 
@@ -665,49 +736,49 @@ public class State {
   //draws additional info if this is a begin
   void draw_begin() {
 
-    noFill();
+    p.noFill();
     //stroke(green+25);
-    stroke(50);
+    p.stroke(50);
     //the wieght of the line
-    strokeWeight(5);
-    ellipse(x, y, size*2, size*2);
+    p.strokeWeight(5);
+    p.ellipse(x, y, size*2, size*2);
     //fill(green+25);
-    fill(50);
-    noStroke();
-    textAlign(CENTER, CENTER);
-    text("BEGIN", x, y-(size*1.2));
+    p.fill(50);
+    p.noStroke();
+    p.textAlign(p.CENTER, p.CENTER);
+    p.text("BEGIN", x, y-(size*1.2f));
   }
 
   //draws additional info if this is an end
   void draw_end() {
     //line color
-    noFill();
+    p.noFill();
     //stroke(green+25);
-    stroke(50);
+    p.stroke(50);
     //the wieght of the line
-    strokeWeight(5);
-    ellipse(x, y, size*2, size*2);
+    p.strokeWeight(5);
+    p.ellipse(x, y, size*2, size*2);
     //fill(green+25);
-    fill(50);
-    noStroke();
-    textAlign(CENTER, CENTER);
-    text("END", x, y-(size*1.2));
+    p.fill(50);
+    p.noStroke();
+    p.textAlign(p.CENTER, p.CENTER);
+    p.text("END", x, y-(size*1.2f));
   }
 
   //draws additional info if this is an end
   void draw_actual() {
     //line color
-    noFill();
-    stroke(green+25);
+    p.noFill();
+    p.stroke(green+25);
     //stroke(50);
     //the wieght of the line
-    strokeWeight(5);
-    ellipse(x, y, size*2.5, size*2.5);
-    fill(green+25);
+    p.strokeWeight(5);
+    p.ellipse(x, y, size*2.5f, size*2.5f);
+    p.fill(green+25);
     //fill(50);
-    noStroke();
-    textAlign(CENTER, CENTER);
-    text("ACTUAL", x, y-(size*1.5));
+    p.noStroke();
+    p.textAlign(p.CENTER, p.CENTER);
+    p.text("ACTUAL", x, y-(size*1.5f));
   }
 
   void draw_connections () {
@@ -727,13 +798,13 @@ public class State {
   }
 
   boolean verify_if_user_released_mouse_while_temporary_connecting () {
-    return (there_is_a_temporary_connection_on_gui() && mouseReleased);
+    return (there_is_a_temporary_connection_on_gui() && HFSMPrototype.instance().mouseReleased);
   }
 
   void draw_temp_connection() {
     //if this state is freezed
     if (there_is_a_temporary_connection_on_gui()) {
-        draw_generic_connection(mouseX, mouseY, connections.size()+1, "true");
+        draw_generic_connection(p.mouseX, p.mouseY, connections.size()+1, "true");
     }
   }
 
@@ -743,55 +814,55 @@ public class State {
 
   void draw_generic_connection (int destx, int desty, int priority, String label, boolean print_label) {
     //line color
-    stroke(50);
+    p.stroke(50);
     //the wieght of the line
-    strokeWeight(5);
+    p.strokeWeight(5);
     //draws the line
-    line(x, y, destx, desty);
+    p.line(x, y, destx, desty);
     //saves the current matrix
-    pushMatrix();
+    p.pushMatrix();
     //moving to where the arrow is going
-    translate(x, y);
+    p.translate(x, y);
     //saves the current matrix
-    pushMatrix();
+    p.pushMatrix();
     //computes the midpoint where the arrow is going to be
     float newx = (destx-x)/2;
     float newy = (desty-y)/2;
     //translate to the final position of the arrow
-    translate(newx, newy);
+    p.translate(newx, newy);
 
     //saves the current matrix
-    pushMatrix();
+    p.pushMatrix();
 
     //computes the angle to rotate the arrow
-    float a = atan2(x-destx, desty-y);
+    float a = p.atan2(x-destx, desty-y);
     //rotates
-    rotate(a);
+    p.rotate(a);
     //draws the arr0w
-    line(0, 0, -10, -10);
-    line(0, 0, 10, -10);
+    p.line(0, 0, -10, -10);
+    p.line(0, 0, 10, -10);
     //returns the matris to the regular position
-    popMatrix();
+    p.popMatrix();
     //sets text color
-    fill(180);
-    textAlign(CENTER, CENTER);
+    p.fill(180);
+    p.textAlign(p.CENTER, p.CENTER);
     if(print_label)
-      text("[ "+priority+" ] : " + label, 0, -30);
+      p.text("[ "+priority+" ] : " + label, 0, -30);
     //c.set_gui_position(0, -30);
     //returns the matris to the regular position
-    popMatrix();
-    popMatrix();
+    p.popMatrix();
+    p.popMatrix();
   }
 
   void draw_connection (Connection c) {
     State ns = c.get_next_state();
     float destx = ns.x;
     float desty = ns.y;
-    draw_generic_connection(ns.x, ns.y, c.priority, c.get_expression().toString(), false);
+    draw_generic_connection(ns.x, ns.y, c.get_priority(), c.get_expression().toString(), false);
     float newx = (destx-x)/2;
     float newy = (desty-y)/2;
     //float a = atan2(x-destx, desty-y);
-    float a = atan2(destx-x, desty-y);
+    float a = p.atan2(destx-x, desty-y);
     newx = newx+x;
     newy = newy+y;
     int x_offset = (int)c.get_label_width()/2;
@@ -800,18 +871,18 @@ public class State {
 
   void draw_connection_to_self(Connection c) {
     //line color
-    stroke(50);
+    p.stroke(50);
     //the wieght of the line
-    strokeWeight(5);
+    p.strokeWeight(5);
     //draws the lines
-    line(x, y, x-100, y-100);
-    line(x, y, x+100, y-100);
-    line(x-100, y-100, x+100, y-100);
+    p.line(x, y, x-100, y-100);
+    p.line(x, y, x+100, y-100);
+    p.line(x-100, y-100, x+100, y-100);
     //draw the arrow
-    line(x-5, y-100, x+5, y-90);
-    line(x-5, y-100, x+5, y-110);
+    p.line(x-5, y-100, x+5, y-90);
+    p.line(x-5, y-100, x+5, y-110);
     //draw the input
-    fill(180);
+    p.fill(180);
     //textAlign(CENTER, CENTER);
     //text("[ "+priority+" ] : "  + c.get_expression().toString(), x, y-125);
     int x_offset = (int)c.get_label_width()/2;
@@ -838,7 +909,7 @@ public class State {
 
   //returns if the pie menu is currently open or not
   boolean is_pie_menu_open () {
-    return (pie.is_showing&&(!pie.down));
+    return (pie.is_showing()&&(!pie.is_fading_away()));
   }
 
   //boolean
@@ -846,12 +917,12 @@ public class State {
   //verifies if the user selected a option inside the pie menu
   void verify_if_user_picked_a_pie_option() {
     //if the menu is not open or the mouse is not clicked, returns
-    if (!is_pie_menu_open() || !mousePressed) return;
+    if (!is_pie_menu_open() || !p.mousePressed) return;
 
     int selected = get_pie_option();
 
     //if the mouse is pressed & the button is over a option & is not dragging
-    if (mousePressed && selected > -1 && !is_dragging_someone) {
+    if (p.mousePressed && selected > -1 && !is_dragging_someone) {
       hide_pie();
       //println(pie.options[selected] + " (option " + selected + ") selected in state " + this.name);
       switch(selected) {
@@ -874,6 +945,7 @@ public class State {
   //verifies if the mouse is over a certain task, returning this task
   Task verifies_if_mouse_is_over_a_task () {
     Task to_be_removed = null;
+    ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
     //iterates of all tasks related to this state
     for (Task t : tasks) {
@@ -881,7 +953,7 @@ public class State {
       Group g = cp5.get(Group.class, this.name + " " + t.get_name());
 
       //verifies if the menu item is selected and the user pressed '-'
-      if (g.isMouseOver() && user_pressed_minus ()) {
+      if (g.isMouseOver() && HFSMPrototype.instance().user_pressed_minus ()) {
         //stores the item to be removed
         to_be_removed = t;
         break;
@@ -914,15 +986,49 @@ public class State {
   }
 
   void freeze_movement_and_trigger_connection() {
-    println("freezing " + this.name);
+    System.out.println("freezing " + this.name);
     this.movement_status = MovementStatus.FREEZED;
     label.setFocus(false);
   }
 
   void unfreeze_movement_and_untrigger_connection() {
     if(this.movement_status == MovementStatus.FREEZED) {
-      println("unfreezing " + this.name);
+      System.out.println("unfreezing " + this.name);
       this.movement_status = MovementStatus.FREE;
+    }
+  }
+
+  void remove_gui_connections_involving_this_state() {
+    //removing the connections originated in this state
+    for (Connection c : connections)
+      c.remove_gui_items();
+
+    HFSMPrototype.instance().canvas().root.remove_all_gui_connections_to_a_state(this);
+  }
+
+  void remove_all_gui_connections_to_a_state (State dest) {
+    //iterating over connections backwards
+    for (int i = connections.size()-1; i >=0 ; i--) {
+      Connection c = connections.get(i);
+      if (c.get_next_state()==dest)
+        c.remove_gui_items();
+    }
+  }
+
+  void init_gui_connections_involving_this_state() {
+    //initing the connections originated in this state
+    for (Connection c : connections)
+      c.init_gui_items();
+
+    HFSMPrototype.instance().canvas().root.init_all_gui_connections_to_a_state(this);
+  }
+
+  void init_all_gui_connections_to_a_state (State dest) {
+    //iterating over connections backwards
+    for (int i = connections.size()-1; i >=0 ; i--) {
+      Connection c = connections.get(i);
+      if (c.get_next_state()==dest)
+        c.init_gui_items();
     }
   }
 

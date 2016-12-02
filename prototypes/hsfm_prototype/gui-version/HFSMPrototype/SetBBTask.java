@@ -4,13 +4,17 @@
 ************************************************
 ************************************************/
 
+import controlP5.*;
+import processing.core.PApplet;
+
+
 class SetBBTask extends Task {
 
   Object value;
   String variableName;
 
-  public SetBBTask (String taskname, Object value) {
-    super(taskname);
+  public SetBBTask (PApplet p, String taskname, Object value) {
+    super(p, taskname);
     this.variableName = taskname;
     this.value = value;
   }
@@ -22,11 +26,16 @@ class SetBBTask extends Task {
   }
   */
 
-  SetBBTask clone() {
-    return new SetBBTask(this.name, this.value);
+  void build(PApplet p) {
+    this.p = p;
+  }
+
+  SetBBTask clone_it() {
+    return new SetBBTask(this.p, this.name, this.value);
   }
 
   void run() {
+    Blackboard board = HFSMPrototype.instance().board();
     this.status = Status.RUNNING;
     board.put(variableName, evaluate_value(value));
     this.status = Status.DONE;
@@ -57,12 +66,12 @@ class SetBBTask extends Task {
           if (s.equals(get_gui_id() + "/name")) {
               String text = theEvent.getController().getValueLabel().getText();
               update_variable_name(text);
-              println(s + " " + text);
+              System.out.println(s + " " + text);
           }
           if (s.equals(get_gui_id() + "/value")) {
               String newvalue = theEvent.getController().getValueLabel().getText();
               update_value(new Expression(newvalue));
-              println(s + " " + newvalue);
+              System.out.println(s + " " + newvalue);
           }
         }
     };
@@ -86,6 +95,7 @@ class SetBBTask extends Task {
           //if the user tried to change but did not press enter
           if (!newtext.replace(" ", "").equals(oldtext)) {
             //resets the test for the original
+            ControlP5 cp5 = HFSMPrototype.instance().cp5();
             Textfield t = (Textfield)cp5.get(s);
             t.setText(oldtext);
           }
@@ -94,14 +104,19 @@ class SetBBTask extends Task {
   }
 
   Group load_gui_elements(State s) {
+    PApplet p = HFSMPrototype.instance();
     CallbackListener cb_enter = generate_callback_enter();
 		CallbackListener cb_leave = generate_callback_leave();
-		this.set_gui_id(s.name + " " + this.get_name());
+    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    int c1 = p.color(255, 50);
+    int c2 = p.color(255, 25);
+
+		this.set_gui_id(s.get_name() + " " + this.get_name());
 		String g_name = this.get_gui_id();
 
     Group g = cp5.addGroup(g_name)
-      .setColorBackground(color(255, 50)) //color of the task
-      .setBackgroundColor(color(255, 25)) //color of task when openned
+      .setColorBackground(c1) //color of the task
+      .setBackgroundColor(c2) //color of task when openned
       .setBackgroundHeight(90)
       .setLabel(this.get_prefix() + "   " + this.get_name())
       .setHeight(12)

@@ -1,45 +1,42 @@
+import oscP5.*;
+import netP5.*;
+import controlP5.*;
+import processing.core.PApplet;
+
 ////////////////////////////////////////
 //implementing a task for OSC messages
 class OSCTask extends Task {
 
   //variables to store my osc connection
   // private OscP5      oscP5;
-  private NetAddress broadcast;
+  //transient private NetAddress broadcast;
   //private OscMessage message;
   private Object[]  content;
   private String    message;
+  private String    ip;
+  private int       port;
+  //transient private NetAddress broadcast;
 
   //contructor loading the file
-  public OSCTask (String id, String message, int port, String ip, Object[] content) {
-    super(id);
+  public OSCTask (PApplet p, String id, String message, int port, String ip, Object[] content) {
+    super(p, id);
     this.message   = message;
+    this.ip        = ip;
+    this.port      = port;
     //this.oscP5     = new OscP5(p, port+1);
-    this.broadcast = new NetAddress(ip, port);
+    //this.broadcast = new NetAddress(ip, port);
     this.content   = content;
+    //this.broadcast = null;
     //this.update_message(content);
+  }
+
+  void build(PApplet p) {
+    this.p = p;
   }
 
   //method that returns if this OSC Task is curerntly initialized
-
-  /*
-  //contructor loading the file
-  public OSCTask (PApplet p, String taskname, int port, String ip, Object[] content) {
-    super(p, taskname);
-    //this.oscP5     = new OscP5(p, port+1);
-    this.broadcast = new NetAddress(ip, port);
-    this.content   = content;
-    //this.update_message(content);
-  }
-  */
-
-  /*
-  public OSCTask () {
-
-  }
-  */
-
-  OSCTask clone() {
-    return new OSCTask(this.name, this.message, this.broadcast.port(), this.broadcast.address(), this.content);
+  OSCTask clone_it() {
+    return new OSCTask(this.p, this.name, this.message, this.port, this.ip, this.content);
   }
 
   void run () {
@@ -47,10 +44,14 @@ class OSCTask extends Task {
 
     OscMessage msg = create_message();
 
+    //if (broadcast==null)
+    NetAddress broadcast = new NetAddress(ip, port);
+    OscP5 oscP5 = HFSMPrototype.instance().oscP5();
+
     oscP5.send(msg, broadcast);
 
     //if (debug)
-      println("sending OSC message to: " + broadcast.toString() + ". content: " + msg.toString());
+    System.out.println("sending OSC message to: " + broadcast.toString() + ". content: " + msg.toString());
     this.status = Status.DONE;
   }
 
@@ -98,11 +99,13 @@ class OSCTask extends Task {
 
 
   void update_ip (String ip) {
-    this.broadcast = new NetAddress(ip, broadcast.port());
+    this.ip = ip;
+    //this.broadcast = new NetAddress(ip, broadcast.port());
   }
 
   void update_port (int port) {
-    this.broadcast = new NetAddress(broadcast.address(), port);
+    this.port = port;
+    //this.broadcast = new NetAddress(broadcast.address(), port);
   }
 
   void update_message (String newMessage) {
@@ -146,23 +149,23 @@ class OSCTask extends Task {
             if (s.equals(get_gui_id() + "/ip")) {
                 String text = theEvent.getController().getValueLabel().getText();
                 update_ip(text);
-                println(s + " " + text);
+                //System.out.println(s + " " + text);
             }
             if (s.equals(get_gui_id() + "/port")) {
                 int newport = (int)theEvent.getController().getValue();
                 update_port(newport);
-                println(s + " " + newport);
+                //System.out.println(s + " " + newport);
             }
             if (s.equals(get_gui_id() + "/message")) {
                 String text = theEvent.getController().getValueLabel().getText();
                 update_message(text);
-                println(s + " " + text);
+                //System.out.println(s + " " + text);
             }
 
             if (s.equals(get_gui_id() + "/parameters")) {
                 String text = theEvent.getController().getValueLabel().getText();
                 update_content_from_string(text);
-                println(s + " " + text);
+                //System.out.println(s + " " + text);
             }
           }
     };
@@ -178,7 +181,7 @@ class OSCTask extends Task {
             String oldtext = "";
 
             if (s.equals(get_gui_id() + "/ip"))
-              oldtext = broadcast.address();
+              oldtext = ip;
             //else if (s.equals(get_gui_id() + "/port"))
             //  oldtext = broadcast.port()+"";
             else if (s.equals(get_gui_id() + "/message"))
@@ -190,6 +193,7 @@ class OSCTask extends Task {
             //if the user tried to change but did not press enter
             if (!newtext.replace(" ", "").equals(oldtext)) {
               //resets the test for the original
+              ControlP5 cp5 = HFSMPrototype.instance().cp5();
               Textfield t = (Textfield)cp5.get(s);
               t.setText(oldtext);
             }
@@ -201,17 +205,21 @@ class OSCTask extends Task {
   Group load_gui_elements(State s) {
     //do we really need this?
     //this.parent = s;
+    PApplet p = HFSMPrototype.instance();
+    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    int c1 = p.color(255, 50);
+    int c2 = p.color(255, 25);
 
     CallbackListener cb_enter = generate_callback_enter();
     CallbackListener cb_leave = generate_callback_leave();
 
-    this.set_gui_id(s.name + " " + this.get_name());
+    this.set_gui_id(s.get_name() + " " + this.get_name());
     String g_name = this.get_gui_id();
 
     //creates the group
     Group g = cp5.addGroup(g_name)
-      .setColorBackground(color(255, 50)) //color of the task
-      .setBackgroundColor(color(255, 25)) //color of task when openned
+      .setColorBackground(c1) //color of the task
+      .setBackgroundColor(c2) //color of task when openned
       .setBackgroundHeight(180)
       .setLabel(this.get_prefix() + "   " + this.get_name())
       .setHeight(12)
@@ -229,25 +237,25 @@ class OSCTask extends Task {
       .setGroup(g)
       .setAutoClear(false)
       .setLabel("ip address")
-      .setText(this.broadcast.address())
+      .setText(ip)
       .onChange(cb_enter)
       .onReleaseOutside(cb_leave)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
       ;
 
-    Numberbox port = cp5.addNumberbox(g_name+"/port")
+    Numberbox port_gui = cp5.addNumberbox(g_name+"/port")
       .setPosition(localx, localy+localoffset)
       .setSize(w, 15)
-      .setValue(this.broadcast.port())
+      .setValue(port)
       .setGroup(g)
       .setLabel("port")
       .onChange(cb_enter)
       //.onReleaseOutside(cb_leave)
       ;
 
-    port.getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
+    port_gui.getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
 
-    makeEditable( port );
+    HFSMPrototype.instance().makeEditable( port_gui );
 
     cp5.addTextfield(g_name+"/message")
       .setPosition(localx, localy+(2*localoffset))
@@ -260,8 +268,6 @@ class OSCTask extends Task {
       .onReleaseOutside(cb_leave)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
       ;
-
-
 
     cp5.addTextfield(g_name+"/parameters")
       .setPosition(localx, localy+(3*localoffset))

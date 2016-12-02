@@ -1,12 +1,12 @@
 /************************************************
- ** Basic Status enum for running machine
+ ** Basic movement status for a state
  ************************************************
- ** jeraman.info, Sep. 30 2016 ******************
+ ** jeraman.info, Nov. 29 2016 ******************
  ************************************************
  ************************************************/
 
-public static enum Status {
-    INACTIVE,
-    RUNNING,
-    DONE,
+public enum MovementStatus {
+    FREE,
+    MOVING,
+    FREEZED,
 }

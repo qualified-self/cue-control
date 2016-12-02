@@ -5,30 +5,43 @@
  ************************************************
  ************************************************/
 
+ import java.io.Serializable;
+ import processing.core.PApplet;
+ import controlP5.*;
+ import java.util.Vector;
 
-
-class Canvas {
+class MainCanvas implements Serializable {
 
   StateMachine  root; //my basic state machine
-  Vector<State> states; //vector that store my states
+  //Vector<State> states; //vector that store my states
+
+  transient private PApplet p;
 
   //contructor
-  public Canvas () {
-
+  public MainCanvas (PApplet p) {
+    this.p = p;
   }
 
-  void build() {
-    println("@TODO [CANVAS] verify what sorts of things needs to be initialize when loaded from file");
-    root.show();
+  void build(PApplet p) {
+    System.out.println("@TODO [CANVAS] verify what sorts of things needs to be initialize when loaded from file");
+    this.p = p;
+    root.build(p);
+    //root.show();
   }
 
   //init my variables
   void setup(){
-    root      = new StateMachine("root");
-    states    = new Vector<State>();
+    System.out.println("hey");
 
-    textSize(cp5.getFont().getSize());
-    textFont(cp5.getFont().getFont());
+    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+
+    root      = new StateMachine(this.p, "root");
+    //states    = new Vector<State>();
+
+    System.out.println("hey");
+
+    p.textSize(cp5.getFont().getSize());
+    p.textFont(cp5.getFont().getFont());
 
     root.show();
   }
@@ -41,23 +54,27 @@ class Canvas {
     //drawing the root
     root.show();
     root.draw();
-    fill(255);
-    textAlign(LEFT);
-    text("ROOT", 20, 20);
+    p.fill(255);
+    p.textAlign(p.LEFT);
+    p.text("ROOT", 20, 20);
   }
 
   //creates a new state and adds its to the root state machine
   void create_state() {
-    println("creates a state");
-    State newState = new State("NEW_STATE_" + ((int)random(0, 1000)), mouseX, mouseY);
+    System.out.println("creates a state");
+    State newState = new State(p, "NEW_STATE_" + ((int)p.random(0, 1000)), p.mouseX, p.mouseY);
     root.add_state(newState);
   }
 
   //gets the state where the mouse is hoving and removes it form the root state machine
   void remove_state() {
-    println("remove a state");
-    root.remove_state(mouseX, mouseY);
+    System.out.println("remove a state");
+    root.remove_state(p.mouseX, p.mouseY);
 
+  }
+
+  void clear() {
+    root.clear();
   }
 
   void run() {
@@ -76,7 +93,7 @@ class Canvas {
     root.reset_all_names_gui();
 
     //verifies if the mouse intersects a state
-    State result = root.intersects_gui(mouseX, mouseY);
+    State result = root.intersects_gui(p.mouseX, p.mouseY);
 
     //if it does not, creates a new state
     if (result==null)
@@ -95,7 +112,7 @@ class Canvas {
     root.reset_all_names_gui();
 
     //verifies if the mouse intersects a state
-    State result = root.intersects_gui(mouseX, mouseY);
+    State result = root.intersects_gui(p.mouseX, p.mouseY);
 
     //if it intersects no one, return
     if (result==null) return;
@@ -111,11 +128,11 @@ class Canvas {
   //processes ui in case the shfit key was pressed
   void process_shift_key() {
     //verifies if the mouse intersects a state
-    State result = root.intersects_gui(mouseX, mouseY);
+    State result = root.intersects_gui(p.mouseX, p.mouseY);
 
     //if it does not, creates a new state
     if (result!=null) {
-        println("mouse was pressed while holding shift key in state " + result.get_name());
+        System.out.println("mouse was pressed while holding shift key in state " + result.get_name());
         result.freeze_movement_and_trigger_connection();
     }
   }

@@ -6,14 +6,7 @@
  ************************************************/
 
 
-
-//Testing_Task          t = new Testing_Task(this);
-//Testing_State         t = new Testing_State(this);
-//Testing_Connection    t = new Testing_Connection(this);
-//Scenario t = new Scenario(this);
-//Testing_Conditions    t = new Testing_Conditions(this);
-//Scenario t    = new Scenario(this);
-Canvas    canvas      = new Canvas();
+MainCanvas canvas     = new MainCanvas(this);
 Blackboard board      = new Blackboard(this);
 Serializer serializer = new Serializer();
 
@@ -22,6 +15,7 @@ boolean keyReleased = false;
 boolean mouseReleased = false;
 
 void setup() {
+  inst = this;
   size(1280, 800);
   background(0);
   smooth();
@@ -31,18 +25,26 @@ void setup() {
 }
 
 void draw() {
+  background(0);
+
+  //if is loading an open patch, do not draw anything
+  if (is_loading) return;
+
   //updates global variables in the bb
-  board.update_global_variables(this);
+  board.update_global_variables();
   //draws the scenario
   canvas.draw();
   //draws the blackboard
-  board.draw(this);
+  board.draw();
 
   if (keyReleased)     keyReleased = false;
   if (mouseReleased) mouseReleased = false;
 }
 
 void keyPressed(){
+  //if is loading an open patch, do not draw anything
+  if (is_loading) return;
+
   switch(key) {
   case '+':
     //create_state();
@@ -69,6 +71,8 @@ void keyPressed(){
 }
 
 void mousePressed() {
+  //if is loading an open patch, do not draw anything
+  if (is_loading) return;
   //if the key is not pressed, i'm not interested
   if (!keyPressed) return;
 
@@ -86,4 +90,29 @@ void keyReleased() {
 
 void mouseReleased() {
   mouseReleased = true;
+}
+
+//checks if the user released the key minus
+public boolean user_pressed_minus () {
+  boolean result = keyReleased && key=='-';
+  //returns the result
+  return result;
+}
+
+///////////////////////////////////////////////////
+//the following code was taken from Sofians' prototype
+//the goal is to allow serialization
+
+public OscP5 oscP5() { return oscP5; }
+public ControlP5 cp5() { return cp5; }
+public Minim minim() { return minim; }
+public Blackboard board() { return board; }
+public MainCanvas canvas() { return canvas; }
+public boolean debug() {return debug; }
+//public NetAddress remoteLocation() { return remoteLocation; }
+
+private static HFSMPrototype inst;
+
+public static HFSMPrototype instance() {
+  return inst;
 }
