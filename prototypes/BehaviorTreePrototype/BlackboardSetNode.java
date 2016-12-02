@@ -24,7 +24,6 @@ class BlackboardSetNode extends BaseNode {
 	}
 
   public void doInit(Blackboard agent) {}
-  public String type() { return "SET"; }
 
   public String toString() {
     return "[" + blackboardKey + "] = " + expression;
