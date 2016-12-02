@@ -15,6 +15,4 @@ public class TextNode extends BaseNode {
 	}
 
 	void doInit(Blackboard agent) {}
-
-	public String type() { return "TXT"; }
 }

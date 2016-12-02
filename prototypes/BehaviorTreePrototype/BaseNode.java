@@ -92,7 +92,15 @@ public abstract class BaseNode implements Serializable
 
   abstract State doExecute(Blackboard agent);
   abstract void doInit(Blackboard agent);
-  abstract String type();
+
+  String baseName() {
+    String basename = getClass().getSimpleName();
+    return basename.substring(0, basename.length() - "Node".length());
+  }
+
+  String type() {
+    return baseName().replaceAll("(.)(\\p{Upper})", "$1-$2").toLowerCase();
+  }
 
   void scheduleInit() { needsInit = true; }
 }

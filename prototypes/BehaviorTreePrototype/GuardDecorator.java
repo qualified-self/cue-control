@@ -47,6 +47,5 @@ class GuardDecorator extends Decorator {
   }
 
   String getDefaultDescription() { return condition.toString(); }
-  public String type() { return "GRD"; }
 
 }

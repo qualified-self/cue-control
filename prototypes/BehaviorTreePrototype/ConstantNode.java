@@ -10,6 +10,5 @@ class ConstantNode extends BaseNode
 
   public State doExecute(Blackboard agent) { return state; }
   public void doInit(Blackboard agent) {}
-  public String type() { return "STA"; }
 
 }

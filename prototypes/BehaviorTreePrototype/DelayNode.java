@@ -27,8 +27,6 @@ class DelayNode extends BaseNode {
     chrono.stop();
   }
 
-  public String type() { return "DEL"; }
-
   String getDefaultDescription() {
 		float timeLeft = timeOut - chrono.elapsed()/1000.0f;
 		return PApplet.nf(PApplet.max(timeLeft, 0), 0, 1);

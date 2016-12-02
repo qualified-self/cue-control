@@ -27,4 +27,9 @@ abstract class Decorator extends BaseNode {
   }
 
   BaseNode getNode() { return node; }
+
+  String baseName() {
+    String basename = getClass().getSimpleName();
+    return basename.substring(0, basename.length() - "Decorator".length());
+  }
 }

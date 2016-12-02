@@ -76,6 +76,4 @@ class ParallelNode extends CompositeNode
     nSuccess = 0;
     nFailure = 0;
   }
-
-  public String type() { return "PAR"; }
 }

@@ -24,13 +24,14 @@ void drawItem(PApplet app, int x, int y, color fillColor, boolean roundTops, boo
 }
 
 // General function to draw text.
-void drawItemText(PApplet app, String text, int x, int y, color textColor)
+void drawItemText(PApplet app, String type, String text, int x, int y, color textColor)
 {
-	app.fill(textColor);
 	app.textSize(NODE_HEIGHT/2);
-	app.text(text, x+INDENT/2, y+NODE_HEIGHT*0.65);
+	app.fill(#0000ff);
+	app.text(type, x+INDENT/2, y+NODE_HEIGHT*0.65);
+	app.fill(textColor);
+	app.text(text, x+INDENT/2+textWidth(type)+5, y+NODE_HEIGHT*0.65);
 }
-
 
 int drawDecorator(PApplet app, Decorator dec, int x, int y)
 {
@@ -39,7 +40,7 @@ int drawDecorator(PApplet app, Decorator dec, int x, int y)
 
   // Draw decorator.
 	drawItem(app, x, y, DECORATOR_FILL_COLOR, true, false);
-	drawItemText(app, dec.type() + " " + dec.getDescription(), x, y, DECORATOR_TEXT_COLOR);
+	drawItemText(app, dec.type(), dec.getDescription(), x, y, DECORATOR_TEXT_COLOR);
 
   return (y + NODE_HEIGHT);
 }
@@ -61,7 +62,7 @@ int drawNode(PApplet app, BaseNode node, int x, int y)
   	drawItem(app, x, y, color(#dddddd), true, true);
 
   	// Draw item text.
-  	drawItemText(app, node.getDescription(), x, y, NODE_TEXT_COLOR);
+  	drawItemText(app, "", node.getDescription(), x, y, NODE_TEXT_COLOR);
   }
   else {
     // Draw node.
@@ -79,7 +80,7 @@ int drawNode(PApplet app, BaseNode node, int x, int y)
     }
 
   	// Draw item text.
-  	drawItemText(app, node.type() + " " + node.getDescription(), x, y, NODE_TEXT_COLOR);
+  	drawItemText(app, node.type(), node.getDescription(), x, y, NODE_TEXT_COLOR);
 
   	// Draw expand button and deal with it.
   	if (node instanceof CompositeNode)

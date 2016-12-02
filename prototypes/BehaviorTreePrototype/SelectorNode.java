@@ -63,5 +63,4 @@ class SelectorNode extends CompositeNode
       node.init(agent);
   }
 
-  public String type() { return "SEL"; }
 }

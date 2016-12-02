@@ -90,6 +90,4 @@ class ProbabilityNode extends CompositeNode
     for (BaseNode node : children)
       node.init(agent);
 	}
-
-  public String type() { return "PRB"; }
 }

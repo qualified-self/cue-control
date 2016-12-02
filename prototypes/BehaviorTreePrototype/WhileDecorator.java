@@ -46,7 +46,7 @@ class WhileDecorator extends Decorator {
         status = State.SUCCESS;
       }
     }
-    
+
     else if (status == State.FAILURE)
       node.scheduleInit();
 
@@ -54,6 +54,4 @@ class WhileDecorator extends Decorator {
   }
 
   String getDefaultDescription() { return condition.toString(); }
-
-  public String type() { return "WHL"; }
 }

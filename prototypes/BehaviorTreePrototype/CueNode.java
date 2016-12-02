@@ -122,8 +122,6 @@ class CueNode extends BaseNode {
     chrono.stop();
   }
 
-  public String type() { return "CUE"; }
-
   float currentTime() {
     return (chrono.seconds());
   }

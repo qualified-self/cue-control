@@ -106,7 +106,6 @@ public class OscReceiveNode extends BaseNode
 			return stateOnNoValueReceived;
 	}
 
-  public String type() { return "RCV"; }
 
 	Chrono chrono;
 

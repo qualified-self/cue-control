@@ -47,6 +47,4 @@ class SequentialNode extends CompositeNode
     for (BaseNode node : children)
       node.init(agent);
   }
-
-  public String type() { return "SEQ"; }
 }
