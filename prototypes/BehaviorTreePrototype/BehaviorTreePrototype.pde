@@ -77,7 +77,8 @@ void setup() {
 
 //  root = new SequentialNode();
 //  root = factory.createNode("SelectorNode \"Go man!\" false");
-  root = createTreeOtherSelf();
+  root = createTreeCepheids();
+//  root = createTreeOtherSelf();
 //  root = simpleTest();
 //  root = createTreeOct25();
 //  root = createTreeOct25();
