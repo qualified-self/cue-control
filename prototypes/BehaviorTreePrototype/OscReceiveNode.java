@@ -11,6 +11,8 @@ public class OscReceiveNode extends BaseNode
 
 	State stateOnNoValueReceived;
 
+	Chrono chrono;
+
 	OscReceiveNode(String message, String varName)
 	{
 		this(message, varName, State.RUNNING);
@@ -106,7 +108,5 @@ public class OscReceiveNode extends BaseNode
 			return stateOnNoValueReceived;
 	}
 
-
-	Chrono chrono;
 
 }
