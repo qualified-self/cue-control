@@ -32,11 +32,12 @@ class OscSendNode extends CueNode {
     OscMessage message = new OscMessage(addrPattern);
     try
     {
-      Object value = argExpression.eval(agent);
-      if (value instanceof Double)
-        value = new Float(((Double)value).floatValue());
-      if (argExpression != null)
+      if (argExpression != null) {
+        Object value = argExpression.eval(agent);
+        if (value instanceof Double)
+          value = new Float(((Double)value).floatValue());
         message.add(new Object[] { value });
+      }
       BehaviorTreePrototype.instance().oscP5().send(message, BehaviorTreePrototype.instance().remoteLocation());
     } catch (Exception e) {
       BehaviorTreePrototype.instance().println("Exception " + e.toString());
