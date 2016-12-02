@@ -24,7 +24,7 @@ class Expression implements Serializable {
   }
 
   void build(PApplet p) {
-    
+
     if (manager == null) {
       manager = new ScriptEngineManager();
       engine = manager.getEngineByName("js");

@@ -21,11 +21,11 @@ class AudioTask extends Task {
   private float  volume;
 
   //contructor loading the file
-  public AudioTask (PApplet p, String taskname, String filename) {
-    super(p, taskname);
+  public AudioTask (PApplet p, ControlP5 cp5, String taskname, String filename) {
+    super(p, cp5, taskname);
     this.filename  = filename;
     //repeat what sofian did in his prototype
-    build(p);
+    build(p, cp5);
     //this.volume = 1.;
   }
   /*
@@ -38,13 +38,14 @@ class AudioTask extends Task {
   }
   */
 
-  void build(PApplet p) {
+  void build(PApplet p, ControlP5 cp5) {
     this.p = p;
+    this.cp5 = cp5;
     this.soundfile = HFSMPrototype.instance().minim().loadFile(filename);
   }
 
   AudioTask clone_it() {
-    return new AudioTask(this.p, this.name, this.filename);
+    return new AudioTask(this.p, this.cp5, this.name, this.filename);
   }
 
   void update_name(String name) {
@@ -113,7 +114,7 @@ class AudioTask extends Task {
             //println(name + " was unfocused");
 
             String s = theEvent.getController().getName();
-            ControlP5 cp5 = HFSMPrototype.instance().cp5();
+            //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
             if (s.equals(get_gui_id() + "/filename")) {
                 String newFilename = theEvent.getController().getValueLabel().getText();
@@ -142,7 +143,7 @@ class AudioTask extends Task {
     this.set_gui_id(s.get_name() + " " + this.get_name());
     String g_name = this.get_gui_id();
 
-    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
     Group g = cp5.addGroup(g_name)
     //.setPosition(x, y) //change that?

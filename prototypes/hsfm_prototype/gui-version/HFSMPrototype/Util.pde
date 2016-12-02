@@ -67,3 +67,13 @@ public static BigDecimal round(float d, int decimalPlace) {
     bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
     return bd;
 }
+
+void oscEvent(OscMessage msg) {
+  if (debug) {
+    System.out.print("### received an osc message.");
+    System.out.print(" addrpattern: "+msg.addrPattern());
+    System.out.print(" typetag: "+msg.typetag());
+  }
+
+  board.oscEvent(msg);
+}

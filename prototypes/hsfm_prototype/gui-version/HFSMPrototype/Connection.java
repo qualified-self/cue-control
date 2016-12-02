@@ -20,24 +20,28 @@ public class Connection implements Serializable {
   int background;
   int foreground;
   transient PApplet p;
+  transient ControlP5 cp5;
 
   //constructor for an empty transition
-  public Connection (PApplet p, State par, State ns, int priority) {
-    this(p, par, ns, new Expression("true"), priority);
+  public Connection (PApplet p, ControlP5 cp5, State par, State ns, int priority) {
+    this(p, cp5, par, ns, new Expression("true"), priority);
   }
 
   //constructor for a more complex transition
-  public Connection (PApplet p, State parent, State ns, Expression expression, int priority) {
+  public Connection (PApplet p, ControlP5 cp5, State parent, State ns, Expression expression, int priority) {
     this.p = p;
+    this.cp5 = cp5;
     this.next_state = ns;
     this.priority   = priority;
     this.expression = expression;
     this.parent     = parent;
+    //@TODO PROBLEM TAKING TIME TO LOAD IS IN THE FOLLOWING METHOD!!!
     init_gui_items();
   }
 
-  void build(PApplet p) {
+  void build(PApplet p, ControlP5 cp5) {
     this.p = p;
+    this.cp5 = cp5;
     this.expression.build(p);
     init_gui_items();
   }
@@ -89,13 +93,14 @@ public class Connection implements Serializable {
   /*******************************************
    ** GUI FUNCTIONS ***************************
    ********************************************/
+   //@TODO PROBLEM TAKING TIME TO LOAD IS IN THE FOLLOWING METHOD!!!
   int w=20;
   void init_gui_items() {
     String gui_name = parent.get_name() + "_" + next_state.get_name();
 
     ControlP5 cp5  = get_controlP5_gui();
 
-    p.println(cp5);
+    //p.println(cp5);
 
     background = p.color(0, 0, 0, 50);
     foreground = p.color(0, 116, 217, 200);
@@ -149,7 +154,7 @@ public class Connection implements Serializable {
      }
 
   void remove_gui_items() {
-    ControlP5 cp5 = get_controlP5_gui();
+    //ControlP5 cp5 = get_controlP5_gui();
     String gui_name = parent.get_name() + "_" + next_state.get_name();
     cp5.remove(gui_name+"/priority");
     cp5.remove(gui_name+"/condition");

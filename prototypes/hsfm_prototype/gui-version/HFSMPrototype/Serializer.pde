@@ -48,6 +48,7 @@ public class Serializer {
       ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 
       canvas.root.hide();
+      cp5.setAutoDraw(false);
       board.clear();
       canvas.clear();
 
@@ -57,12 +58,13 @@ public class Serializer {
       PApplet p = HFSMPrototype.instance();
 
       board.build(p);
-      canvas.build(p);
+      canvas.build(p, cp5);
 
       ois.close();
 
       is_loading = false;
       canvas.root.show();
+      cp5.setAutoDraw(true);
 
       println("done loading!");
 

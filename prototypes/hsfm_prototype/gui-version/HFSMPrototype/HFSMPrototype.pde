@@ -6,7 +6,7 @@
  ************************************************/
 
 
-MainCanvas canvas     = new MainCanvas(this);
+MainCanvas canvas     ;
 Blackboard board      = new Blackboard(this);
 Serializer serializer = new Serializer();
 
@@ -15,11 +15,13 @@ boolean keyReleased = false;
 boolean mouseReleased = false;
 
 void setup() {
+  setup_util();
+  canvas = new MainCanvas(this, cp5);
   inst = this;
   size(1280, 800);
   background(0);
   smooth();
-  setup_util();
+
   canvas.setup();
   board.set_gui_position(width-(board.mywidth*3)-2, 20);
 }
@@ -28,7 +30,9 @@ void draw() {
   background(0);
 
   //if is loading an open patch, do not draw anything
-  if (is_loading) return;
+  if (is_loading)
+    return;
+
 
   //updates global variables in the bb
   board.update_global_variables();

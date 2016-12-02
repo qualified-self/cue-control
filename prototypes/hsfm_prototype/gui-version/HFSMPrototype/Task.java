@@ -23,9 +23,11 @@ public abstract class Task implements Serializable {
   protected String group_gui_id;
   //protected State  parent;
   transient protected PApplet  p;
+  transient protected ControlP5 cp5;
 
-  public Task (PApplet p, String taskname) {
+  public Task (PApplet p, ControlP5 cp5, String taskname) {
     this.p = p;
+    this.cp5 = cp5;
     this.name   = taskname;
     this.status = Status.INACTIVE;
 
@@ -102,7 +104,7 @@ public abstract class Task implements Serializable {
   }
 
   abstract void run();
-  abstract void build(PApplet p);
+  abstract void build(PApplet p, ControlP5 cp5);
   abstract void update_status();
   abstract void stop();
   abstract Task clone_it();

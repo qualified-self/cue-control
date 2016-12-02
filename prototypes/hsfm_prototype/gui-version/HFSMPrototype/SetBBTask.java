@@ -13,8 +13,8 @@ class SetBBTask extends Task {
   Object value;
   String variableName;
 
-  public SetBBTask (PApplet p, String taskname, Object value) {
-    super(p, taskname);
+  public SetBBTask (PApplet p, ControlP5 cp5, String taskname, Object value) {
+    super(p, cp5, taskname);
     this.variableName = taskname;
     this.value = value;
   }
@@ -26,12 +26,13 @@ class SetBBTask extends Task {
   }
   */
 
-  void build(PApplet p) {
+  void build(PApplet p, ControlP5 cp5) {
     this.p = p;
+    this.cp5 = cp5;
   }
 
   SetBBTask clone_it() {
-    return new SetBBTask(this.p, this.name, this.value);
+    return new SetBBTask(this.p, this.cp5, this.name, this.value);
   }
 
   void run() {
@@ -95,7 +96,7 @@ class SetBBTask extends Task {
           //if the user tried to change but did not press enter
           if (!newtext.replace(" ", "").equals(oldtext)) {
             //resets the test for the original
-            ControlP5 cp5 = HFSMPrototype.instance().cp5();
+            //ControlP5 cp5 = HFSMPrototype.instance().cp5();
             Textfield t = (Textfield)cp5.get(s);
             t.setText(oldtext);
           }
@@ -104,10 +105,10 @@ class SetBBTask extends Task {
   }
 
   Group load_gui_elements(State s) {
-    PApplet p = HFSMPrototype.instance();
+    //PApplet p = HFSMPrototype.instance();
     CallbackListener cb_enter = generate_callback_enter();
 		CallbackListener cb_leave = generate_callback_leave();
-    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    //ControlP5 cp5 = HFSMPrototype.instance().cp5();
     int c1 = p.color(255, 50);
     int c2 = p.color(255, 25);
 

@@ -15,11 +15,12 @@ class OSCTask extends Task {
   private String    message;
   private String    ip;
   private int       port;
-  //transient private NetAddress broadcast;
+  transient private NetAddress broadcast;
+  transient private OscP5      oscP5;
 
   //contructor loading the file
-  public OSCTask (PApplet p, String id, String message, int port, String ip, Object[] content) {
-    super(p, id);
+  public OSCTask (PApplet p, ControlP5 cp5, String id, String message, int port, String ip, Object[] content) {
+    super(p, cp5, id);
     this.message   = message;
     this.ip        = ip;
     this.port      = port;
@@ -28,15 +29,20 @@ class OSCTask extends Task {
     this.content   = content;
     //this.broadcast = null;
     //this.update_message(content);
+    this.build(p, cp5);
   }
 
-  void build(PApplet p) {
+  void build(PApplet p, ControlP5 cp5) {
     this.p = p;
+    this.cp5 = cp5;
+    this.broadcast = new NetAddress(ip, port);
+    //this.oscP5     = new OscP5(p, port+1);
+    this.oscP5 = HFSMPrototype.instance().oscP5();
   }
 
   //method that returns if this OSC Task is curerntly initialized
   OSCTask clone_it() {
-    return new OSCTask(this.p, this.name, this.message, this.port, this.ip, this.content);
+    return new OSCTask(this.p, this.cp5, this.name, this.message, this.port, this.ip, this.content);
   }
 
   void run () {
@@ -45,8 +51,8 @@ class OSCTask extends Task {
     OscMessage msg = create_message();
 
     //if (broadcast==null)
-    NetAddress broadcast = new NetAddress(ip, port);
-    OscP5 oscP5 = HFSMPrototype.instance().oscP5();
+    //NetAddress broadcast = new NetAddress(ip, port);
+    //OscP5 oscP5 = HFSMPrototype.instance().oscP5();
 
     oscP5.send(msg, broadcast);
 
@@ -193,7 +199,7 @@ class OSCTask extends Task {
             //if the user tried to change but did not press enter
             if (!newtext.replace(" ", "").equals(oldtext)) {
               //resets the test for the original
-              ControlP5 cp5 = HFSMPrototype.instance().cp5();
+              //ControlP5 cp5 = HFSMPrototype.instance().cp5();
               Textfield t = (Textfield)cp5.get(s);
               t.setText(oldtext);
             }
@@ -205,8 +211,8 @@ class OSCTask extends Task {
   Group load_gui_elements(State s) {
     //do we really need this?
     //this.parent = s;
-    PApplet p = HFSMPrototype.instance();
-    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    //PApplet p = HFSMPrototype.instance();
+    //ControlP5 cp5 = HFSMPrototype.instance().cp5();
     int c1 = p.color(255, 50);
     int c2 = p.color(255, 25);
 

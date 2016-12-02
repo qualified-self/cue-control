@@ -16,29 +16,29 @@ class MainCanvas implements Serializable {
   //Vector<State> states; //vector that store my states
 
   transient private PApplet p;
+  transient private ControlP5 cp5;
+
 
   //contructor
-  public MainCanvas (PApplet p) {
+  public MainCanvas (PApplet p, ControlP5 cp5) {
     this.p = p;
+    this.cp5 = cp5;
   }
 
-  void build(PApplet p) {
+  void build(PApplet p, ControlP5 cp5) {
     System.out.println("@TODO [CANVAS] verify what sorts of things needs to be initialize when loaded from file");
     this.p = p;
-    root.build(p);
+    this.cp5 = cp5;
+    root.build(p, cp5);
     //root.show();
   }
 
   //init my variables
   void setup(){
-    System.out.println("hey");
 
-    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
-    root      = new StateMachine(this.p, "root");
-    //states    = new Vector<State>();
-
-    System.out.println("hey");
+    root      = new StateMachine(this.p, cp5, "root");
 
     p.textSize(cp5.getFont().getSize());
     p.textFont(cp5.getFont().getFont());
@@ -62,7 +62,7 @@ class MainCanvas implements Serializable {
   //creates a new state and adds its to the root state machine
   void create_state() {
     System.out.println("creates a state");
-    State newState = new State(p, "NEW_STATE_" + ((int)p.random(0, 1000)), p.mouseX, p.mouseY);
+    State newState = new State(p, cp5, "NEW_STATE_" + ((int)p.random(0, 1000)), p.mouseX, p.mouseY);
     root.add_state(newState);
   }
 

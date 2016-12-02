@@ -22,11 +22,11 @@ public class StateMachine extends Task {
   //State_Machine_Preview preview;
 
   //contructor
-  public StateMachine (PApplet p, String name) {
-    super (p, name);
+  public StateMachine (PApplet p, ControlP5 cp5, String name) {
+    super (p, cp5, name);
     title   = name;
-    begin   = new State(p, "BEGIN_" + name);
-    end     = new State(p, "END_"+name);
+    begin   = new State(p, cp5, "BEGIN_" + name);
+    end     = new State(p, cp5, "END_"+name);
     states  = new Vector<State>();
     debug = HFSMPrototype.instance().debug();
     //preview = new State_Machine_Preview(this);
@@ -58,14 +58,15 @@ public class StateMachine extends Task {
   }
   */
 
-  void build (PApplet p) {
+  void build (PApplet p, ControlP5 cp5) {
     this.p = p;
+    this.cp5 = cp5;
 
-    this.begin.build(p);
-    this.end.build(p);
+    this.begin.build(p, cp5);
+    this.end.build(p, cp5);
 
     for (State s : states)
-      s.build(p);
+      s.build(p, cp5);
 
     //sets the global variables related to this blackboard
     init_global_variables();
@@ -268,7 +269,7 @@ public class StateMachine extends Task {
       //remove all connections to this state
       this.remove_all_connections_to_a_state(s);
 
-      ControlP5 cp5 = HFSMPrototype.instance().cp5();
+      //ControlP5 cp5 = HFSMPrototype.instance().cp5();
       //removes its ui components
       cp5.remove(s.get_name());
       //remove the state fmor the list
@@ -494,7 +495,7 @@ public class StateMachine extends Task {
 
               //if the user tried to change but did not press enter
               if (!newtext.replace(" ", "").equals(oldtext)) {
-                ControlP5 cp5 = HFSMPrototype.instance().cp5();
+                //ControlP5 cp5 = HFSMPrototype.instance().cp5();
                 //resets the test for the original
                 Textfield t = (Textfield)cp5.get(s);
                 t.setText(oldtext);
@@ -507,7 +508,7 @@ public class StateMachine extends Task {
     //creating the callbacks
     CallbackListener cb_enter = generate_callback_enter();
 		CallbackListener cb_leave = generate_callback_leave();
-    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 		String g_name = s.get_name() + " " + this.get_name();
     this.set_gui_id(g_name);
 

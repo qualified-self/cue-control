@@ -35,10 +35,12 @@ public class State implements Serializable {
   transient private Accordion accordion;
   transient private Textfield label;
   transient private PApplet   p;
+  transient private ControlP5 cp5;
 
   //constructor
-  public State(PApplet p, String name) {
+  public State(PApplet p, ControlP5 cp5, String name) {
     this.p = p;
+    this.cp5 = cp5;
     this.name   = name.toUpperCase();
     this.status = Status.INACTIVE;
     this.tasks  = new Vector<Task>();
@@ -55,28 +57,34 @@ public class State implements Serializable {
   }
 
   //constructor
-  public State(PApplet p, String name, int x, int y) {
-    this(p, name);
+  public State(PApplet p, ControlP5 cp5, String name, int x, int y) {
+    this(p, cp5, name);
     this.x = x;
     this.y = y;
     pie.set_position(x,y);
   }
 
   //@TODO IMMPLEMENT BUILD THAT LOADS THE UI ELEMENTS OF THE STATE
-  void build (PApplet p) {
+  void build (PApplet p, ControlP5 cp5) {
     this.p = p;
+    this.cp5 = cp5;
 
     //loads the gui
     init_gui();
     hide_gui();
 
     //builds the tasks
-    for (Task t : tasks)
-      t.build(p);
+    for (Task t : tasks) {
+      t.build(p, cp5);
+    }
+
+    this.add_all_tasks_to_gui();
 
     //builds the tasks
     for (Connection c : connections)
-      c.build(p);
+      c.build(p, cp5);
+
+
   }
 
   String get_name() {
@@ -109,7 +117,7 @@ public class State implements Serializable {
     this.remove_all_tasks();
     this.remove_all_tasks_from_gui();
     this.remove_all_connections();
-    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    //ControlP5 cp5 = HFSMPrototype.instance().cp5();
     //removes the old gui label
     cp5.remove(this.name);
     cp5.remove("/acc_"+this.name);
@@ -307,7 +315,8 @@ public class State implements Serializable {
     int p = connections.size()+1;
 
     //in case the condition hasnt been used, create a new connection
-    Connection c = new Connection(this.p, this, next_state, expression, p);
+    Connection c = new Connection(this.p, this.cp5, this, next_state, expression, p);
+
     //@TODO add item from all dropdown lists
     connections.addElement(c);
     //reload_connections_gui();
@@ -316,7 +325,7 @@ public class State implements Serializable {
     if (there_is_already_a_connection_to_state(this) && next_state!=this)
       //update its priority to the last
       update_priority(p-1, p);
-  
+
 
     if (debug)
       System.out.println("Connection created. If " + this.name + " receives " + expression.toString() + ", it goes to state " + next_state.name);
@@ -396,7 +405,7 @@ public class State implements Serializable {
   //method that initializes a random demo osc task
   void init_random_osc_task () {
     String taskname = generate_random_name();
-    OSCTask t = new OSCTask(p, taskname, "/test/value", 12000, "localhost", new Object[]{0, 12});
+    OSCTask t = new OSCTask(p, cp5, taskname, "/test/value", 12000, "localhost", new Object[]{0, 12});
     this.add_task(t);
     //println(selected + " " + pie.options[selected]);
 
@@ -405,7 +414,7 @@ public class State implements Serializable {
   //method that initializes a random demo audio task
   void init_random_audio_task () {
     String taskname = generate_random_name();
-    AudioTask t = new AudioTask(p, taskname, "123go.mp3");
+    AudioTask t = new AudioTask(p, cp5, taskname, "123go.mp3");
     this.add_task(t);
     //println(selected + " " + pie.options[selected]);
   }
@@ -413,7 +422,7 @@ public class State implements Serializable {
   //method that initializes a random demo state machine task
   void init_random_state_machine_task () {
     String taskname = generate_random_name();
-    StateMachine t = new StateMachine(p, taskname);
+    StateMachine t = new StateMachine(p, cp5, taskname);
     this.add_task(t);
     //println(selected + " " + pie.options[selected]);
   }
@@ -421,7 +430,7 @@ public class State implements Serializable {
   //method that initializes a random demo set balckboard task
   void init_random_set_blackboard_task () {
     String taskname = generate_random_name();
-    SetBBTask t = new SetBBTask(p, taskname, 0);
+    SetBBTask t = new SetBBTask(p, cp5, taskname, 0);
     this.add_task(t);
     //println(selected + " " + pie.options[selected]);
   }
@@ -524,7 +533,7 @@ public class State implements Serializable {
 
   //updates the name of this state
   void update_name (String newName) {
-    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    //ControlP5 cp5 = HFSMPrototype.instance().cp5();
     //removes the old gui label
     cp5.remove(this.name);
     //removes all tasks from the gui
@@ -550,7 +559,7 @@ public class State implements Serializable {
   void init_gui() {
     this.pie = new PieMenu(p, x, y, size);
 
-    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
     p.textSize(cp5.getFont().getSize());
     p.textFont(cp5.getFont().getFont());
@@ -618,7 +627,7 @@ public class State implements Serializable {
   //inits the label with the name of the state
   void init_state_name_gui() {
 
-    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
     CallbackListener cb_enter = generate_callback_enter();
     CallbackListener cb_leave = generate_callback_leave();
@@ -644,7 +653,7 @@ public class State implements Serializable {
 
   //init the accordion that will store the tasks
   void init_accordion_gui() {
-    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
     accordion = cp5.addAccordion("acc_"+this.name)
       .setWidth(110)
@@ -664,7 +673,7 @@ public class State implements Serializable {
 
   //removes a task from the accordion
   void remove_task_in_accordion_gui(Task t) {
-    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    //ControlP5 cp5 = HFSMPrototype.instance().cp5();
     //looks for the group
     //Group g = cp5.get(Group.class, this.name + " " + t.get_name());
     //removes this task from the accordion
@@ -945,12 +954,17 @@ public class State implements Serializable {
   //verifies if the mouse is over a certain task, returning this task
   Task verifies_if_mouse_is_over_a_task () {
     Task to_be_removed = null;
-    ControlP5 cp5 = HFSMPrototype.instance().cp5();
+    //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
     //iterates of all tasks related to this state
     for (Task t : tasks) {
       //gets the group related to this task
       Group g = cp5.get(Group.class, this.name + " " + t.get_name());
+
+      if (g==null) {
+        p.println("g==null");
+        return null;
+      }
 
       //verifies if the menu item is selected and the user pressed '-'
       if (g.isMouseOver() && HFSMPrototype.instance().user_pressed_minus ()) {
