@@ -38,68 +38,159 @@
 final int N_FIREFLIES = 100;
 BaseNode createTreeCepheids() {
   return new SequentialNode()
-    .addChild(new SequentialNode("prologue: install subject; when ready dim lights off and press 'G' to start")
+    .addChild(new SequentialNode("PROLOGUE: install subject; when ready dim lights off and press 'G' to start").setExpanded(false)
       .addChild(new BlackboardSetNode("n_fireflies", 0))
+      .addChild(new BlackboardSetNode("period", 10.0))
+      .addChild(new BlackboardSetNode("alpha_period", 0.001))
       .addChild(new OscSendNode("/reset"))
+      .addChild(new OscSendNode("/environment/firefly/flash-adjust", "0.005"))
+      .addChild(new OscSendNode("/environment/firefly/period", "$period"))
       .addChild(new OscSendNode("/audio/clip/prologue/play"))
       .addChild(new OscSendNode("/audio/beat/gain",            "0.0"))
       .addChild(new OscSendNode("/audio/clip/soundscape/gain", "0.0"))
-      .addChild(new OscSendNode("/audio/clip/prologue/gain",   "1.0"))
+      .addChild(new OscSendNode("/audio/clip/prologue/gain",   "0.65"))
+      .addChild(new OscSendNode("/environment/firefly/state-ring")) // this is just so that the first agent goes towards center
     )
 
     // Wait for a trigger from supervisor: press 'G'
 		.addChild(new ConstantNode(State.SUCCESS).setDecorator(new WhileDecorator(new NotCondition(new KeyCondition('G')))))
 
-    .addChild(new SequentialNode("intro")
+    .addChild(new SequentialNode("INTRO (3 minutes)")
+      .addChild(new BlackboardSetNode("start_time", "$seconds"))
 
       .addChild(new OscSendNode("/audio/clip/soundscape/play"))
+
+      // Add one firefly.
+//      .addChild(new OscSendNode("/environment/firefly/add"))
+      .addChild(new BlackboardSetNode("n_fireflies", 1))
+      .addChild(new OscSendNode("/environment/firefly/state-wander")) // let it wander around
 
       .addChild(new SequentialNode("crossfade audio").setExpanded(false)
         .addChild(new ParallelNode()
           .addChild(new BlackboardRampNode("crossfade", 0, 1, ONE_MINUTE/2))
+          .addChild(new BlackboardRampNode("crossfade_prologue", 0.65, 0, ONE_MINUTE/2))
           .addChild(new SequentialNode().setDecorator(new WhileDecorator("$crossfade < 1"))
             .addChild(new OscSendNode("/audio/clip/soundscape/gain", "$crossfade"))
-            .addChild(new OscSendNode("/audio/clip/prologue/gain", "1-$crossfade"))
-          )
-        )
-        .addChild(new OscSendNode("/audio/beat/gain", "1"))
-        .addChild(new OscSendNode("/audio/clip/soundscape/gain", "1"))
-        .addChild(new OscSendNode("/audio/clip/prologue/gain", "0"))
-        .addChild(new OscSendNode("/audio/clip/prologue/stop"))
-      )
-
-      .addChild(new DelayNode(ONE_MINUTE/3))
-
-      // Start adding agents.
-      .addChild(new ParallelNode()
-        .addChild(new ParallelNode()
-          .addChild(new BlackboardRampNode("crossfade", 0, 1, ONE_MINUTE))
-          .addChild(new SequentialNode().setDecorator(new WhileDecorator("$crossfade < 1"))
+            .addChild(new OscSendNode("/audio/clip/prologue/gain", "$crossfade_prologue"))
             .addChild(new OscSendNode("/audio/beat/gain", "$crossfade"))
             .addChild(new OscSendNode("/environment/firefly/intensity", "$crossfade"))
           )
         )
+        .addChild(new OscSendNode("/audio/beat/gain", "1.0"))
+        .addChild(new OscSendNode("/audio/clip/soundscape/gain", "1.0"))
+        .addChild(new OscSendNode("/audio/clip/prologue/gain", "0.0"))
+        .addChild(new OscSendNode("/audio/clip/prologue/stop"))
+      )
+
+      // One firefly: period increases
+      .addChild(new SequentialNode("introduce single agent").setExpanded(false)
+        .addChild(new ParallelNode()
+          .addChild(new BlackboardRampNode("crossfade", 0, 1, 30))
+          .addChild(new BlackboardRampNode("crossfade_divider", 10, 5, 30))
+          .addChild(new SequentialNode().setDecorator(new WhileDecorator("$crossfade < 1"))
+            .addChild(new OscSendNode("/audio/beat/gain", "$crossfade"))
+            .addChild(new OscSendNode("/environment/firefly/intensity", "$crossfade"))
+            .addChild(new OscSendNode("/environment/firefly/period", "$ecg_gap / 1000.0 * Math.round($crossfade_divider)"))
+          )
+        )
+      )
+
+      // Wait for this phase to end
+		  .addChild(new ConstantNode(State.SUCCESS).setDecorator(new WhileDecorator("$seconds - $start_time < " + 3*ONE_MINUTE)))
+    )
+
+    .addChild(new SequentialNode("ASYNCHRONY (3 minutes)")
+      .addChild(new OscSendNode("/environment/firefly/de-phase-all"))
+      .addChild(new BlackboardSetNode("start_time", "$seconds"))
+
+      // Start adding agents.
+      .addChild(new ParallelNode()
+        .addChild(new ParallelNode("reveal fireflies")
+          .addChild(new BlackboardRampNode("crossfade", 0, 1, ONE_MINUTE))
+          .addChild(new BlackboardRampNode("crossfade_soundscape", 1, 0.65, ONE_MINUTE/3))
+          .addChild(new SequentialNode().setDecorator(new WhileDecorator("$crossfade < 1"))
+            .addChild(new OscSendNode("/audio/beat/gain", "$crossfade"))
+            .addChild(new OscSendNode("/audio/clip/soundscape/gain", "$crossfade_soundscape"))
+//            .addChild(new OscSendNode("/environment/firefly/intensity", "$crossfade"))
+          )
+        )
+
         .addChild(new SequentialNode("add fireflies").setDecorator(new WhileDecorator("$n_fireflies < " + N_FIREFLIES))
           .addChild(new OscSendNode("/environment/firefly/add"))
           .addChild(new BlackboardSetNode("n_fireflies", "${n_fireflies} + 1"))
-          .addChild(new DelayNode(0.5))
+          .addChild(new DelayNode(0.1))
         )
+      )
+
+      // Wait for this phase to end
+		  .addChild(new ConstantNode(State.SUCCESS).setDecorator(new WhileDecorator("$seconds - $start_time < " + 3*ONE_MINUTE)))
+    )
+
+    .addChild(new SequentialNode("SYNCHRONY (3 minutes)")
+      .addChild(new OscSendNode("/environment/firefly/flash-adjust", "0.05"))
+      .addChild(new BlackboardSetNode("start_time", "$seconds"))
+      .addChild(new OscSendNode("/environment/firefly/state-ring", ""))
+
+      // Reduce the soundscape to give space to heartbeats
+      .addChild(new ParallelNode("heighten fireflies")
+        .addChild(new BlackboardRampNode("crossfade", 1, 1.5, ONE_MINUTE/3))
+        .addChild(new BlackboardRampNode("crossfade_soundscape", 0.45, ONE_MINUTE/3))
+        .addChild(new SequentialNode().setDecorator(new WhileDecorator("$crossfade < 1.5"))
+          .addChild(new OscSendNode("/audio/beat/gain", "$crossfade"))
+          .addChild(new OscSendNode("/audio/clip/soundscape/gain", "$crossfade_soundscape"))
+        )
+      )
+
+      // Move the fireflies towards center + to match user's heartbeat
+      .addChild(new SequentialNode("fireflies synchronize with heart").setDecorator(new WhileDecorator("$seconds - $start_time < " + 3*ONE_MINUTE))
+        .addChild(new BlackboardSetNode("period", "(1 - ${alpha_period})*$period + ${alpha_period} * ($ecg_gap / 1000.0)"))
+        // TODO: crossfade to person's heart
+        .addChild(new OscSendNode("/environment/firefly/period", "$period"))
       )
     )
 
-    .addChild(new SequentialNode("noise / asynchrony")
-    )
+    .addChild(new SequentialNode("OUTRO")
+        // TODO: dephase more progressively
+        .addChild(new OscSendNode("/environment/firefly/flash-adjust", "0.0"))
+        .addChild(new OscSendNode("/environment/firefly/de-phase-all"))
+        .addChild(new OscSendNode("/environment/firefly/state-wander"))
+        .addChild(new DelayNode(20))
 
-    .addChild(new SequentialNode("order / synchrony")
-    )
+        .addChild(new SequentialNode("remove fireflies").setDecorator(new WhileDecorator("$n_fireflies > 1"))
+          .addChild(new OscSendNode("/environment/firefly/remove"))
+          .addChild(new BlackboardSetNode("n_fireflies", "${n_fireflies} - 1"))
+          .addChild(new DelayNode(0.01))
+        )
 
-    .addChild(new SequentialNode("outro")
-      .addChild(new OscSendNode("/reset"))
-    )
+        .addChild(new OscSendNode("/audio/beat/gain", "1.0"))
+        .addChild(new DelayNode(15))
+
+        .addChild(new SequentialNode("fade out").setExpanded(false)
+          .addChild(new ParallelNode()
+            .addChild(new BlackboardRampNode("crossfade", 1, 0, 5.0))
+            .addChild(new BlackboardRampNode("crossfade_soundscape", 0, 5.0))
+            .addChild(new SequentialNode().setDecorator(new WhileDecorator("$crossfade > 0"))
+              .addChild(new OscSendNode("/audio/clip/soundscape/gain", "$crossfade_soundscape"))
+              .addChild(new OscSendNode("/audio/beat/gain", "$crossfade"))
+              .addChild(new OscSendNode("/environment/firefly/intensity", "$crossfade"))
+            )
+          )
+          .addChild(new OscSendNode("/audio/beat/gain", "0.0"))
+          .addChild(new OscSendNode("/audio/clip/soundscape/gain", "0.0"))
+          .addChild(new OscSendNode("/audio/clip/soundscape/stop"))
+          .addChild(new OscSendNode("/environment/firefly/intensity", "0.0"))
+        )
+        .addChild(new OscSendNode("/environment/firefly/remove"))
+
+        .addChild(new OscSendNode("/reset"))
+        .addChild(new OscSendNode("/audio/master/gain", "0.0"))
+      )
   ;
 }
 
-final float ONE_MINUTE = 15.0;
+//final float ONE_MINUTE = 15.0;
+//final float ONE_MINUTE = 60.0;
+final float ONE_MINUTE = 20.0;
 BaseNode createTreeOtherSelf() {
   return new SequentialNode()
     // // SUBJECT sits down and SUPERVISOR hooks him/her up with the system
