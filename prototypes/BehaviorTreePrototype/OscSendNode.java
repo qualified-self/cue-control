@@ -34,8 +34,8 @@ class OscSendNode extends CueNode {
     {
       if (argExpression != null) {
         Object value = argExpression.eval(agent);
-        if (value instanceof Double)
-          value = new Float(((Double)value).floatValue());
+        if (value instanceof Number) // force to send floats at all time
+          value = new Float(((Number)value).floatValue());
         message.add(new Object[] { value });
       }
       BehaviorTreePrototype.instance().oscP5().send(message, BehaviorTreePrototype.instance().remoteLocation());
