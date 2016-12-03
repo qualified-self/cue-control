@@ -1,3 +1,5 @@
+import processing.core.PApplet;
+
 class BlackboardRampNode extends BlackboardSetNode {
 
 	Chrono chrono;
@@ -28,8 +30,6 @@ class BlackboardRampNode extends BlackboardSetNode {
         chrono.restart();
         fromValue = ((Number)from.eval(agent)).floatValue();
         toValue   = ((Number)expression.eval(agent)).floatValue();
-        println("from: " + fromValue);
-        println("to: " + toValue);
       }
 
       float elapsed = chrono.seconds();
@@ -39,8 +39,7 @@ class BlackboardRampNode extends BlackboardSetNode {
         state = State.SUCCESS;
       }
 
-      currentValue = map(elapsed, 0, timeOut, fromValue, toValue);
-      println("elapsed: " + elapsed + " currevalue:" + currentValue);
+      currentValue = PApplet.map(elapsed, 0, timeOut, fromValue, toValue);
 
 			agent.put(blackboardKey, currentValue);
       return state;
@@ -57,7 +56,9 @@ class BlackboardRampNode extends BlackboardSetNode {
   }
 
   public String toString() {
-    return "$" + blackboardKey + " = " + from + " -> " + expression + " in " + timeOut + "s" + " (current: " + currentValue + ")";
+    return "$" + blackboardKey + " = " + from + " -> " + expression +
+           " in " + PApplet.nf(timeOut, 0, 1) + "s" +
+           " (current: " + PApplet.nf(currentValue, 0, 1) + ")";
   }
 
 }
