@@ -7,7 +7,7 @@ public class OscBlackboardTask extends BlackboardTask
 	boolean valueReceived;
 	boolean hasStarted;
 
-	OscBlackboardTask(String message, String varName)
+	OscBlackboardTask(String message, String varName, Object startingValue)
 	{
 		this.varName = varName;
     this.message = message;
@@ -15,6 +15,9 @@ public class OscBlackboardTask extends BlackboardTask
 		value = null;
 		valueReceived = false;
 		hasStarted = false;
+
+    // Default.
+    process(startingValue);
 
     build();
 	}

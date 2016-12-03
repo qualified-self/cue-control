@@ -8,10 +8,9 @@ import java.io.Serializable;
 public abstract class BlackboardTask implements Serializable {
 
   BlackboardTask() {
-    build();
   }
-  
-	abstract void execute(Blackboard agent);
 
+	abstract void execute(Blackboard agent);
+  void init(Blackboard agent) {}
   void build() {}
 }

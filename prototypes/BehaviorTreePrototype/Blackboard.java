@@ -17,6 +17,11 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
 			task.build();
   }
 
+  void init() {
+		for (BlackboardTask task : tasks)
+			task.init(this);
+  }
+
 	Blackboard addTask(BlackboardTask task)
 	{
 		tasks.add(task);
