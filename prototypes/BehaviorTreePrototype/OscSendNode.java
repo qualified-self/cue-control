@@ -11,7 +11,7 @@ class OscSendNode extends CueNode {
   }
 
   OscSendNode(String addrPattern, String arg) {
-    this(addrPattern, addrPattern, arg, 0, 0);
+    this(addrPattern+" "+arg, addrPattern, arg, 0, 0);
   }
 
   OscSendNode(String addrPattern, float preWait, float postWait) {
