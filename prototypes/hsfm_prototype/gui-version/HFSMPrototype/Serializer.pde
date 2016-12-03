@@ -69,7 +69,7 @@ public class Serializer {
       println("done loading!");
 
     } catch (Exception e) {
-      println("ERROR saving to file: " + file + " [exception: " + e.toString() + "].");
+      println("ERROR loading file: " + file + " [exception: " + e.toString() + "].");
     }
   }
 

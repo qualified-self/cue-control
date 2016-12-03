@@ -12,8 +12,8 @@
 class Expression implements Serializable {
 
   // Static components.
-  transient ScriptEngineManager manager;
-  transient ScriptEngine engine;
+  static transient ScriptEngineManager manager;
+  static transient ScriptEngine engine;
 
   String expression;
 
@@ -25,9 +25,12 @@ class Expression implements Serializable {
 
   void build(PApplet p) {
 
-    if (manager == null) {
-      manager = new ScriptEngineManager();
-      engine = manager.getEngineByName("js");
+    if (this.manager == null || this.engine == null) {
+      this.manager = new ScriptEngineManager();
+      this.engine = manager.getEngineByName("js");
+
+      System.out.println("building an expression " + toString());
+      System.out.println("engine is " + engine.toString() + "manager is" + manager.toString());
       try {
         // Load library for math operations.
         java.util.Scanner s = new java.util.Scanner(new java.net.URL("file://" + p.dataPath("math.js")).openStream()).useDelimiter("\\A");
@@ -41,6 +44,11 @@ class Expression implements Serializable {
 
   /// Computes expression using blackboard and returns result.
 	Object eval(Blackboard agent) throws ScriptException {
+    System.out.println("eval an expression " + toString());
+    //@TODO DEBUGGING INFO
+    if (agent==null) System.out.println("agent " + agent);
+    if (expression==null) System.out.println("expression " + expression);
+    if (engine==null) System.out.println("engine " + engine);
     return engine.eval(agent.processExpression(expression));
 	}
 
