@@ -5,7 +5,6 @@
 ** into my prototype in DEc. 1st *********************
 *****************************************************/
 
-boolean is_loading = false;
 
 public class Serializer {
 
@@ -45,10 +44,10 @@ public class Serializer {
   public void _load(File file) {
     try {
       is_loading = true;
-      ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-
       canvas.root.hide();
       cp5.setAutoDraw(false);
+
+      ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
       board.clear();
       canvas.clear();
 
@@ -62,15 +61,18 @@ public class Serializer {
 
       ois.close();
 
-      is_loading = false;
-      canvas.root.show();
-      cp5.setAutoDraw(true);
-
-      println("done loading!");
-
     } catch (Exception e) {
       println("ERROR loading file: " + file + " [exception: " + e.toString() + "].");
+      board  = new Blackboard(instance());
+      canvas = new MainCanvas(instance(), cp5);
+
     }
+
+    canvas.root.show();
+    cp5.setAutoDraw(true);
+    is_loading = false;
+
+    println("done loading!");
   }
 
 }

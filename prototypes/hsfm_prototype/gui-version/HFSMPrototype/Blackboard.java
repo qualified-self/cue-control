@@ -44,6 +44,7 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
     System.out.println("@TODO [BLACKBOARD] verify what sorts of things needs to be initialize when loaded from file");
     this.p = p;
     init_global_variables();
+    set_gui_position(p.width-(mywidth*3)-2, 20);
   }
 
   void init_global_variables() {

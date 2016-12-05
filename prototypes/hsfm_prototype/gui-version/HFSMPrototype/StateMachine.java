@@ -18,8 +18,6 @@ public class StateMachine extends Task {
   float stateTimer          = 0;
   public boolean debug;
 
-  //Input input_condition;
-  //State_Machine_Preview preview;
 
   //contructor
   public StateMachine (PApplet p, ControlP5 cp5, String name) {
@@ -29,7 +27,6 @@ public class StateMachine extends Task {
     end     = new State(p, cp5, "END_"+name);
     states  = new Vector<State>();
     debug = HFSMPrototype.instance().debug();
-    //preview = new State_Machine_Preview(this);
 
     actual = begin;
 
@@ -543,6 +540,7 @@ public class StateMachine extends Task {
 
     //StateMachinePreview p = new StateMachinePreview(localx, localy+localoffset, g.getWidth());
     //g.addCanvas((controlP5.Canvas)p);
+    //g.addCanvas((controlP5.Canvas)preview);
 
     cp5.addButton(g_name+"/open_preview")
       .setPosition(localx, localy+15+(2*localoffset))

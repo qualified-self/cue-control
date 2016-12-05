@@ -23,6 +23,9 @@ class MainCanvas implements Serializable {
   public MainCanvas (PApplet p, ControlP5 cp5) {
     this.p = p;
     this.cp5 = cp5;
+    init_buttons();
+
+    setup();
   }
 
   void build(PApplet p, ControlP5 cp5) {
@@ -30,6 +33,7 @@ class MainCanvas implements Serializable {
     this.p = p;
     this.cp5 = cp5;
     root.build(p, cp5);
+    this.init_buttons();
     //root.show();
   }
 
@@ -39,10 +43,6 @@ class MainCanvas implements Serializable {
     //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
     root      = new StateMachine(this.p, cp5, "root");
-
-    p.textSize(cp5.getFont().getSize());
-    p.textFont(cp5.getFont().getFont());
-
     root.show();
   }
 
@@ -135,6 +135,67 @@ class MainCanvas implements Serializable {
         System.out.println("mouse was pressed while holding shift key in state " + result.get_name());
         result.freeze_movement_and_trigger_connection();
     }
+  }
+
+
+  void init_buttons() {
+    int x = 20; //p.width/2;
+    int y = p.height-40;
+    int w = 80;
+    int h  =20;
+
+    int back = p.color(255, 255, 255, 50);
+    int font = p.color(50);
+
+    cp5.addButton("button_play")
+       .setValue(128)
+       .setPosition(x, y)
+       .setColorBackground(back)
+       .setWidth(w)
+       .setHeight(h)
+       .setLabel("play")
+       ;
+
+
+    cp5.addButton("button_stop")
+       .setValue(128)
+       .setPosition(x+w+1, y)
+       .setColorBackground(back)
+       .setWidth(w)
+       .setHeight(h)
+       .setLabel("stop")
+       ;
+
+    //don't know why, but using b_save, button_saving generate problems in cp5
+    cp5.addButton("button_save")
+       .setValue(128)
+       .setPosition(x+(2*w)+2, y)
+       .setColorBackground(back)
+       .setWidth(w)
+       .setHeight(h)
+       .setLabel("save")
+       ;
+
+    cp5.addButton("button_load")
+       .setValue(128)
+       .setPosition(x+(3*w)+3, y)
+       .setColorBackground(back)
+       .setWidth(w)
+       .setHeight(h)
+       .setLabel("load")
+       ;
+
+    /*
+    cp5.addButton("b_new")
+       .setValue(128)
+       .setPosition(x+(4*w)+4, y)
+       .setColorBackground(back)
+       //.setColorCaptionLabel(font)
+       .setWidth(w)
+       .setHeight(h)
+       .setLabel("new")
+       ;
+       */
   }
 
 }

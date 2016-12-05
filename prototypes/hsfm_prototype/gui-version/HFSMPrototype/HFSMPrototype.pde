@@ -7,31 +7,40 @@
 
 
 MainCanvas canvas     ;
-Blackboard board      = new Blackboard(this);
+Blackboard board      ;
 Serializer serializer = new Serializer();
 
 boolean debug = false;
 boolean keyReleased = false;
 boolean mouseReleased = false;
+boolean is_loading = false;
 
 void setup() {
-  setup_util();
-  canvas = new MainCanvas(this, cp5);
-  inst = this;
+  is_loading = true;
   size(1280, 800);
   background(0);
   smooth();
+  inst = this;
+  setup_util();
+  board  = new Blackboard(this);
+  canvas = new MainCanvas(this, cp5);
 
-  canvas.setup();
-  board.set_gui_position(width-(board.mywidth*3)-2, 20);
+  textSize(cp5.getFont().getSize());
+  textFont(cp5.getFont().getFont());
+
+  is_loading = false;
 }
 
 void draw() {
   background(0);
 
   //if is loading an open patch, do not draw anything
-  if (is_loading)
+  if (is_loading) {
+    fill(255);
+    textAlign(CENTER);
+    text("loading... please, wait.", width/2, height/2);
     return;
+  }
 
 
   //updates global variables in the bb
@@ -58,6 +67,8 @@ void keyPressed(){
     //remove_state();
     canvas.process_minus_key_pressed();
     break;
+
+  /*
   case ' ':
     canvas.run();
     break;
@@ -70,6 +81,7 @@ void keyPressed(){
   case 'x':
     serializer.load();
     break;
+  */
   }
   //println(keyCode);
 }
@@ -102,6 +114,38 @@ public boolean user_pressed_minus () {
   //returns the result
   return result;
 }
+
+
+//callback functions
+void button_play() {
+  if (is_loading) return;
+  println("b_play pressed");
+  canvas.run();
+}
+
+void button_stop() {
+  if (is_loading) return;
+  println("b_stop pressed");
+  canvas.stop();
+}
+void button_save() {
+  if (is_loading) return;
+  println("b_save pressed");
+  serializer.save();
+}
+
+void button_load() {
+  if (is_loading) return;
+  println("b_load pressed");
+  serializer.load();
+}
+
+
+/*
+public void b_new() {
+  println("b_new pressed");
+}
+*/
 
 ///////////////////////////////////////////////////
 //the following code was taken from Sofians' prototype

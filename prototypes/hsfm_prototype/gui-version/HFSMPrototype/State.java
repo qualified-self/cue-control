@@ -445,9 +445,9 @@ public class State implements Serializable {
    ********************************************/
   void draw() {
     draw_temp_connection();
-    draw_pie();
     update_gui();
     draw_connections();
+    draw_pie();
     draw_state();
   }
 
@@ -632,8 +632,8 @@ public class State implements Serializable {
     CallbackListener cb_enter = generate_callback_enter();
     CallbackListener cb_leave = generate_callback_leave();
 
-    int c1 = p.color(255, 255);
-    int c2 = p.color(0, 255);
+    int c1 = p.color(255, 255, 255, 255);
+    int c2 = p.color(0, 0, 0, 1);
 
     label = cp5.addTextfield(this.name)
       .setText(this.name)
