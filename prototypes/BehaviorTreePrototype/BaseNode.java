@@ -21,7 +21,7 @@ public abstract class BaseNode implements Serializable
   {
     this.parent = null;
     this.description = description;
-    build();
+    state = State.UNDEFINED;
   }
 
   void build() {
