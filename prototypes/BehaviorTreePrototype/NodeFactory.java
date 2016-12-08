@@ -11,8 +11,12 @@ class NodeFactory {
   NodeFactory() {
   }
 
-  /// Creates a new node based on description string. Returns null if error.
   BaseNode createNode(String str) {
+    return createNode(str, false);
+  }
+
+  /// Creates a new node based on description string. Returns null if error.
+  BaseNode createNode(String str, boolean isDecorator) {
     // Split list in tokens.
     // Source: http://stackoverflow.com/questions/7804335/split-string-on-spaces-in-java-except-if-between-quotes-i-e-treat-hello-wor
     List<String> list = new ArrayList<String>();

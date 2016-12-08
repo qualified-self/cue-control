@@ -8,11 +8,11 @@ class GuardDecorator extends Decorator {
   // If true, will return SUCCESS in case the condition fails.
   boolean succeedOnFalse;
 
-  GuardDecorator(String expression) {
+  public GuardDecorator(String expression) {
     this(new ExpressionCondition(expression));
   }
 
-  GuardDecorator(String expression, boolean succeedOnFalse) {
+  public GuardDecorator(String expression, boolean succeedOnFalse) {
     this(new ExpressionCondition(expression), succeedOnFalse);
   }
 
