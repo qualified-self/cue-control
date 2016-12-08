@@ -5,11 +5,11 @@ class DelayNode extends BaseNode {
 	Chrono chrono;
 	float timeOut;
 
-	DelayNode(float timeOut) {
+	public DelayNode(float timeOut) {
 		this(timeOut + "s", timeOut);
 	}
 
-	DelayNode(String description, float timeOut) {
+	public DelayNode(String description, float timeOut) {
 		super(description);
 		this.timeOut = timeOut;
 		chrono = new Chrono(false);

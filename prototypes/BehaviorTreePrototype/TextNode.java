@@ -2,7 +2,7 @@ public class TextNode extends BaseNode {
 
 	String text;
 
-	TextNode(String text)
+	public TextNode(String text)
 	{
 		super(text);
 		this.text = text;

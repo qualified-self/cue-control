@@ -13,27 +13,27 @@ public class OscReceiveNode extends BaseNode
 
 	Chrono chrono;
 
-	OscReceiveNode(String message, String varName)
+	public OscReceiveNode(String message, String varName)
 	{
 		this(message, varName, State.RUNNING);
 	}
 
-	OscReceiveNode(String message, String varName, float timeOut)
+	public OscReceiveNode(String message, String varName, float timeOut)
 	{
 		this(message, varName, State.RUNNING, timeOut);
 	}
 
-	OscReceiveNode(String message, String varName, State stateOnNoValueReceived)
+	public OscReceiveNode(String message, String varName, State stateOnNoValueReceived)
 	{
 		this(message, varName, stateOnNoValueReceived, 0);
 	}
 
-	OscReceiveNode(String message, String varName, State stateOnNoValueReceived, float timeOut)
+	public OscReceiveNode(String message, String varName, State stateOnNoValueReceived, float timeOut)
 	{
 		this("[" + varName + "] =" + message, message, varName, stateOnNoValueReceived, timeOut);
 	}
 
-	OscReceiveNode(String description, String message, String varName, State stateOnNoValueReceived, float timeOut)
+	public OscReceiveNode(String description, String message, String varName, State stateOnNoValueReceived, float timeOut)
 	{
 		super(description);
 		this.varName = varName;
