@@ -36,6 +36,13 @@ public abstract class BaseNode implements Serializable
     return this;
   }
 
+  BaseNode removeDecorator() {
+    decorator.setNode(null);
+    this.decorator = null;
+    needsInit = true;
+    return this;
+  }
+
   boolean hasDecorator() { return decorator != null; }
 
   Decorator getDecorator() { return decorator; }

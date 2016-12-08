@@ -212,6 +212,7 @@ void keyPressed() {
         case KeyEvent.VK_D:
           addDecorator();
           break;
+        case KeyEvent.VK_E:                 removeDecorator(); break;
 
         case KeyEvent.VK_ENTER:
           addSibling();
@@ -311,6 +312,13 @@ void addDecorator() {
     placeholderNode.reset();
     selectedNode.setDecorator(placeholderNode);
     selectedNode = null;
+//    selectedNode = newNode;
+  }
+}
+
+void removeDecorator() {
+  if (selectedNode != null && selectedNode.hasDecorator()) {
+    selectedNode.removeDecorator();
 //    selectedNode = newNode;
   }
 }
