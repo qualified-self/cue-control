@@ -209,9 +209,7 @@ void keyPressed() {
           reset();
           break;
 
-        case KeyEvent.VK_D:
-          addDecorator();
-          break;
+        case KeyEvent.VK_D:                 addDecorator(); break;
         case KeyEvent.VK_E:                 removeDecorator(); break;
 
         case KeyEvent.VK_ENTER:
