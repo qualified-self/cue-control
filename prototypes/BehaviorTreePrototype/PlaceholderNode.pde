@@ -1,13 +1,21 @@
-class PlaceholderNode extends BaseNode {
+class PlaceholderNode extends Decorator {
 
   String declaration;
+  boolean useAsDecorator;
 
   PlaceholderNode() {
     reset();
   }
 
   void reset() {
+    useAsDecorator = false;
     declaration = "";
+  }
+
+  Decorator setNode(BaseNode node) {
+    super.setNode(node);
+    useAsDecorator = true;
+    return this;
   }
 
   void append(char k) {
@@ -22,7 +30,12 @@ class PlaceholderNode extends BaseNode {
   BaseNode submit() {
     BaseNode newNode = compile();
     if (newNode != null)
-      parent.replaceChild(this, newNode);
+    {
+      if (useAsDecorator)
+        node.setDecorator((Decorator)newNode);
+      else
+        parent.replaceChild(this, newNode);
+    }
     return newNode;
   }
 
@@ -31,7 +44,7 @@ class PlaceholderNode extends BaseNode {
   }
 
   BaseNode compile() {
-    return factory.createNode(declaration);
+    return factory.createNode(declaration, useAsDecorator);
   }
 
   String getDescription() { return declaration; }

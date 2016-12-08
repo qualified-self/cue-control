@@ -5,6 +5,8 @@ import java.util.regex.*;
 import java.util.*;
 import java.io.*;
 
+import java.awt.event.KeyEvent;
+
 final int INDENT = 50;
 final int NODE_HEIGHT = 25;
 final int NODE_SPACING = 5;
@@ -42,6 +44,9 @@ float yOffset = 0;
 
 // Placeholder node used to add/edit new nodes.
 PlaceholderNode placeholderNode = new PlaceholderNode();
+
+// Contextual keys.
+boolean ctrlPressed = false;
 
 public OscP5 oscP5() { return oscP5; }
 public Minim minim() { return minim; }
@@ -168,37 +173,76 @@ void keyPressed() {
   if (isEditing()) {
     switch (key)
     {
-      case CODED: break;
       case ENTER: case RETURN: submitNode(); break;
       case DELETE:             cancelNode(); break;
       case BACKSPACE:          placeholderNode.backspace(); break;
+
+      case CODED:
+      {
+        switch (keyCode)
+        {
+          case KeyEvent.VK_UP:   changeSelected(-1); break;
+          case KeyEvent.VK_DOWN: changeSelected(+1); break;
+        }
+      }
+      break;
+
       default:                 placeholderNode.append(key);
     }
   }
 
   // Otherwise: normal commands.
   else {
-    switch (key)
+    if (keyEvent.isControlDown())
     {
-      case ' ':                togglePlay(); break;
-      case 'R':                reset();      break;
-      case 'L':                serializer.load(); reset(); break;
-      case 'S':                serializer.save(); reset(); break;
-      case 'D':                serializer.saveAs(); reset(); break;
-      case ENTER: case RETURN: addSibling(); break;
-      case TAB:                addChild(); break;
-      case DELETE:             removeNode(); break;
-      case CODED: {
-        switch (keyCode) {
-          case UP:             moveNodeWithinLevel(-1); break;
-          case DOWN:           moveNodeWithinLevel(+1); break;
-          default:
-        }
-      }
-      break;
+      switch (keyCode)
+      {
+        case KeyEvent.VK_SPACE:            togglePlay(); break;
+        case KeyEvent.VK_R:                reset();      break;
 
-      default:
+        case KeyEvent.VK_O:                serializer.load(); reset(); break;
+        case KeyEvent.VK_S:
+          if (keyEvent.isShiftDown())
+            serializer.saveAs();
+          else
+            serializer.save();
+          reset();
+          break;
+
+        case KeyEvent.VK_D:
+          addDecorator();
+          break;
+
+        case KeyEvent.VK_ENTER:
+          addSibling();
+          break;
+        case KeyEvent.VK_TAB:                addChild(); break;
+        case KeyEvent.VK_DELETE:             removeNode(); break;
+
+        case KeyEvent.VK_UP:                 moveNodeWithinLevel(-1); break;
+        case KeyEvent.VK_DOWN:               moveNodeWithinLevel(+1); break;
+        case KeyEvent.VK_LEFT:               moveHigher(); break;
+        case KeyEvent.VK_RIGHT:              moveLower(); break;
+
+        default:
+      }
     }
+  }
+
+  // apply in all modes
+  if (key == CODED)
+  {
+    if (keyCode == CONTROL)
+      ctrlPressed = true;
+  }
+}
+
+void keyReleased() {
+  // apply in all modes
+  if (key == CODED)
+  {
+    if (keyCode == CONTROL)
+      ctrlPressed = false;
   }
 }
 
@@ -207,7 +251,7 @@ void mouseWheel(MouseEvent e) {
 }
 
 void reset() {
-  println("RESET");
+  board.init();
   root.init(board);
   rootState = State.RUNNING;
   pause();
@@ -261,6 +305,16 @@ void addChild() {
   }
 }
 
+void addDecorator() {
+  if (selectedNode != null) {
+    setEditState(true);
+    placeholderNode.reset();
+    selectedNode.setDecorator(placeholderNode);
+    selectedNode = null;
+//    selectedNode = newNode;
+  }
+}
+
 void submitNode() {
   BaseNode newNode = placeholderNode.submit();
   if (newNode != null) {
@@ -289,6 +343,38 @@ void moveNodeWithinLevel(int move) {
     int nextIndex = constrain(index + move, 0, parent.nChildren()-1);
     println("from " + index + " to "+nextIndex);
     parent.moveChild(index, nextIndex);
+  }
+}
+
+void changeSelected(int move) {
+  // TODO: not working yet
+  // if (selectedNode == null)
+  //   selectedNode = root;
+  // else
+  // {
+  // }
+}
+
+void moveHigher() {
+  if (selectedNode != null && selectedNode.hasParent() && selectedNode.getParent().hasParent()) {
+    CompositeNode parent = selectedNode.getParent();
+    CompositeNode grandParent = parent.getParent();
+    parent.removeChild(selectedNode);
+    grandParent.insertChild(parent, selectedNode);
+  }
+}
+
+void moveLower() {
+  if (selectedNode != null && selectedNode.hasParent() & selectedNode.getParent().nChildren() > 0) {
+    CompositeNode parent = selectedNode.getParent();
+    int index = parent.indexOf(selectedNode);
+    if (index > 0) {
+      BaseNode siblingNode = parent.getChild(index-1);
+      if (siblingNode instanceof CompositeNode) {
+        parent.removeChild(selectedNode);
+        ((CompositeNode)siblingNode).addChild(selectedNode);
+      }
+    }
   }
 }
 
