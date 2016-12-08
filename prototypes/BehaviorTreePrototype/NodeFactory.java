@@ -26,7 +26,8 @@ class NodeFactory {
       return null;
     }
 
-    String classType = list.get(0);
+    // Find classtype.
+    String classType = Utils.dashToCamelCase(list.get(0)) + (isDecorator ? "Decorator" : "Node");
 
     int nArguments = list.size()-1;
     String[] arguments = new String[nArguments];

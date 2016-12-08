@@ -99,7 +99,7 @@ public abstract class BaseNode implements Serializable
   }
 
   String type() {
-    return baseName().replaceAll("(.)(\\p{Upper})", "$1-$2").toLowerCase();
+    return Utils.camelCaseToDash(baseName());
   }
 
   void scheduleInit() { needsInit = true; }
