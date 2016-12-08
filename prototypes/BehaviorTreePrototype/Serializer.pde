@@ -33,6 +33,7 @@ public class Serializer {
   }
 
   public void _load(File file) {
+    println("Trying to load file: " + file);
     try {
       ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 
@@ -44,7 +45,7 @@ public class Serializer {
 
       ois.close();
     } catch (Exception e) {
-      println("ERROR saving to file: " + file + " [exception: " + e.toString() + "].");
+      println("ERROR reading from file: " + file + " [exception: " + e.toString() + "].");
     }
   }
 

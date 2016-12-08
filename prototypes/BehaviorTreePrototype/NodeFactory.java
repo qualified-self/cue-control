@@ -53,10 +53,12 @@ class NodeFactory {
         Object obj = expr.eval();
         argumentObjects[i] = obj;
         argumentClasses[i] = obj.getClass();
+
       } catch (ScriptException e) {
         argumentObjects[i] = arguments[i];
         argumentClasses[i] = String.class;
       }
+      System.out.println("Argument[" + i + "] has type :" + argumentClasses[i].getName());
     }
 
     // Try to generate new instance.
@@ -71,15 +73,19 @@ class NodeFactory {
         try {
           return (BaseNode) c.newInstance(argumentObjects);
         }
-        catch (IllegalArgumentException e) {}
+        catch (IllegalArgumentException e) {
+          System.out.println("Bad argument: " + e);
+        }
       }
-      // app.println("No valid constructor found for arguments.");
-      // app.println("Classtype = " + classType);
-      // app.println("Arguments = " + argumentObjects);
+      System.out.println("No valid constructor found for arguments.");
+      System.out.println("Classtype = " + classType);
+      System.out.println("Arguments = " + argumentObjects);
 
       return null;
       // Call constructor.
     } catch (Exception e) {
+        System.out.println("ERROR: error creating node of class " + classType + ".");
+        System.out.println(e);
         // app.println("ERROR: error creating node of class " + classType + ".");
         // app.println(e);
         return null;
