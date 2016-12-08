@@ -8,6 +8,10 @@ class GuardDecorator extends Decorator {
   // If true, will return SUCCESS in case the condition fails.
   boolean succeedOnFalse;
 
+  public GuardDecorator(boolean value) {
+    this(new ConstantCondition(value));
+  }
+
   public GuardDecorator(String expression) {
     this(new ExpressionCondition(expression));
   }
