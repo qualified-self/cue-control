@@ -199,6 +199,7 @@ void keyPressed() {
       {
         case KeyEvent.VK_SPACE:            togglePlay(); break;
         case KeyEvent.VK_R:                reset();      break;
+        case KeyEvent.VK_N:                clear();      break;
 
         case KeyEvent.VK_O:                serializer.load(); reset(); break;
         case KeyEvent.VK_S:
@@ -254,6 +255,15 @@ void reset() {
   root.init(board);
   rootState = State.RUNNING;
   pause();
+}
+
+void clear() {
+  root = new SequentialNode();
+
+  reset();
+
+  setPlayState(false);
+  setEditState(false);
 }
 
 boolean isPlaying() {
