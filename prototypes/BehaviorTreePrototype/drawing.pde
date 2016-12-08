@@ -1,4 +1,4 @@
-// Drawing functions for behavior tree.
+  // Drawing functions for behavior tree.
 
 // General function that draws a single "row".
 void drawItem(PApplet app, int x, int y, color fillColor, boolean roundTops, boolean roundBottoms)
