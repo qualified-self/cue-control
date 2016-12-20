@@ -28,6 +28,7 @@ public class State implements Serializable {
   public int x;
   public int y;
   private final int size = 50;
+  private final float arrow_scale_offset = 1.25f;
   //accordion that stores the tasks
 
   //gui elements
@@ -45,8 +46,8 @@ public class State implements Serializable {
     this.status = Status.INACTIVE;
     this.tasks  = new Vector<Task>();
     this.connections = new Vector<Connection>();
-    this.x = (int)p.random(10, 1024);
-    this.y = (int)p.random(10, 768);
+    this.x = (int)p.random(10, p.width-size);
+    this.y = (int)p.random(10, p.height-size);
     this.movement_status = MovementStatus.FREE;
     this.debug = HFSMPrototype.instance().debug();
 
@@ -835,8 +836,8 @@ public class State implements Serializable {
     //saves the current matrix
     p.pushMatrix();
     //computes the midpoint where the arrow is going to be
-    float newx = (destx-x)/2;
-    float newy = (desty-y)/2;
+    float newx = ((destx-x)/2)*arrow_scale_offset;
+    float newy = ((desty-y)/2)*arrow_scale_offset;
     //translate to the final position of the arrow
     p.translate(newx, newy);
 
@@ -848,6 +849,8 @@ public class State implements Serializable {
     //rotates
     p.rotate(a);
     //draws the arr0w
+    //p.line(0, 0, -10, -10);
+    //p.line(0, 0, 10, -10);
     p.line(0, 0, -10, -10);
     p.line(0, 0, 10, -10);
     //returns the matris to the regular position
@@ -868,12 +871,13 @@ public class State implements Serializable {
     float destx = ns.x;
     float desty = ns.y;
     draw_generic_connection(ns.x, ns.y, c.get_priority(), c.get_expression().toString(), false);
-    float newx = (destx-x)/2;
-    float newy = (desty-y)/2;
-    //float a = atan2(x-destx, desty-y);
+    //float newx = ((destx-x)/2);
+    //float newy = ((desty-y)/2)
+    float newx = ((destx-x)/2)*arrow_scale_offset;
+    float newy = ((desty-y)/2)*arrow_scale_offset;
     float a = p.atan2(destx-x, desty-y);
-    newx = newx+x;
-    newy = newy+y;
+    newx = (newx+x);
+    newy = (newy+y);
     int x_offset = (int)c.get_label_width()/2;
     c.set_gui_position((int)newx-x_offset, (int)newy-30);
   }

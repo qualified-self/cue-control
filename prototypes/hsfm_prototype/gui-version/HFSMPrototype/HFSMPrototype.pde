@@ -17,7 +17,7 @@ boolean is_loading = false;
 
 void setup() {
   is_loading = true;
-  size(1280, 800);
+  size(1024,600);
   background(0);
   smooth();
   inst = this;

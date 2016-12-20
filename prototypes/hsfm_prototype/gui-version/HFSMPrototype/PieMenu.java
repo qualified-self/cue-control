@@ -34,7 +34,8 @@ class PieMenu {
   public PieMenu (PApplet p) {
     this.p = p;
     this.options          = task_list;
-    this.background_color = p.color(50, 50, 50, 100);
+    //this.background_color = p.color(50, 50, 50, 100);
+    this.background_color = p.color(25, 25, 25);
     this.active_color     = p.color(100);
     this.font_color       = p.color(255);
     this.x                = (int)p.width/2;
