@@ -139,10 +139,13 @@ class MainCanvas implements Serializable {
 
 
   void init_buttons() {
-    int x = 20; //p.width/2;
-    int y = p.height-40;
-    int w = 80;
-    int h  =20;
+    int w = 40;
+    int h = 40;
+    int offset = 5;
+    //int x = 20; //p.width/2;
+    int x = (p.width/2)-2*(w+offset);
+    int y = p.height-80;
+
 
     int back = p.color(255, 255, 255, 50);
     int font = p.color(50);
@@ -159,7 +162,7 @@ class MainCanvas implements Serializable {
 
     cp5.addButton("button_stop")
        .setValue(128)
-       .setPosition(x+w+1, y)
+       .setPosition(x+w+offset, y)
        .setColorBackground(back)
        .setWidth(w)
        .setHeight(h)
@@ -169,7 +172,7 @@ class MainCanvas implements Serializable {
     //don't know why, but using b_save, button_saving generate problems in cp5
     cp5.addButton("button_save")
        .setValue(128)
-       .setPosition(x+(2*w)+2, y)
+       .setPosition(x+(2*w)+(2*offset), y)
        .setColorBackground(back)
        .setWidth(w)
        .setHeight(h)
@@ -178,7 +181,7 @@ class MainCanvas implements Serializable {
 
     cp5.addButton("button_load")
        .setValue(128)
-       .setPosition(x+(3*w)+3, y)
+       .setPosition(x+(3*w)+(3*offset), y)
        .setColorBackground(back)
        .setWidth(w)
        .setHeight(h)
