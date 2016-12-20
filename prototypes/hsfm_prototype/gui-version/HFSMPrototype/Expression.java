@@ -44,7 +44,7 @@ class Expression implements Serializable {
 
   /// Computes expression using blackboard and returns result.
 	Object eval(Blackboard agent) throws ScriptException {
-    System.out.println("eval an expression " + toString());
+    //System.out.println("eval an expression " + toString());
     //@TODO DEBUGGING INFO
     if (agent==null) System.out.println("agent " + agent);
     if (expression==null) System.out.println("expression " + expression);

@@ -48,8 +48,8 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
   }
 
   void init_global_variables() {
-      put("mouseX", p.mouseX);
-      put("mouseY", p.mouseY);
+      put("mouseX", (float)p.mouseX/p.width);
+      put("mouseY", (float)p.mouseY/p.height);
       put("mousePressed", p.mousePressed);
       put("key", p.key);
       put("keyCode", p.keyCode);
@@ -61,8 +61,8 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
     //if the blackboard wasn't loaded yet
     if (p==null) return;
 
-    replace("mouseX", p.mouseX);
-    replace("mouseY", p.mouseY);
+    replace("mouseX", (float)p.mouseX/p.width);
+    replace("mouseY", (float)p.mouseY/p.height);
     replace("mousePressed", p.mousePressed);
     replace("key", p.key);
     replace("keyCode", p.keyCode);

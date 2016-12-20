@@ -18,7 +18,7 @@ class AudioTask extends Task {
   //audio variables
   transient private AudioPlayer soundfile;
   private String filename;
-  private float  volume;
+  private Object  volume;
 
   //contructor loading the file
   public AudioTask (PApplet p, ControlP5 cp5, String taskname, String filename) {
@@ -26,7 +26,7 @@ class AudioTask extends Task {
     this.filename  = filename;
     //repeat what sofian did in his prototype
     build(p, cp5);
-    //this.volume = 1.;
+    this.volume = new Expression("1.0");
   }
   /*
   //contructor loading the file
@@ -54,12 +54,41 @@ class AudioTask extends Task {
     this.soundfile = HFSMPrototype.instance().minim().loadFile(this.filename);
   }
 
+  void set_volume(Object new_volume) {
+    Object o = evaluate_value(new_volume);
+
+    if (o instanceof Float || o instanceof Double || o instanceof Integer)
+      volume = new_volume;
+    else
+      volume = new Expression("0.0");
+  }
+
   //input is in between 0 and one. result is between -80 and 14 (dB).
-  void set_volume(float newvolume) {
+  void update_volume() {
+    float newvolume = 0;
+
+    Object o = evaluate_value(volume);
+
+    if (o instanceof Float)
+      newvolume = (Float)o;
+    if (o instanceof Double)
+      newvolume = ((Double)o).floatValue();
+    if (o instanceof Integer)
+      newvolume = ((Integer)o).floatValue();
+
+    p.println("newvolume: " + newvolume);
+
+    newvolume = p.constrain(newvolume, 0.f, 1.f);
     float mapped_volume = map(newvolume, 0.f, 1.f, -70.f, 14.f);
     if (soundfile!=null)
       soundfile.setGain(mapped_volume);
   }
+
+  /*
+  void set_volume(double newvolume) {
+    set_volume((float)newvolume);
+  }
+  */
 
   //taken from https://forum.processing.org/one/topic/i-need-to-know-how-exactly-map-function-works.html
   float map(float value, float istart, float istop, float ostart, float ostop) {
@@ -80,6 +109,7 @@ class AudioTask extends Task {
   }
 
   void update_status() {
+    update_volume();
     boolean playing = soundfile.isPlaying();
 
     if (playing)
@@ -99,10 +129,17 @@ class AudioTask extends Task {
                 update_name(newFilename);
                 System.out.println(s + " " + newFilename);
             }
+            /*
             if (s.equals(get_gui_id() + "/volume")) {
                 float newvolume = theEvent.getController().getValue();
                 set_volume(newvolume);
                 System.out.println(s + " " + newvolume);
+            }
+            */
+            if (s.equals(get_gui_id() + "/volume")) {
+                String newvalue = theEvent.getController().getValueLabel().getText();
+                set_volume(new Expression(newvalue));
+                System.out.println(s + " " + newvalue);
             }
           }
     };
@@ -116,6 +153,7 @@ class AudioTask extends Task {
             String s = theEvent.getController().getName();
             //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
+            /*
             if (s.equals(get_gui_id() + "/filename")) {
                 String newFilename = theEvent.getController().getValueLabel().getText();
                 String oldFilename = filename;
@@ -129,6 +167,26 @@ class AudioTask extends Task {
                   t.setText(oldFilename);
                 }
             }
+            */
+
+            String newtext = theEvent.getController().getValueLabel().getText();
+            String oldtext = "";
+
+            if (s.equals(get_gui_id() + "/filename"))
+              oldtext = filename;
+            else if (s.equals(get_gui_id() + "/volume"))
+              oldtext = volume.toString();
+            else  return;
+
+            //if the user tried to change but did not press enter
+            if (!newtext.replace(" ", "").equals(oldtext)) {
+              //resets the test for the original
+              //ControlP5 cp5 = HFSMPrototype.instance().cp5();
+              Textfield t = (Textfield)cp5.get(s);
+              t.setText(oldtext);
+            }
+
+
           }
     };
   }
@@ -171,6 +229,7 @@ class AudioTask extends Task {
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
     ;
 
+    /*
     // add a vertical slider
     cp5.addSlider(g_name+ "/volume")
       .setPosition(localx, localy+localoffset)
@@ -187,6 +246,21 @@ class AudioTask extends Task {
     // reposition the Label for controller 'slider'
     cp5.getController(g_name+ "/volume").getValueLabel().align(ControlP5.RIGHT, ControlP5.BOTTOM_OUTSIDE).setPaddingX(0);
     cp5.getController(g_name+ "/volume").getCaptionLabel().align(ControlP5.LEFT, ControlP5.BOTTOM_OUTSIDE).setPaddingX(0);
+    */
+
+    cp5.addTextfield(g_name+ "/volume")
+      .setPosition(localx, localy+localoffset)
+      .setSize(w, 15)
+      .setGroup(g)
+      .setAutoClear(false)
+      .setLabel("volume")
+      .setText(this.volume+"")
+      .onChange(cb_enter)
+      .onReleaseOutside(cb_leave)
+      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
+      ;
+
+
     return g;
   }
 
