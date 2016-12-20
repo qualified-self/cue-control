@@ -87,7 +87,11 @@ void setup() {
   // board.put("test2", "2");
   // board.put("test3", "3");
 
-  board.addTask(new OscBlackboardTask("/test/sync", "raw_sync"));
+  board.addTask(new ChronoBlackboardTask("seconds"));
+  board.addTask(new OscBlackboardTask("/ecg/raw", "ecg_raw", 0.5));
+  board.addTask(new OscBlackboardTask("/ecg/gap", "ecg_gap", 1000.0));
+
+  // board.addTask(new OscBlackboardTask("/test/sync", "raw_sync"));
   // board.addTask(new ConditionBlackboardTask("spacebar", new ExpressionCondition("$test1 == 1 && $test1 > 0 && $test2 == 2 && $test3 == 3")));
   // board.addTask(new ConditionBlackboardTask("spacebar", new KeyCondition(' ')));
 
