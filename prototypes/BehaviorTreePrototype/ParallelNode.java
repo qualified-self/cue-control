@@ -38,6 +38,7 @@ class ParallelNode extends CompositeNode
     // TODO: implement avec ceci: https://github.com/NetEase/pomelo-bt/blob/master/lib/node/parallel.js
     for (int i = 0 ; i<nChildren(); i++)
     {
+      BehaviorTreePrototype.instance().println("processing " + childrenRunning);
       if (childrenRunning.get(i).booleanValue())
       {
         State status = children.get(i).execute(agent);
@@ -66,9 +67,11 @@ class ParallelNode extends CompositeNode
 
   void doInit(Blackboard agent)
   {
+//    BehaviorTreePrototype.instance().println("do init par for " + nChildren());
     childrenRunning = new ArrayList<Boolean>(nChildren());
 
     for (int i=0; i<nChildren(); i++) {
+//      BehaviorTreePrototype.instance().println("init on kid " + i);
       children.get(i).init(agent);
       childrenRunning.add(new Boolean(true));
     }

@@ -13,6 +13,7 @@ abstract class Decorator extends BaseNode {
 
   public abstract State doExecute(Blackboard agent);
   public void doInit(Blackboard agent) {
+//    BehaviorTreePrototype.instance().println("Decorator do-init");
     if (hasNode())
       node.doInit(agent);
   }

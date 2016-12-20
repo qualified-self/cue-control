@@ -66,7 +66,11 @@ public abstract class BaseNode implements Serializable
   CompositeNode getParent() { return parent; }
 
   void init(Blackboard agent) {
+
+    // BehaviorTreePrototype.instance().println("init called on class " + type());
+
     needsInit = false;
+
     if (hasDecorator())
       decorator.init(agent);
     else
@@ -74,13 +78,16 @@ public abstract class BaseNode implements Serializable
 
     // Reset previous state.
     state = State.UNDEFINED;
+//    BehaviorTreePrototype.instance().println("END init called on class " + type());
   }
 
   State execute(Blackboard agent)
   {
+//    BehaviorTreePrototype.instance().println("exec called on class " + type());
     if (needsInit) {
       init(agent);
     }
+
     if (hasDecorator())
       state = decorator.execute(agent);
     else
