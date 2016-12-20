@@ -10,9 +10,10 @@ final int NODE_HEIGHT = 25;
 final int NODE_SPACING = 5;
 final int BLACKBOARD_WIDTH = 400;
 
-final int OSC_SEND_PORT = 12000;
-final int OSC_RECV_PORT = 14000;
-final String OSC_IP     = "192.168.1.101";
+final int OSC_SEND_PORT = 14000;
+final int OSC_RECV_PORT = 12000;
+//final String OSC_IP     = "127.0.0.1";
+final String OSC_IP     = "192.168.1.105";
 
 final color DECORATOR_FILL_COLOR = #555555;
 final color DECORATOR_TEXT_COLOR = #eeeeee;
