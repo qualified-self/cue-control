@@ -263,6 +263,9 @@ public class StateMachine extends Task {
       //remove all tasks associated with the deleted state
       s.remove_all_tasks();
 
+      //remove all connection from this state
+      s.remove_all_connections();
+      
       //remove all connections to this state
       this.remove_all_connections_to_a_state(s);
 

@@ -826,7 +826,7 @@ public class State implements Serializable {
     //line color
     p.stroke(50);
     //the wieght of the line
-    p.strokeWeight(5);
+    p.strokeWeight(size/10);
     //draws the line
     p.line(x, y, destx, desty);
     //saves the current matrix
@@ -886,7 +886,7 @@ public class State implements Serializable {
     //line color
     p.stroke(50);
     //the wieght of the line
-    p.strokeWeight(5);
+    p.strokeWeight(size/10);
     //draws the lines
     p.line(x, y, x-100, y-100);
     p.line(x, y, x+100, y-100);

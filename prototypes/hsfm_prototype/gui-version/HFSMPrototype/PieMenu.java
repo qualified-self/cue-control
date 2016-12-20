@@ -167,7 +167,7 @@ class PieMenu {
 
       //if it's a empty option, make it black
       if (this.options[i].equals(""))
-        p.fill(0);
+        p.fill(0, 0, 0, 1);
       //otherwise, make it interactive as part of the pie menu
       else {
         //float s = i/op-PI*0.125;
