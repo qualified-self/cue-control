@@ -1,4 +1,4 @@
-class SelectorNode extends CompositeNode
+public class SelectorNode extends IterableNode
 {
   int currentPosition;
   boolean restart;
@@ -19,6 +19,9 @@ class SelectorNode extends CompositeNode
 
   public State doExecute(Blackboard agent)
   {
+    if (nChildren() == 0)
+      return State.SUCCESS;
+
     // if (currentPosition == -1) //starting out
     // {
     //   init(agent);
@@ -27,23 +30,19 @@ class SelectorNode extends CompositeNode
     // else
     if (restart) // restart on running
     {
-      currentPosition = 0;
+      reset();
     }
 
-    if (nChildren() == 0)
-      return State.SUCCESS;
-
-    BaseNode currentlyRunningNode = children.get(currentPosition);
     State status;
-    while ((status = currentlyRunningNode.execute(agent)) == State.FAILURE) //keep trying children until one doesn't fail
+    while ((status = current().execute(agent)) == State.FAILURE) //keep trying children until one doesn't fail
     {
-      currentPosition++;
-      if (currentPosition == nChildren()) //all of the children failed
+      if (!hasNext()) //all of the children failed
       {
         //currentPosition = -1;
         return State.FAILURE;
-      } else
-        currentlyRunningNode = children.get(currentPosition);
+      }
+      else
+        next();
     }
 
     if (status == State.RUNNING)
@@ -53,14 +52,6 @@ class SelectorNode extends CompositeNode
 //      currentPosition = -1;
       return State.SUCCESS;
     }
-  }
-
-  void doInit(Blackboard agent)
-  {
-    currentPosition = 0;
-//    currentPosition = -1;
-    for (BaseNode node : children)
-      node.init(agent);
   }
 
 }

@@ -1,6 +1,5 @@
-class SequentialNode extends CompositeNode
+class SequentialNode extends IterableNode
 {
-  int currentPosition;
 
   public SequentialNode()
   {
@@ -10,7 +9,6 @@ class SequentialNode extends CompositeNode
   public SequentialNode(String description)
   {
     super(description);
-    currentPosition = -1;
   }
 
   public State doExecute(Blackboard agent)
@@ -18,20 +16,18 @@ class SequentialNode extends CompositeNode
     if (nChildren() == 0)
       return State.SUCCESS;
 
-    BaseNode currentTask = children.get(currentPosition);
-    State result = currentTask.execute(agent);
+//    BaseNode currentTask = children.get(currentPosition);
+    State result = current().execute(agent);
 
     while (result == State.SUCCESS)
     {
-      if (currentPosition == nChildren()-1) //finished last task
+      if (!hasNext()) //finished last task
       {
         return State.SUCCESS;
       }
       else
       {
-        currentPosition++;
-        currentTask = children.get(currentPosition);
-        result = currentTask.execute(agent);
+        result = next().execute(agent);
       }
     }
 
@@ -41,10 +37,4 @@ class SequentialNode extends CompositeNode
     return result;
   }
 
-  void doInit(Blackboard agent)
-  {
-    currentPosition = 0;
-    for (BaseNode node : children)
-      node.init(agent);
-  }
 }
