@@ -2,8 +2,8 @@ import java.util.Iterator;
 
 public abstract class IterableNode extends CompositeNode {
 
-  Iterator<BaseNode> iterator;
-  BaseNode current;
+  transient Iterator<BaseNode> iterator;
+  transient BaseNode current;
 
   IterableNode() {
     this("");
@@ -11,6 +11,10 @@ public abstract class IterableNode extends CompositeNode {
 
   IterableNode(String description) {
     super(description);
+    build();
+  }
+
+  void build() {
     current = null;
   }
 
