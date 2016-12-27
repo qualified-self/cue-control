@@ -31,7 +31,7 @@ class NodeFactory {
     }
 
     // Find classtype.
-    String classType = Utils.dashToCamelCase(list.get(0)) + (isDecorator ? "Decorator" : "Node");
+    String classType = nodeNameToClassName(list.get(0), isDecorator);
 
     int nArguments = list.size()-1;
     String[] arguments = new String[nArguments];
@@ -94,6 +94,10 @@ class NodeFactory {
         // app.println(e);
         return null;
     }
+  }
+
+  static String nodeNameToClassName(String name, boolean isDecorator) {
+    return Utils.dashToCamelCase(name) + (isDecorator ? "Decorator" : "Node");
   }
 
 }
