@@ -35,6 +35,7 @@ void drawItemText(PApplet app, String type, String text, int x, int y, color tex
 
 int drawDecorator(PApplet app, Decorator dec, int x, int y)
 {
+  // Draw decorator's own decorator.
   if (dec.hasDecorator())
     y = drawDecorator(app, dec.getDecorator(), x, y);
 
