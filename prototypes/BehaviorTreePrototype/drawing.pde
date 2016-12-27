@@ -38,8 +38,14 @@ int drawDecorator(PApplet app, Decorator dec, int x, int y)
   if (dec.hasDecorator())
     y = drawDecorator(app, dec.getDecorator(), x, y);
 
+  // Check for clicking on decorator.
+  if (click.rectButtonWasClicked(x, y, width-INDENT, y+NODE_HEIGHT))
+  {
+    selectedNode = dec;
+  }
+
   // Draw decorator.
-	drawItem(app, x, y, DECORATOR_FILL_COLOR, true, false);
+	drawItem(app, x, y, DECORATOR_FILL_COLOR, !dec.hasDecorator(), false, selectedNode == dec);
 	drawItemText(app, dec.type(), dec.getDescription(), x, y, DECORATOR_TEXT_COLOR);
 
   return (y + NODE_HEIGHT);
