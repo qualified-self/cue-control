@@ -80,7 +80,7 @@ void setup() {
   minim = new Minim(this);
 
 
-//  root = new SequentialNode();
+  root = new SequenceNode();
 //  root = factory.createNode("SelectorNode \"Go man!\" false");
   root = createTreeCepheids();
 //  root = createTreeOtherSelf();
@@ -258,7 +258,7 @@ void reset() {
 }
 
 void clear() {
-  root = new SequentialNode();
+  root = new SequenceNode();
 
   reset();
 

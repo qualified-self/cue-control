@@ -1,12 +1,12 @@
-class SequentialNode extends IterableNode
+class SequenceNode extends IterableNode
 {
 
-  public SequentialNode()
+  public SequenceNode()
   {
     this(null);
   }
 
-  public SequentialNode(String description)
+  public SequenceNode(String description)
   {
     super(description);
   }
