@@ -211,7 +211,6 @@ void keyPressed() {
           break;
 
         case KeyEvent.VK_D:                 addDecorator(); break;
-        case KeyEvent.VK_E:                 removeDecorator(); break;
 
         case KeyEvent.VK_ENTER:
           addSibling();
@@ -324,13 +323,6 @@ void addDecorator() {
   }
 }
 
-void removeDecorator() {
-  if (selectedNode != null && selectedNode.hasDecorator()) {
-    selectedNode.removeDecorator();
-//    selectedNode = newNode;
-  }
-}
-
 void submitNode() {
   BaseNode newNode = placeholderNode.submit();
   if (newNode != null) {
@@ -345,9 +337,16 @@ void cancelNode() {
 }
 
 void removeNode() {
-  if (selectedNode != null && selectedNode.hasParent()) {
-    selectedNode.getParent().removeChild(selectedNode);
-    selectedNode = null;
+  if (selectedNode != null) {
+    if (selectedNode.hasParent()) {
+      selectedNode.getParent().removeChild(selectedNode);
+      selectedNode = null;
+    }
+    else if (selectedNode instanceof Decorator) {
+      BaseNode node = ((Decorator)selectedNode).getNode();
+      node.removeDecorator();
+      selectedNode = node;
+    }
   }
 }
 
