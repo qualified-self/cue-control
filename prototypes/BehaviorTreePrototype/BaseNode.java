@@ -100,9 +100,17 @@ public abstract class BaseNode implements Serializable
   }
 
   State getState() { return state; }
-  String getDescription() { return (description == null ? getDefaultDescription() : description); }
+  String getDescription() {
+    String desc = (description == null ? getDefaultDescription() : description);
+    String dynDesc = getDynamicDescription();
+    if (dynDesc != null)
+      desc += " [" + dynDesc + "]";
+    return desc;
+  }
 
   String getDefaultDescription() { return ""; }
+
+  String getDynamicDescription() { return null; }
 
   abstract State doExecute(Blackboard agent);
   abstract void doInit(Blackboard agent);
