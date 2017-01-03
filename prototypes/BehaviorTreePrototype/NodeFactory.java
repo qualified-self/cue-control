@@ -24,6 +24,7 @@ class NodeFactory {
     registerNode("parallel");
     registerNode("selector");
     registerNode("sequence");
+    registerNode("simple-parallel");
     registerNode("sound");
     registerNode("text");
 

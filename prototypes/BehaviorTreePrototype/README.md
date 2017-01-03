@@ -55,7 +55,7 @@ Constructors:
  * **selector** *description(string)*
  * **selector** *restart(boolean)*
  * **selector** *description(string)* *restart(boolean)*
- 
+
 ### Parallel
 
 Executes all of the node's children in parallel.
@@ -63,12 +63,22 @@ Executes all of the node's children in parallel.
 Parameter *isSequencePolicy* (default: true) determines how the node reacts to the return result of its children:
  * Sequence policy (isSequencePolicy=true): FAILS as soon as any one of the node's children FAILS; if all children SUCCEED, returns SUCCESS
  * Selector policy (isSequencePolicy=false): SUCCEEDS as soon as any one of the node's children SUCCEEDS; if all children FAIL, returns FAILURE
- 
+
 Constructors:
  * **parallel**
  * **parallel** *description(string)*
  * **parallel** *isSequencePolicy(boolean)*
  * **parallel** *description(string)* *isSequencePolicy(boolean)*
+
+### Simple parallel
+
+Executes all of the node's children in parallel, with a priority on the first child. It repeats the execution of all children following the first one, until the first children either FAILS or SUCCEEDS. If any of the children FAILS, also FAILS.
+
+This node is used to run fast parallel tasks (that usually take one step) while a main task is running.
+
+Constructors:
+ * **simple-parallel**
+ * **simple-parallel** *description(string)*
 
 ## Task nodes
 
@@ -108,8 +118,8 @@ Examples:
 Waits for a given time (in seconds) then SUCCEEDS. Timeout can be specified as an expression.
 
 Constructors:
- * **delay** *timeout(string)* 
- * **delay** *description(string)* *timeout(string)* 
+ * **delay** *timeout(string)*
+ * **delay** *description(string)* *timeout(string)*
 
 ### OSC receive
 
@@ -118,7 +128,7 @@ Waits for an OSC message to arrive and sets a blackboard variable according to t
 Constructors:
  * **osc-receive** *message(string)* *variable-name(string)*
  * **osc-receive** *message(string)* *variable-name(string)* *timeout(float)*
- 
+
 ### OSC send
 
 Sends an OSC message (optionally based on an expression).
@@ -167,7 +177,7 @@ Constructors:
  * **guard** *value(boolean)*
  * **guard** *expression(string)*
  * **guard** *expression(string)* *succeedOnFalse(boolean)*
- 
+
 ## Randomize
 
 Executes children in a random order. Can only be added as a decorator of a composite node (sequence, selector, parallel).
