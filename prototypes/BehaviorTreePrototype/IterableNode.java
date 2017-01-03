@@ -15,6 +15,7 @@ public abstract class IterableNode extends CompositeNode {
   }
 
   void build() {
+    super.build();
     current = null;
   }
 
