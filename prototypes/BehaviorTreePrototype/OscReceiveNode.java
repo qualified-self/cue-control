@@ -23,17 +23,17 @@ public class OscReceiveNode extends BaseNode
 		this(message, varName, State.RUNNING, timeOut);
 	}
 
-	public OscReceiveNode(String message, String varName, State stateOnNoValueReceived)
+	OscReceiveNode(String message, String varName, State stateOnNoValueReceived)
 	{
 		this(message, varName, stateOnNoValueReceived, 0);
 	}
 
-	public OscReceiveNode(String message, String varName, State stateOnNoValueReceived, float timeOut)
+	OscReceiveNode(String message, String varName, State stateOnNoValueReceived, float timeOut)
 	{
 		this("[" + varName + "] =" + message, message, varName, stateOnNoValueReceived, timeOut);
 	}
 
-	public OscReceiveNode(String description, String message, String varName, State stateOnNoValueReceived, float timeOut)
+	OscReceiveNode(String description, String message, String varName, State stateOnNoValueReceived, float timeOut)
 	{
 		super(description);
 		this.varName = varName;

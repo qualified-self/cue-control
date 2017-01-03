@@ -10,11 +10,11 @@ class SoundNode extends CueNode {
     this(fileName, fileName, 0, 0);
   }
 
-  public SoundNode(String fileName, float preWait, float postWait) {
+  SoundNode(String fileName, float preWait, float postWait) {
     this(fileName, fileName, preWait, postWait);
   }
 
-  public SoundNode(String description, String fileName, float preWait, float postWait) {
+  SoundNode(String description, String fileName, float preWait, float postWait) {
     super(description, preWait, 0, postWait);
     this.fileName = fileName;
     build();
