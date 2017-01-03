@@ -31,3 +31,45 @@ These commands apply to currently selected node or decorator.
 | LEFT/RIGHT | Move accross | Moves selected node accross its current hierarchy |
 
 (\*) Switches to node/decorator creation mode. When a node or decorator is added, the user needs to input the node/decorator *type* followed by arguments (if applicable). User can interrupt node/decorator creation by pressing *DELETE*.
+
+# Node reference
+
+## Composite nodes
+
+### Sequence
+
+Executes all of the node's children in order until one FAILS (FAILURE) or all SUCCEEDS (SUCCESS).
+
+Constructors:
+ * **sequence**
+ * **sequence** *description(string)*
+
+### Selector
+
+Executes all of the node's children in order until one SUCCEEDS (SUCCESS) or all FAIL (FAILURE). Typically used in conjuction with guard decorators on children to select a task based on conditions.
+
+If *restart* (default: false) is set to true, while the node is running it will always check again from the start in case one of its children's state would change from FAILURE to RUNNING/SUCCESS.
+
+Constructors:
+ * **selector**
+ * **selector** *description(string)*
+ * **selector** *restart(boolean)*
+ * **selector** *description(string)* *restart(boolean)*
+ 
+### Parallel
+
+Executes all of the node's children in parallel.
+
+Parameter *isSequencePolicy* (default: true) determines how the node reacts to the return result of its children:
+ * Sequence policy (isSequencePolicy=true): FAILS as soon as any one of the node's children FAILS; if all children SUCCEED, returns SUCCESS
+ * Selector policy (isSequencePolicy=false): SUCCEEDS as soon as any one of the node's children SUCCEEDS; if all children FAIL, returns FAILURE
+ 
+Constructors:
+ * **parallel**
+ * **parallel** *description(string)*
+ * **parallel** *isSequencePolicy(boolean)*
+ * **parallel** *description(string)* *isSequencePolicy(boolean)*
+
+## Task nodes
+
+## Decorators
