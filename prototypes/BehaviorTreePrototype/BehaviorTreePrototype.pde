@@ -45,9 +45,6 @@ float yOffset = 0;
 // Placeholder node used to add/edit new nodes.
 PlaceholderNode placeholderNode = new PlaceholderNode();
 
-// Contextual keys.
-boolean ctrlPressed = false;
-
 public OscP5 oscP5() { return oscP5; }
 public Minim minim() { return minim; }
 public NetAddress remoteLocation() { return remoteLocation; }
@@ -229,21 +226,6 @@ void keyPressed() {
     }
   }
 
-  // apply in all modes
-  if (key == CODED)
-  {
-    if (keyCode == CONTROL)
-      ctrlPressed = true;
-  }
-}
-
-void keyReleased() {
-  // apply in all modes
-  if (key == CODED)
-  {
-    if (keyCode == CONTROL)
-      ctrlPressed = false;
-  }
 }
 
 void mouseWheel(MouseEvent e) {
