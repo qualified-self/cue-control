@@ -28,7 +28,6 @@ class NodeFactory {
     registerNode("text");
 
     registerDecorator("chrono");
-    registerDecorator("condition");
     registerDecorator("constant");
     registerDecorator("guard");
     registerDecorator("randomize");
