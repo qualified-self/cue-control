@@ -160,6 +160,7 @@ class MouseClick {
 BaseNode selectedNode = null;
 BaseNode nextSelectedNode = null;
 MouseClick click = new MouseClick();
+ArrayList<BaseNode> orderedVisibleNodes; // used to maintain list of all nodes in order they appear on screen
 
 void mouseClicked()
 {
@@ -176,16 +177,6 @@ void keyPressed() {
       case DELETE:             cancelNode(); break;
       case BACKSPACE:          placeholderNode.backspace(); break;
       case TAB:                autocompleteNode(); break;
-
-      case CODED:
-      {
-        switch (keyCode)
-        {
-          case KeyEvent.VK_UP:   changeSelected(-1); break;
-          case KeyEvent.VK_DOWN: changeSelected(+1); break;
-        }
-      }
-      break;
 
       default:                 placeholderNode.append(key);
     }
@@ -224,6 +215,21 @@ void keyPressed() {
         case KeyEvent.VK_RIGHT:              moveLower(); break;
 
         default:
+      }
+    }
+    else
+    {
+      switch (key)
+      {
+        case CODED:
+        {
+          switch (keyCode)
+          {
+            case KeyEvent.VK_UP:   changeSelected(-1); break;
+            case KeyEvent.VK_DOWN: changeSelected(+1); break;
+          }
+        }
+        break;
       }
     }
   }
@@ -353,12 +359,18 @@ void moveNodeWithinLevel(int move) {
 }
 
 void changeSelected(int move) {
-  // TODO: not working yet
-  // if (selectedNode == null)
-  //   selectedNode = root;
-  // else
-  // {
-  // }
+  if (selectedNode == null || orderedVisibleNodes == null)
+  {
+    selectedNode = root;
+  }
+  else
+  {
+    int index = orderedVisibleNodes.indexOf(selectedNode);
+    if (index >= 0)
+    {
+      selectedNode = orderedVisibleNodes.get( constrain(index + move, 0, orderedVisibleNodes.size()-1));
+    }
+  }
 }
 
 void moveHigher() {
