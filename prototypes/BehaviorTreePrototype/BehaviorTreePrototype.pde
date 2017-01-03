@@ -336,7 +336,7 @@ void removeNode() {
 }
 
 void autocompleteNode() {
-  ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getDescription());
+  ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getDescription(), placeholderNode.isDecorator());
   if (autocompleteOptions.size() == 1)
     placeholderNode.assign(autocompleteOptions.get(0));
 }

@@ -7,15 +7,19 @@ class PlaceholderNode extends Decorator {
     reset();
   }
 
-  void reset() {
-    useAsDecorator = false;
-    declaration = "";
+  boolean isDecorator() {
+    return useAsDecorator;
   }
 
   Decorator setNode(BaseNode node) {
     super.setNode(node);
     useAsDecorator = true;
     return this;
+  }
+
+  void reset() {
+    useAsDecorator = false;
+    declaration = "";
   }
 
   void append(char k) {
@@ -44,7 +48,10 @@ class PlaceholderNode extends Decorator {
   }
 
   void cancel() {
-    parent.removeChild(this);
+    if (useAsDecorator)
+      node.removeDecorator();
+    else
+      parent.removeChild(this);
   }
 
   BaseNode compile() {

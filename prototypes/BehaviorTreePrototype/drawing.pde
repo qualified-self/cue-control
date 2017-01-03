@@ -47,9 +47,22 @@ int drawDecorator(PApplet app, Decorator dec, int x, int y)
     selectedNode = dec;
   }
 
-  // Draw decorator.
-	drawItem(app, x, y, DECORATOR_FILL_COLOR, !dec.hasDecorator(), false, selectedNode == dec);
-	drawItemText(app, dec.type(), dec.getDescription(), x, y, DECORATOR_TEXT_COLOR);
+  if (isEditing() && dec == placeholderNode) {
+    // Generate text area.
+  	drawItem(app, x, y, color(#dddddd), true, true);
+
+  	// Draw item text.
+  	drawItemText(app, "", dec.getDescription(), x, y, NODE_TEXT_COLOR);
+
+    // Save values for later.
+    editorX = x;
+    editorY = y;
+  }
+  else {
+    // Draw decorator.
+  	drawItem(app, x, y, DECORATOR_FILL_COLOR, !dec.hasDecorator(), false, selectedNode == dec);
+  	drawItemText(app, dec.type(), dec.getDescription(), x, y, DECORATOR_TEXT_COLOR);
+  }
 
   return (y + NODE_HEIGHT);
 }
@@ -148,7 +161,7 @@ void drawEditor(PApplet app) {
   // Draw contextual menu.
   if (isEditing())
   {
-    ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getDescription());
+    ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getDescription(), placeholderNode.isDecorator());
 
     int yOption = editorY;
     for (int i=0; i<autocompleteOptions.size(); i++)
@@ -156,7 +169,7 @@ void drawEditor(PApplet app) {
       yOption += NODE_HEIGHT;
 
       // Generate text area.
-      drawItem(app, editorX, yOption, color(#aaaaaa), i == 0, i == autocompleteOptions.size()-1);
+      drawItem(app, editorX, yOption, color(#bbbbbb), i == 0, i == autocompleteOptions.size()-1);
 
       // Draw item text.
       drawItemText(app, "", autocompleteOptions.get(i), editorX, yOption, NODE_TEXT_COLOR);
@@ -172,5 +185,5 @@ else if (state == State.SUCCESS)
 else if (state == State.FAILURE)
   return color(#E33535);
 else
-  return color(#999999);
+  return color(#AAAAAA);
 }

@@ -42,12 +42,8 @@ class NodeFactory {
     decoratorTypes.add(decoratorType);
   }
 
-  ArrayList<String> nodesStartingWith(String str) {
-    return _stringsStartingWith(str, nodeTypes);
-  }
-
-  ArrayList<String> decoratorsStartingWith(String str) {
-    return _stringsStartingWith(str, decoratorTypes);
+  ArrayList<String> nodesStartingWith(String str, boolean isDecorator) {
+    return _stringsStartingWith(str, isDecorator ? decoratorTypes : nodeTypes);
   }
 
   ArrayList<String> _stringsStartingWith(String str, ArrayList<String> array) {
@@ -87,12 +83,20 @@ class NodeFactory {
       arguments[i] = list.get(i+1);
     }
 
-    return createNode(classType, arguments);
+    return createNode(classType, arguments, isDecorator);
   }
 
   /// Creates node based on class name and a set of arguments to the constructor, expressed as string.
-  BaseNode createNode(String classType, String[] arguments)
+  BaseNode createNode(String classType, String[] arguments, boolean isDecorator)
   {
+    // First verify if classType is eligible.
+    String nodeName = classNameToNodeName(classType);
+    if (! (isDecorator ? decoratorTypes.contains(nodeName) : nodeTypes.contains(nodeName)))
+    {
+      Console.instance().log("Unsupported class type: " + nodeName + ".");
+      return null;
+    }
+
     // Convert constructor arguments to objects.
     int nArguments = arguments.length;
     Object[] argumentObjects = new Object[nArguments];
@@ -160,4 +164,8 @@ class NodeFactory {
     return Utils.dashToCamelCase(name) + (isDecorator ? "Decorator" : "Node");
   }
 
+  static String classNameToNodeName(String className) {
+    int suffixLength = (className.endsWith("Node") ? "Node" : "Decorator").length();
+    return Utils.camelCaseToDash(className.substring(0, className.length() - suffixLength));
+  }
 }
