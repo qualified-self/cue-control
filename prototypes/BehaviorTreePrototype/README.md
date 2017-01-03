@@ -72,4 +72,72 @@ Constructors:
 
 ## Task nodes
 
+### Blackboard set
+
+Sets a blackboard variable to some value or expression. If variable does not exist, creates it.
+
+Constructors:
+ * **blackboard-set** *variable-name(string)* *expression(object)*
+
+Examples:
+ * **blackboard-set** *counter* *0*
+ * **blackboard-set** *counter* *"$counter+1"*
+
+### Blackboard ramp
+
+Ramps a blackboard variable between two values or expression over a certain period (in seconds).
+
+Constructors:
+ * **blackboard-ramp** *variable-name(string)* *to(object)* *timeout(float)*
+ * **blackboard-ramp** *variable-name(string)* *from(object)* *to(object)* *timeout(float)*
+
+### Constant
+
+Returns a constant result (SUCCESS, FAILURE, or RUNNING).
+
+Constructors:
+ * **constant** *state(string)*
+
+Examples:
+ * **constant** SUCCESS
+ * **constant** FAILURE
+ * **constant** RUNNING
+
+### Delay
+
+Waits for a given time (in seconds) then SUCCEEDS.
+
+Constructors:
+ * **delay** *timeout(float)* 
+
+### OSC receive
+
+Waits for an OSC message to arrive and sets a blackboard variable according to the received argument.
+
+Constructors:
+ * **osc-receive** *message(string)* *variable-name(string)*
+ * **osc-receive** *message(string)* *variable-name(string)* *timeout(float)*
+ 
+### OSC send
+
+Sends an OSC message (optionally based on an expression).
+
+Constructors:
+ * **osc-send** *addr-pattern(string)*
+ * **osc-send** *addr-pattern(string)* *expression(string)*
+
+### Sound
+
+Plays a sound file.
+
+Constructors:
+ * **sound** *filename(string)*
+
+### Text
+
+Outputs expression to the console.
+
+Constructors:
+ * **text** *expression(string)*
+
 ## Decorators
