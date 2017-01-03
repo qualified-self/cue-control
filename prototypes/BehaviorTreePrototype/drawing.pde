@@ -1,4 +1,6 @@
-  // Drawing functions for behavior tree.
+// Drawing functions for behavior tree.
+int editorX;
+int editorY;
 
 // General function that draws a single "row".
 void drawItem(PApplet app, int x, int y, color fillColor, boolean roundTops, boolean roundBottoms)
@@ -70,6 +72,10 @@ int drawNode(PApplet app, BaseNode node, int x, int y)
 
   	// Draw item text.
   	drawItemText(app, "", node.getDescription(), x, y, NODE_TEXT_COLOR);
+
+    // Save values for later.
+    editorX = x;
+    editorY = y;
   }
   else {
     // Draw node.
@@ -136,6 +142,26 @@ int drawTree(PApplet app, BaseNode node, int x, int y)
   }
 
   return y;
+}
+
+void drawEditor(PApplet app) {
+  // Draw contextual menu.
+  if (isEditing())
+  {
+    ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getDescription());
+
+    int yOption = editorY;
+    for (int i=0; i<autocompleteOptions.size(); i++)
+    {
+      yOption += NODE_HEIGHT;
+
+      // Generate text area.
+      drawItem(app, editorX, yOption, color(#aaaaaa), i == 0, i == autocompleteOptions.size()-1);
+
+      // Draw item text.
+      drawItemText(app, "", autocompleteOptions.get(i), editorX, yOption, NODE_TEXT_COLOR);
+    }
+  }
 }
 
 color stateToColor(State state) {
