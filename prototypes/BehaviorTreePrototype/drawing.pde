@@ -136,10 +136,19 @@ int drawNode(PApplet app, BaseNode node, int x, int y)
   return (y + NODE_HEIGHT + NODE_SPACING);
 }
 
+void drawMainTree(PApplet app)
+{
+  orderedVisibleNodes = new ArrayList<BaseNode>(orderedVisibleNodes == null ? 10 : orderedVisibleNodes.size());
+  drawTree(this, root, INDENT, (int)yOffset+NODE_HEIGHT);
+}
+
 int drawTree(PApplet app, BaseNode node, int x, int y)
 {
   // Draw node.
   y = drawNode(app, node, x, y);
+
+  // Add node to visible nodes.
+  orderedVisibleNodes.add(node);
 
   if (node instanceof CompositeNode)
   {
