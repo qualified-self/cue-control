@@ -8,8 +8,57 @@ import java.util.regex.Pattern;
 /// Allows the dynamic creation of nodes.
 class NodeFactory {
 
+  ArrayList<String> nodeTypes;
+  ArrayList<String> decoratorTypes;
+
   NodeFactory() {
+    nodeTypes = new ArrayList<String>();
+    decoratorTypes = new ArrayList<String>();
+
+    registerNode("blackboard-ramp");
+    registerNode("blackboard-set");
+    registerNode("constant");
+    registerNode("delay");
+    registerNode("osc-receive");
+    registerNode("osc-send");
+    registerNode("parallel");
+    registerNode("selector");
+    registerNode("sequence");
+    registerNode("sound");
+    registerNode("text");
+
+    registerDecorator("chrono");
+    registerDecorator("condition");
+    registerDecorator("constant");
+    registerDecorator("guard");
+    registerDecorator("randomize");
+    registerDecorator("while");
   }
+
+  void registerNode(String nodeType) {
+    nodeTypes.add(nodeType);
+  }
+
+  void registerDecorator(String decoratorType) {
+    decoratorTypes.add(decoratorType);
+  }
+
+  ArrayList<String> nodesStartingWith(String str) {
+    return _stringsStartingWith(str, nodeTypes);
+  }
+
+  ArrayList<String> decoratorsStartingWith(String str) {
+    return _stringsStartingWith(str, decoratorTypes);
+  }
+
+  ArrayList<String> _stringsStartingWith(String str, ArrayList<String> array) {
+    ArrayList<String> result = new ArrayList<String>(array.size());
+    for (String s : array)
+      if (s.startsWith(str))
+        result.add(s);
+    return result;
+  }
+
 
   BaseNode createNode(String str) {
     return createNode(str, false);

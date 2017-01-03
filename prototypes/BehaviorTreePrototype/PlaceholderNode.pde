@@ -22,6 +22,10 @@ class PlaceholderNode extends Decorator {
     declaration += k;
   }
 
+  void assign(String dec) {
+    declaration = dec;
+  }
+
   void backspace() {
     if (declaration.length() >= 1)
       declaration = declaration.substring(0, declaration.length() - 1);

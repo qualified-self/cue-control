@@ -176,6 +176,7 @@ void keyPressed() {
       case ENTER: case RETURN: submitNode(); break;
       case DELETE:             cancelNode(); break;
       case BACKSPACE:          placeholderNode.backspace(); break;
+      case TAB:                autocompleteNode(); break;
 
       case CODED:
       {
@@ -348,6 +349,12 @@ void removeNode() {
       selectedNode = node;
     }
   }
+}
+
+void autocompleteNode() {
+  ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getDescription());
+  if (autocompleteOptions.size() == 1)
+    placeholderNode.assign(autocompleteOptions.get(0));
 }
 
 void moveNodeWithinLevel(int move) {
