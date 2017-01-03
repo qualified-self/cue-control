@@ -8,7 +8,12 @@ public class SelectorNode extends IterableNode
   }
 
   public SelectorNode(boolean restart) {
-    this(null, restart);
+    this(restart ? "restart" : "no-restart", restart);
+  }
+
+  public SelectorNode(String description)
+  {
+    this(description, false);
   }
 
   public SelectorNode(String description, boolean restart)
