@@ -141,3 +141,43 @@ Constructors:
  * **text** *expression(string)*
 
 ## Decorators
+
+Decorators are special elements that can be added to a node or to another decorator to modify its behavior.
+
+### Chronometer
+
+Keeps executing child node until timeout is reached.
+
+Constructors:
+ * **chrono** *timeout(float)*
+
+### Constant
+
+Returns a constant result (SUCCESS, FAILURE, or RUNNING) overriding the result of its child.
+
+Constructors:
+ * **constant** *state(string)*
+
+### Guard
+
+Call the node if and only if guard condition checks to be true; otherwise does not execute the node and returns FAILURE (unless option *succeedOnFalse* is set to true, in which case returns SUCCESS).
+
+Constructors:
+ * **guard** *value(boolean)*
+ * **guard** *expression(string)*
+ * **guard** *expression(string)* *succeedOnFalse(boolean)*
+ 
+## Randomize
+
+Executes children in a random order. Can only be added as a decorator of a composite node (sequence, selector, parallel).
+
+Constructors:
+ * **randomize**
+
+## While
+
+Keeps executing child node while condition checks.
+
+Constructors:
+ * **while** *value(boolean)*
+ * **while** *expression(string)*
