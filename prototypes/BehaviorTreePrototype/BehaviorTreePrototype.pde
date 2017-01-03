@@ -10,7 +10,7 @@ import java.awt.event.KeyEvent;
 final int INDENT = 50;
 final int NODE_HEIGHT = 25;
 final int NODE_SPACING = 5;
-final int BLACKBOARD_WIDTH = 400;
+final int BLACKBOARD_WIDTH = 600;
 
 final int OSC_SEND_PORT = 12000;
 final int OSC_RECV_PORT = 14000;
@@ -29,6 +29,7 @@ Minim minim;
 Serializer serializer = new Serializer();
 
 Blackboard board = new Blackboard();
+Console console = Console.instance();
 BaseNode root;
 
 NodeFactory factory;
@@ -56,7 +57,7 @@ void settings() {
 void setup() {
   // Secondary window (for blackboard).
 //  String[] args = {"Blackboard"};
-  BlackboardApplet sa = new BlackboardApplet();
+  ConsoleApplet sa = new ConsoleApplet();
 //  PApplet.runSketch(args, sa);
 
   // Iniialize instance.

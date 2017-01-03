@@ -10,7 +10,7 @@ public class TextNode extends BaseNode {
 
 	State doExecute(Blackboard agent)
 	{
-		System.out.println(agent.processExpression(text));
+		Console.instance().log(agent.processExpression(text));
 		return State.SUCCESS;
 	}
 

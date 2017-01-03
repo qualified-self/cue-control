@@ -47,7 +47,7 @@ class Expression implements Serializable {
         engine.eval(s.hasNext() ? s.next() : "");
       }
       catch (Exception e) {
-        System.out.println(e);
+        Console.instance().log(e);
       }
     }
   }

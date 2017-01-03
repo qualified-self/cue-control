@@ -1,11 +1,11 @@
 class ConstantNode extends BaseNode
 {
 	State state;
-	public ConstantNode(String state) throws Exception
+	public ConstantNode(String state)
 	{
     this.state = Utils.stringToState(state);
-    if (state == null)
-      throw new Exception("Undefined state: " + state + ".");
+    // HACK: to avoid errors
+    if (this.state == null) this.state = State.SUCCESS;
 	}
 
 	ConstantNode(State state)

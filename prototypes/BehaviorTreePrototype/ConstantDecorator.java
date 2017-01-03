@@ -2,11 +2,11 @@ class ConstantDecorator extends Decorator {
 
 		State state;
 
-  	public ConstantDecorator(String state)
+  	public ConstantDecorator(String state) throws Exception
   	{
       this.state = Utils.stringToState(state);
-      if (state == null)
-        throw new Exception("Undefined state: " + state + ".");
+      // HACK: to avoid errors
+      if (this.state == null) this.state = State.SUCCESS;
   	}
 
 		ConstantDecorator(State state)

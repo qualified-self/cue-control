@@ -17,7 +17,7 @@ class BlackboardSetNode extends BaseNode {
       return State.SUCCESS;
     }
     catch (Exception e) {
-      System.out.println("ERROR: " + e.toString());
+      Console.instance().log(e.getMessage());
 			return State.FAILURE;
     }
 

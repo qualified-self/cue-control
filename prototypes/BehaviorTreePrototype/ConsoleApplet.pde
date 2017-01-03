@@ -1,8 +1,11 @@
-public class BlackboardApplet extends PApplet {
+public class ConsoleApplet extends PApplet {
 
-	BlackboardApplet() {
+  final int MAX_LOGS = 10;
+  int logOffset = 0; // current log offset
+
+	ConsoleApplet() {
 		super();
-		PApplet.runSketch(new String[] { "Blackboard" }, this);
+		PApplet.runSketch(new String[] { "Console" }, this);
 	}
 
   public void settings() {
@@ -12,6 +15,7 @@ public class BlackboardApplet extends PApplet {
   public void draw() {
     background(255);
 
+    // Draw blackboard.
 		int x = INDENT;
 		int y = NODE_HEIGHT;
 		y = drawRow("Name", "Value", x, y, #555555, #ffffff, true, false);
@@ -45,12 +49,25 @@ public class BlackboardApplet extends PApplet {
 			String stackTrace = writer.toString();
 			println(stackTrace);
 		}
+
+    // Draw console.
+    y = max(y + NODE_HEIGHT, height/2);
+    drawItem(this, x, y, #555555, true, false);
+		drawItemText(this, "", "Console",  x, y, #ffffff);
+
+    int startIndex = max(console.nLogs() - MAX_LOGS + logOffset, 0);
+    ArrayList<String> logs = console.getLogs(startIndex, MAX_LOGS);
+    for (String log : logs) {
+      y += NODE_HEIGHT;
+      drawItem(this, x, y, #aaaaaa, false, false);
+		  drawItemText(this, "", log,  x, y, #000000);
+    }
   }
 
 	int drawRow(String name, String value, int x, int y, color fillColor, color textColor, boolean roundTops, boolean roundBottoms)
 	{
 		drawItem(this, x, y, fillColor, roundTops, roundBottoms);
-		drawItemText(this, "", name,  x,         y, textColor);
+		drawItemText(this, "", name,  x,           y, textColor);
 		drawItemText(this, "", value, x+width*1/3, y, textColor);
 
 		return (y + NODE_HEIGHT);

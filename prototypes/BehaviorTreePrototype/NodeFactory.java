@@ -75,7 +75,7 @@ class NodeFactory {
 
     // Wrong statement.
     if (list.isEmpty()) {
-      System.out.println("Invalid empty string.");
+      Console.instance().log("Invalid empty string.");
       return null;
     }
 
@@ -111,7 +111,7 @@ class NodeFactory {
         argumentObjects[i] = arguments[i];
         argumentClasses[i] = String.class;
       }
-      System.out.println("Argument[" + i + "] has type :" + argumentClasses[i].getName());
+//      Console.instance().log("Argument[" + i + "] has type :" + argumentClasses[i].getName());
     }
 
     // Try to generate new instance.
@@ -129,16 +129,28 @@ class NodeFactory {
         catch (IllegalArgumentException e) {
           System.out.println("Bad argument: " + e);
         }
+        catch (Exception e) {
+          System.out.println("Exception: " + e);
+        }
       }
-      System.out.println("No valid constructor found for arguments.");
-      System.out.println("Classtype = " + classType);
-      System.out.println("Arguments = " + argumentObjects);
+      Console.instance().log("No valid constructor found for arguments. Available declarations:");
+      // Console.instance().log("Classtype = " + classType);
+      // Console.instance().log("Arguments = " + argumentObjects);
+
+      for (Constructor<?> c : constructors)
+      {
+        String description = classNameToNodeName(c.getName());
+        Class[] paramTypes = c.getParameterTypes();
+        for (Class type : paramTypes)
+          description += " " + Utils.camelCaseToDash(type.getSimpleName());
+        Console.instance().log(" - " + description);
+      }
 
       return null;
       // Call constructor.
     } catch (Exception e) {
-        System.out.println("ERROR: error creating node of class " + classType + ".");
-        System.out.println(e);
+        Console.instance().log("ERROR: error creating node of class " + classType + ".");
+        Console.instance().log(e);
         // app.println("ERROR: error creating node of class " + classType + ".");
         // app.println(e);
         return null;
