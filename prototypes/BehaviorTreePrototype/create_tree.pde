@@ -465,7 +465,7 @@ BaseNode createTree() {
 							)
 							.addChild(new ConstantNode(State.SUCCESS).setDecorator(new WhileDecorator(new NotCondition(new KeyCondition('G')))))
 							.addChild(new SoundNode("123go.mp3"))
-							.addChild(new ParallelNode("Start the show", true, true)
+							.addChild(new ParallelNode("Start the show", false)
 								.addChild(new SequenceNode("Stuff running in background").setDecorator(new WhileDecorator(new ExpressionCondition("[end] == 0")))
 									.addChild(new OscReceiveNode("/cue-proto/start", "start", State.SUCCESS))
 									.addChild(new OscReceiveNode("/cue-proto/level", "level", State.SUCCESS))
