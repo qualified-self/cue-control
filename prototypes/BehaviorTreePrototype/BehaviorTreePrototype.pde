@@ -197,7 +197,7 @@ void keyPressed() {
       {
         case KeyEvent.VK_SPACE:            togglePlay(); break;
         case KeyEvent.VK_R:                reset();      break;
-        case KeyEvent.VK_N:                clear();      break;
+        case KeyEvent.VK_N:                if (keyEvent.isShiftDown()) clear(); break;
 
         case KeyEvent.VK_O:                serializer.load(); reset(); break;
         case KeyEvent.VK_S:
