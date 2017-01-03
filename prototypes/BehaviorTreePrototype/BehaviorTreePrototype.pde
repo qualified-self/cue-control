@@ -84,7 +84,7 @@ void setup() {
   // Create new/empty structure.
   clear();
 //  root = factory.createNode("SelectorNode \"Go man!\" false");
-  root = createTreeCepheids();
+//  root = createTreeCepheids();
 //  root = createTreeOtherSelf();
 //  root = simpleTest();
 //  root = createTreeOct25();
@@ -94,14 +94,9 @@ void setup() {
   // board.put("test2", "2");
   // board.put("test3", "3");
 
-  board.addTask(new OscBlackboardTask("/test/sync", "raw_sync"));
+  // board.addTask(new OscBlackboardTask("/test/sync", "raw_sync"));
   // board.addTask(new ConditionBlackboardTask("spacebar", new ExpressionCondition("$test1 == 1 && $test1 > 0 && $test2 == 2 && $test3 == 3")));
   // board.addTask(new ConditionBlackboardTask("spacebar", new KeyCondition(' ')));
-
-  reset();
-
-  setPlayState(false);
-  setEditState(false);
 }
 
 State rootState = State.RUNNING;
@@ -252,7 +247,8 @@ void reset() {
   board.init();
   root.init(board);
   rootState = State.RUNNING;
-  pause();
+  setPlayState(false);
+  setEditState(false);
 }
 
 void clear() {
