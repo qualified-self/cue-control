@@ -12,11 +12,12 @@ class Expression implements Serializable {
 
   Expression(Object expression) {
     this.expression = expression;
-    _initManager();
+    initManager();
   }
 
   /// Computes expression using blackboard and returns result.
 	Object eval(Blackboard agent) throws ScriptException {
+    initManager();
     if (expression instanceof String)
       return engine.eval(agent.processExpression((String)expression));
     else
@@ -25,6 +26,7 @@ class Expression implements Serializable {
 
   /// Eval without agent.
   Object eval() throws ScriptException {
+    initManager();
     if (expression instanceof String)
       return engine.eval((String)expression);
     else
@@ -36,7 +38,7 @@ class Expression implements Serializable {
   }
 
 
-  void _initManager() {
+  static void initManager() {
     if (manager == null) {
       manager = new ScriptEngineManager();
       engine = manager.getEngineByName("js");
