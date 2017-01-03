@@ -69,16 +69,20 @@ void setup() {
   // Create factory.
   factory = new NodeFactory();
 
-  // start oscP5, listening for incoming messages.
+  // Start oscP5, listening for incoming messages.
   oscP5 = new OscP5(this, OSC_RECV_PORT);
 
-  // location to send OSC messages
+  // Location to send OSC messages
   remoteLocation = new NetAddress(OSC_IP, OSC_SEND_PORT);
 
+  // Start sound server.
   minim = new Minim(this);
 
+  // Initianlize expression/script manager.
+  Expression.initManager();
 
-  root = new SequenceNode();
+  // Create new/empty structure.
+  clear();
 //  root = factory.createNode("SelectorNode \"Go man!\" false");
   root = createTreeCepheids();
 //  root = createTreeOtherSelf();
@@ -116,7 +120,7 @@ void draw() {
   click.reset();
 
   if (isPlaying() && !isEditing()) {
-    println(nSteps);
+//    println(nSteps);
 
     // Execute blackboard tasks.
     board.execute();
@@ -140,8 +144,12 @@ class MouseClick {
   void reset() { clicked = false; }
 
   void click() {
-    x = mouseX;
-    y = mouseY;
+    click(mouseX, mouseY);
+  }
+
+  void click(float x, float y) {
+    this.x = x;
+    this.y = y;
     clicked = true;
   }
 
@@ -201,7 +209,7 @@ void keyPressed() {
           reset();
           break;
 
-        case KeyEvent.VK_D:                 addDecorator(); break;
+        case KeyEvent.VK_D:                  addDecorator(); break;
 
         case KeyEvent.VK_ENTER:
           addSibling();
@@ -214,7 +222,7 @@ void keyPressed() {
         case KeyEvent.VK_LEFT:               moveHigher(); break;
         case KeyEvent.VK_RIGHT:              moveLower(); break;
 
-        default:
+        default:;
       }
     }
     else
