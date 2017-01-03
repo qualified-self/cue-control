@@ -1,12 +1,12 @@
 import java.util.Iterator;
 
-class RandomDecorator extends IterableDecorator {
+class RandomizeDecorator extends IterableDecorator {
 
-  public RandomDecorator() {
+  public RandomizeDecorator() {
     this(null);
   }
 
-  RandomDecorator(IterableNode node) {
+  RandomizeDecorator(IterableNode node) {
     super(node);
   }
 

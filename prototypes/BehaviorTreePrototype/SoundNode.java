@@ -1,20 +1,20 @@
 import ddf.minim.AudioPlayer;
 
-class SoundCueNode extends CueNode {
+class SoundNode extends CueNode {
 
   transient AudioPlayer player;
 
   String fileName;
 
-  public SoundCueNode(String fileName) {
+  public SoundNode(String fileName) {
     this(fileName, fileName, 0, 0);
   }
 
-  public SoundCueNode(String fileName, float preWait, float postWait) {
+  public SoundNode(String fileName, float preWait, float postWait) {
     this(fileName, fileName, preWait, postWait);
   }
 
-  public SoundCueNode(String description, String fileName, float preWait, float postWait) {
+  public SoundNode(String description, String fileName, float preWait, float postWait) {
     super(description, preWait, 0, postWait);
     this.fileName = fileName;
     build();
