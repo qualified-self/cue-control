@@ -2,8 +2,7 @@ import java.util.ArrayList;
 
 class ParallelNode extends CompositeNode
 {
-  boolean failOnAll;
-  boolean succeedOnAll;
+  boolean sequencePolicy;
 
   ArrayList<Boolean> childrenRunning;
   int nFailure;
@@ -13,19 +12,18 @@ class ParallelNode extends CompositeNode
     this("");
   }
 
-  public ParallelNode(boolean failOnAll, boolean succeedOnAll) {
-    this(failOnAll + " " + succeedOnAll, failOnAll, succeedOnAll);
+  public ParallelNode(boolean sequencePolicy) {
+    this(sequencePolicy ? "sequence" : "selector" + " policy", sequencePolicy);
   }
 
   public ParallelNode(String description) {
-    this(description, true, true);
+    this(description, true);
   }
 
-  public ParallelNode(String description, boolean failOnAll, boolean succeedOnAll)
+  public ParallelNode(String description, boolean sequencePolicy)
   {
     super(description);
-    this.failOnAll = failOnAll;
-    this.succeedOnAll = succeedOnAll;
+    this.sequencePolicy = sequencePolicy;
   }
 
   public State doExecute(Blackboard agent)
@@ -51,15 +49,15 @@ class ParallelNode extends CompositeNode
       }
     }
 
-    if (nSuccess == nChildren() || (!succeedOnAll && nSuccess >= 1))
-    {
-//      childrenRunning = null;
-      return State.SUCCESS;
-    }
-    else if (nFailure == nChildren() || (!failOnAll && nFailure >= 1))
+    if (nFailure == nChildren() || (sequencePolicy && nFailure >= 1))
     {
 //      childrenRunning = null;
       return State.FAILURE;
+    }
+    else if (nSuccess == nChildren() || (!sequencePolicy && nSuccess >= 1))
+    {
+//      childrenRunning = null;
+      return State.SUCCESS;
     }
     else
       return State.RUNNING;
