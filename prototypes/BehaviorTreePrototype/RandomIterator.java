@@ -13,7 +13,6 @@ public class RandomIterator<T> implements Iterator<T> {
         while(indexSet.size() != delegate.size())
             indexSet.add(r.nextInt(delegate.size()));
 
-        System.out.println(indexSet);
         indicies = indexSet.iterator();
     }
 
