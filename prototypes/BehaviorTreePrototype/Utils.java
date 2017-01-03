@@ -17,4 +17,13 @@ class Utils {
     String result = sb.toString();
     return result.substring(0, 1).toUpperCase() + result.substring(1);
   }
+  }
+
+  static String stateToString(State state) {
+  	if (state == State.RUNNING)        return "RUNNING";
+  	else if (state == State.SUCCESS)   return "SUCCESS";
+  	else if (state == State.FAILURE)   return "FAILURE";
+  	else if (state == State.UNDEFINED) return "UNDEFINED";
+    else return null;
+  }
 }

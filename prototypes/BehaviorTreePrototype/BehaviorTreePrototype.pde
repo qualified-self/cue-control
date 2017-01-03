@@ -390,13 +390,6 @@ void oscEvent(OscMessage msg) {
   println(" typetag: "+msg.typetag());
 }
 
-public static String stateToString(State state) {
-	if (state == State.RUNNING) return "RUNNING";
-	else if (state == State.SUCCESS) return "SUCCESS";
-	else if (state == State.FAILURE) return "FAILURE";
-	else return "UNDEFINED";
-}
-
 private static BehaviorTreePrototype inst;
 
 public static BehaviorTreePrototype instance() {
