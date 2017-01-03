@@ -111,6 +111,7 @@ void draw() {
   if (click.wasClicked())
     selectedNode = null;
   drawTree(this, root, INDENT, (int)yOffset+NODE_HEIGHT);
+  drawEditor(this);
   click.reset();
 
   if (isPlaying() && !isEditing()) {
