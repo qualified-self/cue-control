@@ -93,4 +93,18 @@ public abstract class CompositeNode extends BaseNode
   // CompositeNode insertChild(... )
 
   int nChildren() { return children.size(); }
+
+  State execute(Blackboard agent)
+  {
+    State state = super.execute(agent);
+
+    // If parent has stopped, stop any running children.
+    if (state != State.RUNNING) {
+      for (BaseNode node : children)
+        if (node.getState() == State.RUNNING)
+          node.init(agent);
+    }
+
+    return state;
+  }
 }
