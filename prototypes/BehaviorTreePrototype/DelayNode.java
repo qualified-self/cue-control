@@ -3,23 +3,41 @@ import processing.core.PApplet;
 class DelayNode extends BaseNode {
 
 	Chrono chrono;
-	float timeOut;
+  Expression timeOut;
+  float currentTimeOut;
 
 	public DelayNode(float timeOut) {
-		this(timeOut + "s", timeOut);
+		this(Float.toString(timeOut));
 	}
 
 	public DelayNode(String description, float timeOut) {
+    this(description, Float.toString(timeOut));
+	}
+
+	public DelayNode(String timeOut) {
+		this(timeOut, timeOut);
+	}
+
+	public DelayNode(String description, String timeOut) {
 		super(description);
-		this.timeOut = timeOut;
+		this.timeOut = new Expression(timeOut);
 		chrono = new Chrono(false);
 	}
 
   public State doExecute(Blackboard agent) {
 		if (!chrono.isRunning())
+    {
+      try {
+        currentTimeOut = ((Number)timeOut.eval(agent)).floatValue();
+      }
+      catch (Exception e) {
+        Console.instance().log(e.toString());
+        currentTimeOut = 0;
+      }
 			chrono.restart();
+    }
 
-		return (chrono.hasPassed(PApplet.ceil(timeOut*1000)) ? State.SUCCESS : State.RUNNING);
+		return (chrono.hasPassed(PApplet.ceil(currentTimeOut*1000)) ? State.SUCCESS : State.RUNNING);
   }
 
   public void doInit(Blackboard agent)

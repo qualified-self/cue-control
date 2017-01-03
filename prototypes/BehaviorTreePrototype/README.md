@@ -105,10 +105,11 @@ Examples:
 
 ### Delay
 
-Waits for a given time (in seconds) then SUCCEEDS.
+Waits for a given time (in seconds) then SUCCEEDS. Timeout can be specified as an expression.
 
 Constructors:
- * **delay** *timeout(float)* 
+ * **delay** *timeout(string)* 
+ * **delay** *description(string)* *timeout(string)* 
 
 ### OSC receive
 
