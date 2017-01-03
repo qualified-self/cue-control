@@ -16,7 +16,7 @@ final int OSC_SEND_PORT = 12000;
 final int OSC_RECV_PORT = 14000;
 final String OSC_IP     = "192.168.1.101";
 
-final color DECORATOR_FILL_COLOR = #555555;
+final color DECORATOR_FILL_COLOR = #6a6a6a;
 final color DECORATOR_TEXT_COLOR = #eeeeee;
 
 final color NODE_TEXT_COLOR = #000000;
