@@ -51,7 +51,7 @@ public Minim minim() { return minim; }
 public NetAddress remoteLocation() { return remoteLocation; }
 
 void settings() {
-  size(displayWidth-BLACKBOARD_WIDTH, displayHeight);
+  size(displayWidth-BLACKBOARD_WIDTH, displayHeight, P2D);
 }
 
 void setup() {
@@ -64,6 +64,7 @@ void setup() {
   inst = this;
 
   noStroke();
+  smooth();
 //  frameRate(5);
 
   // Create factory.
