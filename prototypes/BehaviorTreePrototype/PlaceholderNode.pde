@@ -41,6 +41,8 @@ class PlaceholderNode extends Decorator {
     {
       if (useAsDecorator)
         node.setDecorator((Decorator)newNode);
+      else if (root == this)
+        root = newNode;
       else
         parent.replaceChild(this, newNode);
     }

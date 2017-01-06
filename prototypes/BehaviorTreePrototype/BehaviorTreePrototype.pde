@@ -107,25 +107,28 @@ void draw() {
   // Reset background.
   background(0);
 
-  // Draw tree.
-  if (click.wasClicked())
-    selectedNode = null;
-  drawMainTree(this);
-  drawEditor(this);
-  click.reset();
+  if (root != null)
+  {
+    // Draw tree.
+    if (click.wasClicked())
+      selectedNode = null;
+    drawMainTree(this);
+    drawEditor(this);
+    click.reset();
 
-  if (isPlaying() && !isEditing()) {
-//    println(nSteps);
+    if (isPlaying() && !isEditing()) {
+  //    println(nSteps);
 
-    // Execute blackboard tasks.
-    board.execute();
+      // Execute blackboard tasks.
+      board.execute();
 
-    // Execute (if running).
-    if (rootState == State.RUNNING) {
-      rootState = root.execute(board);
+      // Execute (if running).
+      if (rootState == State.RUNNING) {
+        rootState = root.execute(board);
+      }
+
+      nSteps++;
     }
-
-    nSteps++;
   }
 }
 
@@ -245,14 +248,15 @@ void mouseWheel(MouseEvent e) {
 
 void reset() {
   board.init();
-  root.init(board);
+  if (root != null)
+    root.init(board);
   rootState = State.RUNNING;
   setPlayState(false);
   setEditState(false);
 }
 
 void clear() {
-  root = new SequenceNode();
+  root = null;
 
   reset();
 
@@ -299,10 +303,13 @@ void addSibling() {
 }
 
 void addChild() {
-  if (selectedNode != null && selectedNode instanceof CompositeNode) {
+  if ((selectedNode != null && selectedNode instanceof CompositeNode) || root == null) {
     setEditState(true);
     placeholderNode.reset();
-    ((CompositeNode)selectedNode).addChild(placeholderNode);
+    if (root == null)
+      root = placeholderNode;
+    else
+      ((CompositeNode)selectedNode).addChild(placeholderNode);
     selectedNode = null;
 //    selectedNode = newNode;
   }
