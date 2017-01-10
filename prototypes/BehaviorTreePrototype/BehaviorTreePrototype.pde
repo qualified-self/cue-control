@@ -122,6 +122,13 @@ void draw() {
     click.reset();
 
     if (isPlaying() && !isEditing()) {
+
+      // Update blackboard values.
+      board.put("mouseX", mouseX);
+      board.put("mouseY", mouseY);
+      board.put("keyPressed", keyPressed);
+      board.put("key", keyPressed ? key : 0);
+
   //    println(nSteps);
 
       // Execute blackboard tasks.
