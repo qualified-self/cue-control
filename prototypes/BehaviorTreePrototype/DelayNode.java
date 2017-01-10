@@ -31,7 +31,7 @@ class DelayNode extends BaseNode {
         currentTimeOut = ((Number)timeOut.eval(agent)).floatValue();
       }
       catch (Exception e) {
-        Console.instance().log(e.toString());
+        Console.instance().error(e.toString());
         currentTimeOut = 0;
       }
 			chrono.restart();

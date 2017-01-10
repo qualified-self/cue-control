@@ -56,11 +56,12 @@ public class ConsoleApplet extends PApplet {
 		drawItemText(this, "", "Console",  x, y, #ffffff);
 
     int startIndex = max(console.nLogs() - MAX_LOGS + logOffset, 0);
-    ArrayList<String> logs = console.getLogs(startIndex, MAX_LOGS);
-    for (String log : logs) {
+    ArrayList<Console.Entry> logs = console.getLogs(startIndex, MAX_LOGS);
+    for (Console.Entry log : logs) {
       y += NODE_HEIGHT;
-      drawItem(this, x, y, #aaaaaa, false, false);
-		  drawItemText(this, "", log,  x, y, #000000);
+      drawItem(this, x, y, #dddddd, false, false);
+      String logMessage = "[" + log.getFormattedTime() + "] : " + log.getMessage();
+		  drawItemText(this, "", logMessage,  x, y, logColor(log));
     }
   }
 
@@ -72,5 +73,11 @@ public class ConsoleApplet extends PApplet {
 
 		return (y + NODE_HEIGHT);
 	}
+
+  color logColor(Console.Entry log) {
+    if (log.getType() == Console.MessageType.NOTICE) return color(#000000);
+    else if (log.getType() == Console.MessageType.WARNING) return color(#F06D02);
+    else return color(#ff0000);
+  }
 
 }

@@ -5,4 +5,5 @@
 [ ] Add a button to "comment out" (ie. activate/deactivate) a node / decorator
 [ ] Integrate tasks for tracking keyPressed, mouseX and mouseY
 [ ] Add colors to the console (notice/log, warning, error)
+[x] Add colors to the console (notice/log, warning, error)
 [ ] Bring all colors in a single file as constants

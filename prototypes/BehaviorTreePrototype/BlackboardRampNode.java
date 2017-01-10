@@ -45,7 +45,7 @@ class BlackboardRampNode extends BlackboardSetNode {
       return state;
     }
     catch (Exception e) {
-      Console.instance().log(e.getMessage());
+      Console.instance().error(e.getMessage());
 			return State.FAILURE;
     }
 

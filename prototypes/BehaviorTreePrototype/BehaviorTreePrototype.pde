@@ -249,6 +249,10 @@ void keyPressed() {
 
         case KeyEvent.VK_CONTROL:
           break;
+
+        default:
+          console.warning("Untracked command: '" + keyCode + "'.");
+        ;
       }
     }
     else

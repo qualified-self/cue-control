@@ -42,7 +42,7 @@ class CueNode extends BaseNode {
       step = 1;
     }
     else
-      Console.instance().log("Wrong step to call beginCue(): " + step);
+      Console.instance().warning("Wrong step to call beginCue(): " + step);
 
     return true;
   }

@@ -71,7 +71,7 @@ class NodeFactory {
 
     // Wrong statement.
     if (list.isEmpty()) {
-      Console.instance().log("Invalid empty string.");
+      Console.instance().error("Invalid empty string.");
       return null;
     }
 
@@ -94,7 +94,7 @@ class NodeFactory {
     String nodeName = classNameToNodeName(classType);
     if (! (isDecorator ? decoratorTypes.contains(nodeName) : nodeTypes.contains(nodeName)))
     {
-      Console.instance().log("Unsupported class type: " + nodeName + ".");
+      Console.instance().warning("Unsupported class type: " + nodeName + ".");
       return null;
     }
 
@@ -153,8 +153,8 @@ class NodeFactory {
       return null;
       // Call constructor.
     } catch (Exception e) {
-        Console.instance().log("ERROR: error creating node of class " + classType + ".");
-        Console.instance().log(e);
+        Console.instance().error("ERROR: error creating node of class " + classType + ".");
+        Console.instance().error(e.toString());
         // app.println("ERROR: error creating node of class " + classType + ".");
         // app.println(e);
         return null;
