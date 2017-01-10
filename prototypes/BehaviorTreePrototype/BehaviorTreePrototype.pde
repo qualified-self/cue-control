@@ -30,7 +30,7 @@ Serializer serializer = new Serializer();
 
 Blackboard board = new Blackboard();
 Console console = Console.instance();
-BaseNode root;
+CompositeNode root;
 
 NodeFactory factory;
 
@@ -278,7 +278,7 @@ void reset() {
 }
 
 void clear() {
-  root = null;
+  root = new SequenceNode();
 
   reset();
 
@@ -326,13 +326,12 @@ void addSibling() {
 }
 
 void addChild() {
-  if ((selectedNode != null && selectedNode instanceof CompositeNode) || root == null) {
+  if ( (selectedNode != null && selectedNode instanceof CompositeNode) || root.nChildren() == 0) {
     setEditState(true);
     placeholderNode.reset();
-    if (root == null)
-      root = placeholderNode;
-    else
-      ((CompositeNode)selectedNode).addChild(placeholderNode);
+    if (root.nChildren() == 0)
+      selectedNode = root;
+    ((CompositeNode)selectedNode).addChild(placeholderNode);
     selectedNode = null;
     autocompleteListCurrentSelected = null;
 //    selectedNode = newNode;

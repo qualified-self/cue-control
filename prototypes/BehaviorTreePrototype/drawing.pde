@@ -139,7 +139,12 @@ int drawNode(PApplet app, BaseNode node, int x, int y)
 void drawMainTree(PApplet app)
 {
   orderedVisibleNodes = new ArrayList<BaseNode>(orderedVisibleNodes == null ? 10 : orderedVisibleNodes.size());
-  drawTree(this, root, INDENT, (int)yOffset+NODE_HEIGHT);
+
+  int y = (int)yOffset+NODE_HEIGHT;
+  for (BaseNode child : ((CompositeNode)root).getChildren())
+	{
+    y = drawTree(this, child, INDENT, y);
+  }
 }
 
 int drawTree(PApplet app, BaseNode node, int x, int y)

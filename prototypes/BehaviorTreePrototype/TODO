@@ -1,5 +1,6 @@
 [ ] Tab in autocomplete should complete common prefixes
 [x] Autocomplete list should be selectable using arrows (and/or mouse)
+[x] Allow erasing the root node (all of this would be highly facilitated by simply adding a RootNode that takes a single child).
 [ ] Autocomplete list should be selectable using arrows (and/or mouse)
 [ ] Add a button to "comment out" (ie. activate/deactivate) a node / decorator
 [ ] Integrate tasks for tracking keyPressed, mouseX and mouseY

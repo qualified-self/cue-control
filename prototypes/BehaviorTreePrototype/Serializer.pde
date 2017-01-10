@@ -38,7 +38,7 @@ public class Serializer {
       ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 
       board = (Blackboard) ois.readObject();
-      root  = (BaseNode)   ois.readObject();
+      root  = (CompositeNode)   ois.readObject();
 
       board.build();
       root.build();
