@@ -18,7 +18,7 @@ boolean is_loading = false;
 void setup() {
   is_loading = true;
   //fullScreen();
-  size(1024,768);
+  size(1024,400);
   background(0);
   smooth();
   inst = this;

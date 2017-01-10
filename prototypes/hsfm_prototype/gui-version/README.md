@@ -1,9 +1,13 @@
 #About
 In this prototype, we use [Hierarchical Finite State Machines (HFSM)](https://en.wikipedia.org/wiki/UML_state_machine#Hierarchically_nested_states) as approach to compose immersive multimedia art installations.
 
-For composing, you need to create a set of _States_. These states are connected to one another via logical _Connections_. The execution of the HFSM always starts at the "Begin_state", following these logical connections whenever they are true, always towards the final the "End_state", where execution halts.
+For composing, you need to create a set of _States_. These states are connected to one another via logical _Connections_. The execution of the HFSM always starts at the "Begin" state, following these logical connections towards the final the "End" state, where execution halts.
 
-States are composed by a set of _Tasks_. Tasks are the most basic media actions that can happen inside a state. Whenever a certain state is executed, all tasks associated to it are set to action in parallel.
+![image](gif-tutorial.gif)
+
+States are composed by a set of _Tasks_. Tasks are the most basic media actions that can happen inside a state (e.g. light, audio, haptics). Whenever a certain state is executed, all tasks associated to it are set to action in parallel.
+
+![image](gif-tasks.gif)
 
 At any moment, you can use _Blackboard_ variables to enrich your composition (e.g. use the mouse x position to control the volume, or to trigger certain connections).
 
