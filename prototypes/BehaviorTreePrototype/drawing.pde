@@ -171,6 +171,7 @@ void drawEditor(PApplet app) {
   if (isEditing())
   {
     ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getDescription(), placeholderNode.isDecorator());
+    int indexSelected = autocompleteOptions.indexOf(autocompleteListCurrentSelected);
 
     int yOption = editorY;
     for (int i=0; i<autocompleteOptions.size(); i++)
@@ -178,7 +179,7 @@ void drawEditor(PApplet app) {
       yOption += NODE_HEIGHT;
 
       // Generate text area.
-      drawItem(app, editorX, yOption, color(#bbbbbb), i == 0, i == autocompleteOptions.size()-1);
+      drawItem(app, editorX, yOption, indexSelected == i ? color(#aaaaaa) : color(#bbbbbb), i == 0, i == autocompleteOptions.size()-1);
 
       // Draw item text.
       drawItemText(app, "", autocompleteOptions.get(i), editorX, yOption, NODE_TEXT_COLOR);

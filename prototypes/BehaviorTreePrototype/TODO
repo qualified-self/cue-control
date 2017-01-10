@@ -1,4 +1,5 @@
 [ ] Tab in autocomplete should complete common prefixes
+[x] Autocomplete list should be selectable using arrows (and/or mouse)
 [ ] Autocomplete list should be selectable using arrows (and/or mouse)
 [ ] Add a button to "comment out" (ie. activate/deactivate) a node / decorator
 [ ] Integrate tasks for tracking keyPressed, mouseX and mouseY

@@ -46,8 +46,12 @@ float yOffset = 0;
 // Placeholder node used to add/edit new nodes.
 PlaceholderNode placeholderNode = new PlaceholderNode();
 
+// Autocomplete list.
+String autocompleteListCurrentSelected;
+
 public OscP5 oscP5() { return oscP5; }
 public Minim minim() { return minim; }
+
 public NetAddress remoteLocation() { return remoteLocation; }
 
 void settings() {
@@ -180,10 +184,27 @@ void keyPressed() {
   if (isEditing()) {
     switch (key)
     {
-      case ENTER: case RETURN: submitNode(); break;
+      case ENTER: case RETURN:
+        if (autocompleteListCurrentSelected == null) submitNode();
+        else
+        {
+          placeholderNode.assign(autocompleteListCurrentSelected);
+          autocompleteListCurrentSelected = null;
+        }
+        break;
       case DELETE:             cancelNode(); break;
       case BACKSPACE:          placeholderNode.backspace(); break;
       case TAB:                autocompleteNode(); break;
+
+     case CODED:
+     {
+       switch (keyCode)
+       {
+         case UP:   changeSelectedDropdown(-1); break;
+         case DOWN: changeSelectedDropdown(+1); break;
+       }
+     }
+     break;
 
       default:                 placeholderNode.append(key);
     }
@@ -299,6 +320,7 @@ void addSibling() {
     placeholderNode.reset();
     selectedNode.getParent().insertChild(selectedNode, placeholderNode);
     selectedNode = null;
+    autocompleteListCurrentSelected = null;
 //    selectedNode = newNode;
   }
 }
@@ -312,6 +334,7 @@ void addChild() {
     else
       ((CompositeNode)selectedNode).addChild(placeholderNode);
     selectedNode = null;
+    autocompleteListCurrentSelected = null;
 //    selectedNode = newNode;
   }
 }
@@ -357,6 +380,24 @@ void autocompleteNode() {
   ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getDescription(), placeholderNode.isDecorator());
   if (autocompleteOptions.size() == 1)
     placeholderNode.assign(autocompleteOptions.get(0));
+}
+
+void changeSelectedDropdown(int move) {
+  println("changeleefadfd");
+  ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getDescription(), placeholderNode.isDecorator());
+  if (autocompleteListCurrentSelected == null && autocompleteOptions.size() > 0)
+    autocompleteListCurrentSelected = autocompleteOptions.get(0);
+  else
+  {
+    int index = autocompleteOptions.indexOf(autocompleteListCurrentSelected);
+    println("index:" + index);
+    if (index >= 0)
+    {
+      index = constrain(index +  move, 0, autocompleteOptions.size()-1);
+      autocompleteListCurrentSelected = autocompleteOptions.get(index);
+      println("new: " + autocompleteListCurrentSelected);
+    }
+  }
 }
 
 void moveNodeWithinLevel(int move) {
