@@ -1,9 +1,12 @@
+High priority:
+[ ] CTRL-DEL is not working
 [ ] Tab in autocomplete should complete common prefixes
 [x] Autocomplete list should be selectable using arrows (and/or mouse)
 [x] Allow erasing the root node (all of this would be highly facilitated by simply adding a RootNode that takes a single child).
-[ ] Autocomplete list should be selectable using arrows (and/or mouse)
-[ ] Add a button to "comment out" (ie. activate/deactivate) a node / decorator
+[ ] Add a help button
 [ ] Integrate tasks for tracking keyPressed, mouseX and mouseY
-[ ] Add colors to the console (notice/log, warning, error)
+
+Mid priority:
+[ ] Add a button to "comment out" (ie. activate/deactivate) a node / decorator
 [x] Add colors to the console (notice/log, warning, error)
 [ ] Bring all colors in a single file as constants
