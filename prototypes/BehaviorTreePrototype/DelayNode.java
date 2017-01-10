@@ -33,6 +33,8 @@ class DelayNode extends BaseNode {
       catch (Exception e) {
         Console.instance().error(e.toString());
         currentTimeOut = 0;
+			  chrono.restart();
+        return State.FAILURE;
       }
 			chrono.restart();
     }
