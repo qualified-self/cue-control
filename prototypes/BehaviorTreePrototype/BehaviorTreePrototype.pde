@@ -238,9 +238,7 @@ void keyPressed() {
 
         case KeyEvent.VK_D:                  addDecorator(); break;
 
-        case KeyEvent.VK_ENTER:
-          addSibling();
-          break;
+        case KeyEvent.VK_ENTER:              addSibling(); break;
         case KeyEvent.VK_TAB:                addChild(); break;
         case KeyEvent.VK_DELETE:             removeNode(); break;
 
@@ -249,7 +247,8 @@ void keyPressed() {
         case KeyEvent.VK_LEFT:               moveHigher(); break;
         case KeyEvent.VK_RIGHT:              moveLower(); break;
 
-        default:;
+        case KeyEvent.VK_CONTROL:
+          break;
       }
     }
     else
