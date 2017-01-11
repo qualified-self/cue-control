@@ -5,6 +5,7 @@ import java.util.regex.*;
 import java.util.*;
 import java.io.*;
 
+//import com.jogamp.newt.event.KeyEvent;
 import java.awt.event.KeyEvent;
 
 final int INDENT = 50;
@@ -55,7 +56,8 @@ public Minim minim() { return minim; }
 public NetAddress remoteLocation() { return remoteLocation; }
 
 void settings() {
-  size(displayWidth-BLACKBOARD_WIDTH, displayHeight, P2D);
+//  size(displayWidth-BLACKBOARD_WIDTH, displayHeight, P2D);
+  size(displayWidth-BLACKBOARD_WIDTH, displayHeight);
 }
 
 void setup() {
