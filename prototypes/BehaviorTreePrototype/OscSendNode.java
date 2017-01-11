@@ -10,7 +10,7 @@ class OscSendNode extends CueNode {
     this(addrPattern, addrPattern, null, 0, 0);
   }
 
-  public OscSendNode(String addrPattern, String arg) {
+  public OscSendNode(String addrPattern, Object arg) {
     this(addrPattern+" "+arg, addrPattern, arg, 0, 0);
   }
 
@@ -18,11 +18,11 @@ class OscSendNode extends CueNode {
     this(addrPattern, addrPattern, null, preWait, postWait);
   }
 
-  OscSendNode(String addrPattern, String arg, float preWait, float postWait) {
+  OscSendNode(String addrPattern, Object arg, float preWait, float postWait) {
     this(addrPattern+" "+arg, addrPattern, arg, preWait, postWait);
   }
 
-  OscSendNode(String description, String addrPattern, String arg, float preWait, float postWait) {
+  OscSendNode(String description, String addrPattern, Object arg, float preWait, float postWait) {
     super(description, preWait, 0, postWait);
     this.addrPattern = addrPattern;
     argExpression = (arg != null ? new Expression(arg) : null);
