@@ -242,7 +242,9 @@ void keyPressed() {
 
         case KeyEvent.VK_ENTER:              addSibling(); break;
         case KeyEvent.VK_TAB:                addChild(); break;
-        case KeyEvent.VK_DELETE:             removeNode(); break;
+
+        case KeyEvent.VK_DELETE:
+        case BACKSPACE:                      removeNode(); break;
 
         case KeyEvent.VK_UP:                 moveNodeWithinLevel(-1); break;
         case KeyEvent.VK_DOWN:               moveNodeWithinLevel(+1); break;
