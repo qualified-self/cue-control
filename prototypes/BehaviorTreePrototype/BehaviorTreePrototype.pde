@@ -201,7 +201,7 @@ void keyPressed() {
           autocompleteListCurrentSelected = null;
         }
         break;
-      case DELETE:             cancelNode(); break;
+      case ESC:                cancelNode(); break;
       case BACKSPACE:          placeholderNode.backspace(); break;
       case TAB:                autocompleteNode(); break;
 
@@ -275,6 +275,11 @@ void keyPressed() {
       }
     }
   }
+
+  // Prevents ESC from closing the window.
+  // Source: https://processing.org/discourse/beta/num_1158640420.html
+  if (key == ESC)
+    key = 0;
 
 }
 
