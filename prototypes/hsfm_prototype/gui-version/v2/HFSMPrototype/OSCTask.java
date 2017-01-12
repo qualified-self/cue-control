@@ -106,12 +106,12 @@ class OSCTask extends Task {
 
   void update_ip (String ip) {
     this.ip = ip;
-    //this.broadcast = new NetAddress(ip, broadcast.port());
+    this.broadcast = new NetAddress(ip, port);
   }
 
   void update_port (int port) {
     this.port = port;
-    //this.broadcast = new NetAddress(broadcast.address(), port);
+    this.broadcast = new NetAddress(ip, port);
   }
 
   void update_message (String newMessage) {

@@ -32,7 +32,8 @@ public class State implements Serializable {
   //accordion that stores the tasks
 
   //gui elements
-  transient private PieMenu   pie;
+  //transient private PieMenu   pie;
+  transient private MultiLevelPieMenu   pie;
   transient private Accordion accordion;
   transient private Textfield label;
   transient private PApplet   p;
@@ -558,7 +559,10 @@ public class State implements Serializable {
 
   //inits gui elements related to controlP5
   void init_gui() {
-    this.pie = new PieMenu(p, x, y, size);
+    //this.pie = new PieMenu(p, x, y, size);
+    this.pie = new MultiLevelPieMenu(p);
+    this.pie.set_position(x,y);
+    this.pie.set_inner_circle_diam((float)size);
 
     //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
@@ -936,8 +940,11 @@ public class State implements Serializable {
 
     //if the mouse is pressed & the button is over a option & is not dragging
     if (p.mousePressed && selected > -1 && !is_dragging_someone) {
+      //hide_pie();
+      p.println("result is " + selected);
+      /*
       hide_pie();
-      //println(pie.options[selected] + " (option " + selected + ") selected in state " + this.name);
+      println(pie.options[selected] + " (option " + selected + ") selected in state " + this.name);
       switch(selected) {
         case 0: //StateMachine
           init_random_state_machine_task();
@@ -952,6 +959,7 @@ public class State implements Serializable {
           init_random_osc_task();
           break;
         }
+        */
     }
   }
 

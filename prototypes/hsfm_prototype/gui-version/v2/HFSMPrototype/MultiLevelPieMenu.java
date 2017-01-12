@@ -1,0 +1,246 @@
+
+/******************************************************************************
+ ******************************************************************************
+ ** MULTILAYER PIE MENU *******************************************************
+ ******************************************************************************
+ *** jeraman.info, Jan. 12 2017 ***********************************************
+ *****************************************************************************/
+
+
+import processing.core.PApplet;
+
+class MultiLevelPieMenu {
+
+  private String[] task_list       = {"Blackboard", "", "", "", "Sound", "Haptics", "Light", "OSC"};
+  private String[] light_list      = {"Enable DMX", "", "Disable DMX", "Control DMX"};
+  private String[] sound_list      = {"Enable speaker", "", "Disable speaker", "Control audio"};
+  private String[] haptics_list    = {"Enable aura", "", "Disable aura", "Control aura"};
+  private String[] blackboard_list = {"Ramp", "", "Oscillator", "Default"};
+
+  //MLP_Status status;
+
+  private PieMenu main;
+  private PieMenu light;
+  private PieMenu sound;
+  private PieMenu haptics;
+  private PieMenu blackboard;
+
+  private boolean is_opening;
+  private PApplet  p;
+
+  public MultiLevelPieMenu (PApplet p) {
+    this.p = p;
+
+    //status = MLP_Status.CLOSED;
+    is_opening = true;
+
+    main    = new PieMenu(p);
+    main.set_options(task_list);
+
+    light   =  new PieMenu(p, main.getX(), main.getY(), (int)(main.getDiam()*1.75));
+    light.set_inner_circle_diam(main.getDiam());
+    light.set_options(light_list);
+
+    sound   =  new PieMenu(p, main.getX(), main.getY(), (int)(main.getDiam()*1.75));
+    sound.set_inner_circle_diam(main.getDiam());
+    sound.set_options(sound_list);
+
+    haptics =  new PieMenu(p, main.getX(), main.getY(), (int)(main.getDiam()*1.75));
+    haptics.set_inner_circle_diam(main.getDiam());
+    haptics.set_options(haptics_list);
+
+    blackboard = new PieMenu(p, main.getX(), main.getY(), (int)(main.getDiam()*1.75));
+    blackboard.set_inner_circle_diam(main.getDiam());
+    blackboard.set_options(blackboard_list);
+  }
+
+  void setup() {
+    main.setup();
+    light.setup();
+    sound.setup();
+    haptics.setup();
+    blackboard.setup();
+
+    direct_hide_second_layer();
+  }
+
+  void draw() {
+    light.draw();
+    sound.draw();
+    haptics.draw();
+    blackboard.draw();
+
+    main.draw();
+
+    //if is showing, try to update the second layer
+    if (is_showing())
+      update_second_layer_selection();
+  }
+
+  //sets the diam of the inner circle
+  void set_inner_circle_diam (float newdiam) {
+    this.main.set_inner_circle_diam(newdiam);
+  }
+
+  boolean is_showing() {
+    return main.is_showing();
+  }
+
+  boolean is_fading_away() {
+    return main.is_fading_away();
+  }
+
+  void update_second_layer_selection () {
+
+    switch(get_main_selection()) {
+    case 7: // OSC
+      //if (mousePressed) println("hovering osc");
+      //is_opening = true;
+      break;
+    case 0: // Blackboard
+      if (p.mousePressed) show_blackboard();
+      is_opening = true;
+      break;
+    case 4: // Sound
+      if (p.mousePressed) show_sound();
+      is_opening = true;
+      break;
+    case 5: // Haptics
+      if (p.mousePressed) show_haptics();
+      is_opening = true;
+      break;
+    case 6: // Light
+      if (p.mousePressed) show_light();
+      is_opening = true;
+      break;
+    }
+  }
+
+  /*
+  int previous_choice = -1;
+
+   void draw_second_layer() {
+
+   //if the menu choice has changed, hides the menu currently showing
+   if (previous_choice!=get_selection()) {
+   hide_second_layer();
+   }
+   //update the previous
+   previous_choice = get_selection();
+
+   switch(get_selection()) {
+   case 7: // OSC
+   if (!is_opening && !main.down ) println("hovering osc");
+   //is_opening = true;
+   break;
+   case 0: // Blackboard
+   //if (status != MLP_Status.OPENING && !main.down) blackboard.show();
+   //status = MLP_Status.OPENING;
+   if (!is_opening && !main.down) blackboard.show();
+   is_opening = true;
+   break;
+   case 4: // Sound
+   if (!is_opening && !main.down) sound.show();
+   is_opening = true;
+   break;
+   case 5: // Haptics
+   if (!is_opening && !main.down) haptics.show();
+   is_opening = true;
+   break;
+   case 6: // Light
+   if (!is_opening && !main.down) light.show();
+   is_opening = true;
+   break;
+   }
+   }
+   */
+
+  void set_position (int x, int y) {
+    main.set_position(x, y);
+    light.set_position(x, y);
+    sound.set_position(x, y);
+    haptics.set_position(x, y);
+    blackboard.set_position(x, y);
+  }
+
+
+  //reimplement this according to the new structure
+  int get_main_selection() {
+    return main.get_selection();
+  }
+
+  //reimplement this according to the new structure
+  int get_selection() {
+    int result = -1;
+
+    //testing if the result is an osc message (between 0 and 9)
+    result = main.get_selection();
+    if (result != -1) return result;
+
+    //testing if selection is a sound message (between 10 and 19)
+    result = sound.get_selection();
+    if (result != -1) return result+10;
+
+    //testing if selection is a haptics message (between 20 and 29)
+    result = haptics.get_selection();
+    if (result != -1) return result+20;
+
+    //testing if selection is a light message (between 30 and 39)
+    result = light.get_selection();
+    if (result != -1) return result+30;
+
+    //testing if selection is a blackboard message (between 40 and 49)
+    result = blackboard.get_selection();
+    if (result != -1) return result+30;
+
+    p.print("result is " + result);
+
+    return result;
+  }
+
+  void show() {
+    main.show();
+  }
+
+  void show_light() {
+    light.show();
+    sound.hide();
+    haptics.hide();
+    blackboard.hide();
+  }
+
+  void show_sound() {
+    light.hide();
+    sound.show();
+    haptics.hide();
+    blackboard.hide();
+  }
+
+  void show_haptics() {
+    light.hide();
+    sound.hide();
+    haptics.show();
+    blackboard.hide();
+  }
+
+  void show_blackboard() {
+    light.hide();
+    sound.hide();
+    haptics.hide();
+    blackboard.show();
+  }
+
+  void hide() {
+    main.hide();
+    direct_hide_second_layer();
+  }
+
+  void direct_hide_second_layer() {
+    light.direct_hide();
+    sound.direct_hide();
+    haptics.direct_hide();
+    blackboard.direct_hide();
+    //status = MLP_Status.CLOSING;
+    is_opening = false;
+  }
+}

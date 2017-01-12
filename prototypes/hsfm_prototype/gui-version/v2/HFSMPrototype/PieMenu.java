@@ -1,3 +1,5 @@
+
+
 /******************************************************************************
  ******************************************************************************
  ** PIE MENU ******************************************************************
@@ -11,12 +13,13 @@ import processing.core.PApplet;
 
 class PieMenu {
 
+
   //this is the variable that stores all the possible tasks
-  static String[] task_list = {"State Machine","", "", "Set Blackboard", "Audio", "OSC"};
+  String[] task_list = {"State Machine","", "", "Set Blackboard", "Audio", "OSC"};
 
   String[] options;
-  private float    diam, textdiam, innerCircleDiam;
-  private int      selected;
+  private float  diam, textdiam, innerCircleDiam;
+  private int    selected;
   private int    background_color;
   private int    font_color;
   private int    active_color;
@@ -34,10 +37,13 @@ class PieMenu {
   public PieMenu (PApplet p) {
     this.p = p;
     this.options          = task_list;
-    //this.background_color = p.color(50, 50, 50, 100);
+
     this.background_color = p.color(25, 25, 25);
     this.active_color     = p.color(100);
     this.font_color       = p.color(255);
+    //this.background_color = color(25, 25, 25);
+    //this.active_color     = color(100);
+    //this.font_color       = color(255);
     this.x                = (int)p.width/2;
     this.y                = (int)p.height/2;
     this.set_diam(200);
@@ -51,13 +57,26 @@ class PieMenu {
   }
 
   //another constructor
-  public PieMenu (PApplet p, int x, int y, int innerCircleDiam) {
+  public PieMenu (PApplet p, int x, int y, int diam) {
     this(p);
     this.x = x;
     this.y = y;
-    this.innerCircleDiam = innerCircleDiam;
+    this.set_diam(diam);
+    //this.innerCircleDiam = innerCircleDiam;
+    //this.innerCircleDiam = diam;
   }
 
+  int getX() {
+    return x;
+  }
+
+  int getY() {
+    return y;
+  }
+
+  float getDiam() {
+    return diam;
+  }
 
   //i created this setup because of a misterious bug with the millis function
   //the first time i try to open the pie menu, it freezes for a while before proceeding
@@ -65,6 +84,10 @@ class PieMenu {
   void setup() {
     show();
     hide();
+  }
+
+  void set_options (String[] options) {
+    this.options = options;
   }
 
   //shows this pie menu
@@ -84,21 +107,18 @@ class PieMenu {
     up = false;
   }
 
+  void direct_hide() {
+    is_showing = false;
+    size = 0;
+    down = false;
+    up = false;
+  }
+
   void update_timer() {
 
     if (up) {
       //udpating the size
       size =((float)p.millis() - startTime)/(maxTime*1000);
-
-      /*
-      if (size > 2) {
-       println("WTF! ");
-       println("  millis after: " + temp);
-       println("  startTime: " + startTime);
-       println("  maxTime: " + maxTime);
-       }
-       */
-
       //if finished
       if (size > 1)
         up = false;
@@ -115,8 +135,6 @@ class PieMenu {
         is_showing = false;
       }
     }
-
-    //println(size);
   }
 
   //sets the diam and the textdiam
@@ -127,7 +145,7 @@ class PieMenu {
   }
 
   //sets the diam of the inner circle
-  void set_inner_circle_diam (int newdiam) {
+  void set_inner_circle_diam (float newdiam) {
     this.innerCircleDiam = newdiam;
   }
 
@@ -149,7 +167,13 @@ class PieMenu {
   //draws the pie menu
   void draw_menu() {
     //if it' not showing, return!
-    if (!is_showing) return;
+    if (!is_showing()) return;
+
+    //fill(0, 0, 0);
+    //ellipse(0, 0, diam+5, diam+5);
+
+    p.fill(0, 0, 0);
+    p.ellipse(0, 0, diam+5, diam+5);
 
     p.noStroke();
     p.fill(125);
@@ -173,8 +197,8 @@ class PieMenu {
         //float s = i/op-PI*0.125;
         //float e = (i+0.98)/op-PI*0.125;
         if (piTheta>= s && piTheta <= e && is_a_point_inside_the_menu(p.mouseX, p.mouseY) && (!is_a_point_inside_the_core_circle(p.mouseX, p.mouseY))) {
-            p.fill(active_color);
-            selected = i;
+          p.fill(active_color);
+          selected = i;
         } else
           p.fill(background_color);
       }
