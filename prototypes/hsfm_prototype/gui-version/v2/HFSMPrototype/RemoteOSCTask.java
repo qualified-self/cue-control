@@ -1,3 +1,13 @@
+/************************************************
+ ** Abstract Remote OSC Task ********************
+ ************************************************
+ ** customizes OSC messages to the multimedia server
+ ************************************************
+ ** jeraman.info, Jan 12 2016 ******************
+ ************************************************
+ ************************************************/
+
+
 import oscP5.*;
 import netP5.*;
 import controlP5.*;
@@ -5,30 +15,27 @@ import processing.core.PApplet;
 
 ////////////////////////////////////////
 //implementing a task for OSC messages
-class OSCTask extends Task {
+public abstract class RemoteOSCTask extends Task {
 
   //variables to store my osc connection
   // private OscP5      oscP5;
   //transient private NetAddress broadcast;
   //private OscMessage message;
-  private Object[]  content;
-  private String    message;
-  private String    ip;
-  private int       port;
+  protected Object[]  content;
+  protected String    message;
   transient private NetAddress broadcast;
   transient private OscP5      oscP5;
 
+  static String    ip   = "192.168.1.10";
+  static int       port = 12000;
+
   //contructor loading the file
-  public OSCTask (PApplet p, ControlP5 cp5, String id, String message, int port, String ip, Object[] content) {
+  public RemoteOSCTask (PApplet p, ControlP5 cp5, String id) {
     super(p, cp5, id);
-    this.message   = message;
-    this.ip        = ip;
-    this.port      = port;
-    //this.oscP5     = new OscP5(p, port+1);
-    //this.broadcast = new NetAddress(ip, port);
-    this.content   = content;
-    //this.broadcast = null;
-    //this.update_message(content);
+    //IP SHOULD BE REDEFINED HERE
+    //this.ip        =  "192.168.1.10";
+    //PORT SHOULD BE REDEFINED HERE
+    //this.port      = 12000;
     this.build(p, cp5);
   }
 
@@ -36,23 +43,14 @@ class OSCTask extends Task {
     this.p = p;
     this.cp5 = cp5;
     this.broadcast = new NetAddress(ip, port);
-    //this.oscP5     = new OscP5(p, port+1);
     this.oscP5 = HFSMPrototype.instance().oscP5();
   }
 
-  //method that returns if this OSC Task is curerntly initialized
-  OSCTask clone_it() {
-    return new OSCTask(this.p, this.cp5, this.name, this.message, this.port, this.ip, this.content);
-  }
 
   void run () {
     this.status = Status.RUNNING;
 
     OscMessage msg = create_message();
-
-    //if (broadcast==null)
-    //NetAddress broadcast = new NetAddress(ip, port);
-    //OscP5 oscP5 = HFSMPrototype.instance().oscP5();
 
     oscP5.send(msg, broadcast);
 
@@ -103,7 +101,6 @@ class OSCTask extends Task {
   void update_status() {
   }
 
-
   void update_ip (String ip) {
     this.ip = ip;
     this.broadcast = new NetAddress(ip, port);
@@ -116,11 +113,6 @@ class OSCTask extends Task {
 
   void update_message (String newMessage) {
     this.message = newMessage;
-    /*
-    cp5.remove(parent.name + " " + this.get_name());
-    set_name(newName);
-    parent.add_task_in_accordion_gui(this);
-    */
   }
 
   String build_string_from_content () {
@@ -146,6 +138,7 @@ class OSCTask extends Task {
     content=result;
   }
 
+  /*
   CallbackListener generate_callback_enter() {
     return new CallbackListener() {
           public void controlEvent(CallbackEvent theEvent) {
@@ -227,8 +220,7 @@ class OSCTask extends Task {
       .setColorBackground(c1) //color of the task
       .setBackgroundColor(c2) //color of task when openned
       .setBackgroundHeight(180)
-      //.setLabel(this.get_prefix() + "   " + this.get_name())
-      .setLabel("OSC message")
+      .setLabel(this.get_prefix() + "   " + this.get_name())
       .setHeight(12)
       ;
 
@@ -290,5 +282,6 @@ class OSCTask extends Task {
 
     return g;
   }
+  */
 
 }

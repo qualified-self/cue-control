@@ -410,7 +410,6 @@ public class State implements Serializable {
     OSCTask t = new OSCTask(p, cp5, taskname, "/test/value", 12000, "localhost", new Object[]{0, 12});
     this.add_task(t);
     //println(selected + " " + pie.options[selected]);
-
   }
 
   //method that initializes a random demo audio task
@@ -436,6 +435,79 @@ public class State implements Serializable {
     this.add_task(t);
     //println(selected + " " + pie.options[selected]);
   }
+
+  /////////////////////////////
+  // special remote tasks
+  void init_start_audio_task() {
+    String taskname = generate_random_name();
+    StartRemoteSoundTask t = new StartRemoteSoundTask(p, cp5, taskname);
+    this.add_task(t);
+  }
+
+  void init_control_audio_task() {
+    String taskname = generate_random_name();
+    ControlRemoteSoundTask t = new ControlRemoteSoundTask(p, cp5, taskname);
+    this.add_task(t);
+  }
+
+  void init_stop_audio_task() {
+    String taskname = generate_random_name();
+    StopRemoteSoundTask t = new StopRemoteSoundTask(p, cp5, taskname);
+    this.add_task(t);
+  }
+
+  void init_start_aura_task() {
+    String taskname = generate_random_name();
+    StartRemoteAuraTask t = new StartRemoteAuraTask(p, cp5, taskname);
+    this.add_task(t);
+  }
+
+  void init_control_aura_task() {
+    String taskname = generate_random_name();
+    ControlRemoteAuraTask t = new ControlRemoteAuraTask(p, cp5, taskname);
+    this.add_task(t);
+  }
+
+  void init_stop_aura_task() {
+    String taskname = generate_random_name();
+    StopRemoteAuraTask t = new StopRemoteAuraTask(p, cp5, taskname);
+    this.add_task(t);
+  }
+
+  void init_start_dmx_task() {
+    String taskname = generate_random_name();
+    StartRemoteDMXTask t = new StartRemoteDMXTask(p, cp5, taskname);
+    this.add_task(t);
+  }
+
+  void init_control_dmx_task() {
+    String taskname = generate_random_name();
+    ControlRemoteDMXTask t = new ControlRemoteDMXTask(p, cp5, taskname);
+    this.add_task(t);
+  }
+
+  void init_stop_dmx_task() {
+    String taskname = generate_random_name();
+    StopRemoteDMXTask t = new StopRemoteDMXTask(p, cp5, taskname);
+    this.add_task(t);
+  }
+
+  //method that initializes a random demo osc task
+  void init_osc_task () {
+    String taskname = generate_random_name();
+    OSCTask t = new OSCTask(p, cp5, taskname, "/test/value", RemoteOSCTask.port, RemoteOSCTask.ip, new Object[]{0});
+    this.add_task(t);
+    //println(selected + " " + pie.options[selected]);
+  }
+
+  //method that initializes a random demo set balckboard task
+  void init_set_blackboard_task () {
+    String taskname = generate_random_name();
+    SetBBTask t = new SetBBTask(p, cp5, taskname, 0);
+    this.add_task(t);
+    //println(selected + " " + pie.options[selected]);
+  }
+
 
   int get_number_of_connections() {
     return connections.size();
@@ -940,8 +1012,55 @@ public class State implements Serializable {
 
     //if the mouse is pressed & the button is over a option & is not dragging
     if (p.mousePressed && selected > -1 && !is_dragging_someone) {
-      //hide_pie();
-      p.println("result is " + selected);
+      p.println("state receive " + selected + " as a result");
+
+      switch(selected) {
+        case 0:
+          init_random_set_blackboard_task();
+          hide_pie();
+          break;
+        case 7:
+          init_osc_task();
+          hide_pie();
+          break;
+        case 12:
+          init_start_audio_task();
+          hide_pie();
+          break;
+        case 13:
+          init_control_audio_task();
+          hide_pie();
+          break;
+        case 10:
+          init_stop_audio_task();
+          hide_pie();
+          break;
+        case 22:
+          init_start_aura_task();
+          hide_pie();
+          break;
+        case 23:
+          init_control_aura_task();
+          hide_pie();
+          break;
+        case 20:
+          init_stop_aura_task();
+          hide_pie();
+          break;
+        case 32:
+          init_start_dmx_task();
+          hide_pie();
+          break;
+        case 33:
+          init_control_dmx_task();
+          hide_pie();
+          break;
+        case 30:
+          init_stop_dmx_task();
+          hide_pie();
+          break;
+      }
+
       /*
       hide_pie();
       println(pie.options[selected] + " (option " + selected + ") selected in state " + this.name);

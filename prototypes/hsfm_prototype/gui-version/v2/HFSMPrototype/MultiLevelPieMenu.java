@@ -12,10 +12,10 @@ import processing.core.PApplet;
 class MultiLevelPieMenu {
 
   private String[] task_list       = {"Blackboard", "", "", "", "Sound", "Haptics", "Light", "OSC"};
-  private String[] light_list      = {"Enable DMX", "", "Disable DMX", "Control DMX"};
-  private String[] sound_list      = {"Enable speaker", "", "Disable speaker", "Control audio"};
-  private String[] haptics_list    = {"Enable aura", "", "Disable aura", "Control aura"};
-  private String[] blackboard_list = {"Ramp", "", "Oscillator", "Default"};
+  private String[] light_list      = {"Stop DMX", "", "Start DMX", "Control DMX"};
+  private String[] sound_list      = {"Stop audio", "", "Start audio", "Control audio"};
+  private String[] haptics_list    = {"Stop aura", "", "Start aura", "Control aura"};
+  private String[] blackboard_list = {"Default", "", "Oscillator", "Ramp"};
 
   //MLP_Status status;
 
@@ -98,8 +98,8 @@ class MultiLevelPieMenu {
       //is_opening = true;
       break;
     case 0: // Blackboard
-      if (p.mousePressed) show_blackboard();
-      is_opening = true;
+      //if (p.mousePressed) show_blackboard();
+      //is_opening = true;
       break;
     case 4: // Sound
       if (p.mousePressed) show_sound();
@@ -177,9 +177,14 @@ class MultiLevelPieMenu {
     result = main.get_selection();
     if (result != -1) return result;
 
+    p.println("a) result is " + result);
+
     //testing if selection is a sound message (between 10 and 19)
     result = sound.get_selection();
+
     if (result != -1) return result+10;
+
+    p.println("b) result is " + result);
 
     //testing if selection is a haptics message (between 20 and 29)
     result = haptics.get_selection();
@@ -193,8 +198,6 @@ class MultiLevelPieMenu {
     result = blackboard.get_selection();
     if (result != -1) return result+30;
 
-    p.print("result is " + result);
-
     return result;
   }
 
@@ -203,24 +206,24 @@ class MultiLevelPieMenu {
   }
 
   void show_light() {
-    light.show();
     sound.hide();
     haptics.hide();
     blackboard.hide();
+    light.show();
   }
 
   void show_sound() {
     light.hide();
-    sound.show();
     haptics.hide();
     blackboard.hide();
+    sound.show();
   }
 
   void show_haptics() {
     light.hide();
     sound.hide();
-    haptics.show();
     blackboard.hide();
+    haptics.show();
   }
 
   void show_blackboard() {

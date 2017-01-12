@@ -15,7 +15,7 @@ class PieMenu {
 
 
   //this is the variable that stores all the possible tasks
-  String[] task_list = {"State Machine","", "", "Set Blackboard", "Audio", "OSC"};
+  //String[] task_list = {"State Machine","", "", "Set Blackboard", "Audio", "OSC"};
 
   String[] options;
   private float  diam, textdiam, innerCircleDiam;
@@ -36,7 +36,7 @@ class PieMenu {
   //basic constructor
   public PieMenu (PApplet p) {
     this.p = p;
-    this.options          = task_list;
+    //this.options          = task_list;
 
     this.background_color = p.color(25, 25, 25);
     this.active_color     = p.color(100);
@@ -105,6 +105,7 @@ class PieMenu {
     size = 1;
     down = true;
     up = false;
+    selected = -1;
   }
 
   void direct_hide() {
@@ -112,6 +113,7 @@ class PieMenu {
     size = 0;
     down = false;
     up = false;
+    selected = -1;
   }
 
   void update_timer() {

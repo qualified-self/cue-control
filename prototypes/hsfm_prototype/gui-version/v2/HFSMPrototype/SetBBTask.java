@@ -119,7 +119,7 @@ class SetBBTask extends Task {
       .setColorBackground(c1) //color of the task
       .setBackgroundColor(c2) //color of task when openned
       .setBackgroundHeight(90)
-      .setLabel(this.get_prefix() + "   " + this.get_name())
+      .setLabel("Blackboard variable")
       .setHeight(12)
     ;
 
