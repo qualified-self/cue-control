@@ -120,6 +120,22 @@ public abstract class Task implements Serializable {
     return ret;
   }
 
+  //check if this task should be executed repeatedly or only once
+  boolean should_run () {
+
+    boolean result = true;
+    //checkes if this should be executed only once
+    if (!repeat) {
+      //if this is the first time, go on
+      if (first_time) first_time = false;
+      //if it's not the first time, do not execute anything
+      else result = false;
+    }
+
+    return result;
+  }
+
+  //these method should be reimplemented
   abstract void run();
   abstract void build(PApplet p, ControlP5 cp5);
   abstract void update_status();
@@ -155,7 +171,7 @@ public abstract class Task implements Serializable {
   }
 
   //abstract CallbackListener generate_callback_leave(){}
-  //abstract CallbackListener generate_callback_enter(){}
+  abstract CallbackListener generate_callback_enter();
   //Group load_gui_elements(State s) { return null; }
   abstract Group load_gui_elements(State s);
 

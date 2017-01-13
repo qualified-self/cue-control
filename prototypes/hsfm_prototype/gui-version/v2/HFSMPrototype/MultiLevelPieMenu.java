@@ -15,7 +15,7 @@ class MultiLevelPieMenu {
   private String[] light_list      = {"Stop DMX", "", "Start DMX", "Control DMX"};
   private String[] sound_list      = {"Stop audio", "", "Start audio", "Control audio"};
   private String[] haptics_list    = {"Stop aura", "", "Start aura", "Control aura"};
-  private String[] blackboard_list = {"Default", "", "Oscillator", "Ramp"};
+  private String[] blackboard_list = {"Random", "", "Oscillator", "Ramp"};
 
   //MLP_Status status;
 
@@ -99,8 +99,8 @@ class MultiLevelPieMenu {
       //is_opening = true;
       break;
     case 0: // Blackboard
-      //if (p.mousePressed) show_blackboard();
-      //is_opening = true;
+      if (p.mousePressed) show_blackboard();
+      is_opening = true;
       break;
     case 4: // Sound
       if (p.mousePressed) show_sound();
@@ -116,45 +116,6 @@ class MultiLevelPieMenu {
       break;
     }
   }
-
-  /*
-  int previous_choice = -1;
-
-   void draw_second_layer() {
-
-   //if the menu choice has changed, hides the menu currently showing
-   if (previous_choice!=get_selection()) {
-   hide_second_layer();
-   }
-   //update the previous
-   previous_choice = get_selection();
-
-   switch(get_selection()) {
-   case 7: // OSC
-   if (!is_opening && !main.down ) println("hovering osc");
-   //is_opening = true;
-   break;
-   case 0: // Blackboard
-   //if (status != MLP_Status.OPENING && !main.down) blackboard.show();
-   //status = MLP_Status.OPENING;
-   if (!is_opening && !main.down) blackboard.show();
-   is_opening = true;
-   break;
-   case 4: // Sound
-   if (!is_opening && !main.down) sound.show();
-   is_opening = true;
-   break;
-   case 5: // Haptics
-   if (!is_opening && !main.down) haptics.show();
-   is_opening = true;
-   break;
-   case 6: // Light
-   if (!is_opening && !main.down) light.show();
-   is_opening = true;
-   break;
-   }
-   }
-   */
 
   void set_position (int x, int y) {
     main.set_position(x, y);
@@ -197,7 +158,7 @@ class MultiLevelPieMenu {
 
     //testing if selection is a blackboard message (between 40 and 49)
     result = blackboard.get_selection();
-    if (result != -1) return result+30;
+    if (result != -1) return result+40;
 
     return result;
   }

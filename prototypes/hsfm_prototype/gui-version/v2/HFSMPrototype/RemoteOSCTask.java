@@ -48,13 +48,7 @@ public abstract class RemoteOSCTask extends Task {
   }
 
   void run () {
-    //checkes if this should be executed only once
-    if (!repeat) {
-      //if this is the first time, go on
-      if (first_time) first_time = false;
-      //if it's not the first time, do not execute anything
-      else return;
-    }
+    if (!should_run()) return;
 
     this.status = Status.RUNNING;
 

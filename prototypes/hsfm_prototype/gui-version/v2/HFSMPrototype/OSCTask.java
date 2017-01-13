@@ -46,6 +46,8 @@ class OSCTask extends Task {
   }
 
   void run () {
+    if (!should_run()) return;
+
     this.status = Status.RUNNING;
 
     OscMessage msg = create_message();
@@ -146,68 +148,6 @@ class OSCTask extends Task {
     content=result;
   }
 
-  CallbackListener generate_callback_enter() {
-    return new CallbackListener() {
-          public void controlEvent(CallbackEvent theEvent) {
-
-            String s = theEvent.getController().getName();
-
-            if (s.equals(get_gui_id() + "/ip")) {
-                String text = theEvent.getController().getValueLabel().getText();
-                update_ip(text);
-                //System.out.println(s + " " + text);
-            }
-            if (s.equals(get_gui_id() + "/port")) {
-                int newport = (int)theEvent.getController().getValue();
-                update_port(newport);
-                //System.out.println(s + " " + newport);
-            }
-            if (s.equals(get_gui_id() + "/message")) {
-                String text = theEvent.getController().getValueLabel().getText();
-                update_message(text);
-                //System.out.println(s + " " + text);
-            }
-
-            if (s.equals(get_gui_id() + "/parameters")) {
-                String text = theEvent.getController().getValueLabel().getText();
-                update_content_from_string(text);
-                //System.out.println(s + " " + text);
-            }
-          }
-    };
-  }
-
-  CallbackListener generate_callback_leave() {
-    return new CallbackListener() {
-          public void controlEvent(CallbackEvent theEvent) {
-
-            String s = theEvent.getController().getName();
-
-            String newtext = theEvent.getController().getValueLabel().getText();
-            String oldtext = "";
-
-            if (s.equals(get_gui_id() + "/ip"))
-              oldtext = ip;
-            //else if (s.equals(get_gui_id() + "/port"))
-            //  oldtext = broadcast.port()+"";
-            else if (s.equals(get_gui_id() + "/message"))
-              oldtext = message;
-            else if (s.equals(get_gui_id() + "/parameters"))
-              oldtext = build_string_from_content();
-            else  return;
-
-            //if the user tried to change but did not press enter
-            if (!newtext.replace(" ", "").equals(oldtext)) {
-              //resets the test for the original
-              //ControlP5 cp5 = HFSMPrototype.instance().cp5();
-              Textfield t = (Textfield)cp5.get(s);
-              t.setText(oldtext);
-            }
-
-          }
-    };
-  }
-
   Group load_gui_elements(State s) {
     //do we really need this?
     //this.parent = s;
@@ -226,7 +166,7 @@ class OSCTask extends Task {
     Group g = cp5.addGroup(g_name)
       .setColorBackground(c1) //color of the task
       .setBackgroundColor(c2) //color of task when openned
-      .setBackgroundHeight(180)
+      .setBackgroundHeight(220)
       //.setLabel(this.get_prefix() + "   " + this.get_name())
       .setLabel("OSC message")
       .setHeight(12)
@@ -288,7 +228,75 @@ class OSCTask extends Task {
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
       ;
 
+    create_gui_toggle(localx, localy+(4*localoffset), w, g, cb_enter);
+
     return g;
+  }
+
+  CallbackListener generate_callback_enter() {
+    return new CallbackListener() {
+          public void controlEvent(CallbackEvent theEvent) {
+
+            String s = theEvent.getController().getName();
+
+            if (s.equals(get_gui_id() + "/ip")) {
+                String text = theEvent.getController().getValueLabel().getText();
+                update_ip(text);
+                //System.out.println(s + " " + text);
+            }
+            if (s.equals(get_gui_id() + "/port")) {
+                int newport = (int)theEvent.getController().getValue();
+                update_port(newport);
+                //System.out.println(s + " " + newport);
+            }
+            if (s.equals(get_gui_id() + "/message")) {
+                String text = theEvent.getController().getValueLabel().getText();
+                update_message(text);
+                //System.out.println(s + " " + text);
+            }
+
+            if (s.equals(get_gui_id() + "/parameters")) {
+                String text = theEvent.getController().getValueLabel().getText();
+                update_content_from_string(text);
+                //System.out.println(s + " " + text);
+            }
+
+            check_repeat_toggle(s, theEvent);
+          }
+
+
+    };
+  }
+
+  CallbackListener generate_callback_leave() {
+    return new CallbackListener() {
+          public void controlEvent(CallbackEvent theEvent) {
+
+            String s = theEvent.getController().getName();
+
+            String newtext = theEvent.getController().getValueLabel().getText();
+            String oldtext = "";
+
+            if (s.equals(get_gui_id() + "/ip"))
+              oldtext = ip;
+            //else if (s.equals(get_gui_id() + "/port"))
+            //  oldtext = broadcast.port()+"";
+            else if (s.equals(get_gui_id() + "/message"))
+              oldtext = message;
+            else if (s.equals(get_gui_id() + "/parameters"))
+              oldtext = build_string_from_content();
+            else  return;
+
+            //if the user tried to change but did not press enter
+            if (!newtext.replace(" ", "").equals(oldtext)) {
+              //resets the test for the original
+              //ControlP5 cp5 = HFSMPrototype.instance().cp5();
+              Textfield t = (Textfield)cp5.get(s);
+              t.setText(oldtext);
+            }
+
+          }
+    };
   }
 
 }

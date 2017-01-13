@@ -36,6 +36,8 @@ class SetBBTask extends Task {
   }
 
   void run() {
+    if (!should_run()) return;
+
     Blackboard board = HFSMPrototype.instance().board();
     this.status = Status.RUNNING;
     board.put(variableName, evaluate_value(value));
@@ -57,52 +59,7 @@ class SetBBTask extends Task {
   void update_status() {
   }
 
-  CallbackListener generate_callback_enter() {
-    return new CallbackListener() {
-        public void controlEvent(CallbackEvent theEvent) {
 
-          String s = theEvent.getController().getName();
-          //println(s + " was entered");
-
-          if (s.equals(get_gui_id() + "/name")) {
-              String text = theEvent.getController().getValueLabel().getText();
-              update_variable_name(text);
-              System.out.println(s + " " + text);
-          }
-          if (s.equals(get_gui_id() + "/value")) {
-              String newvalue = theEvent.getController().getValueLabel().getText();
-              update_value(new Expression(newvalue));
-              System.out.println(s + " " + newvalue);
-          }
-        }
-    };
-  }
-
-    CallbackListener generate_callback_leave() {
-      return new CallbackListener() {
-        public void controlEvent(CallbackEvent theEvent) {
-
-          String s = theEvent.getController().getName();
-
-          String newtext = theEvent.getController().getValueLabel().getText();
-          String oldtext = "";
-
-          if (s.equals(get_gui_id() + "/name"))
-            oldtext = variableName;
-          else if (s.equals(get_gui_id() + "/value"))
-            oldtext = value.toString();
-          else  return;
-
-          //if the user tried to change but did not press enter
-          if (!newtext.replace(" ", "").equals(oldtext)) {
-            //resets the test for the original
-            //ControlP5 cp5 = HFSMPrototype.instance().cp5();
-            Textfield t = (Textfield)cp5.get(s);
-            t.setText(oldtext);
-          }
-        }
-      };
-  }
 
   Group load_gui_elements(State s) {
     //PApplet p = HFSMPrototype.instance();
@@ -118,7 +75,7 @@ class SetBBTask extends Task {
     Group g = cp5.addGroup(g_name)
       .setColorBackground(c1) //color of the task
       .setBackgroundColor(c2) //color of task when openned
-      .setBackgroundHeight(90)
+      .setBackgroundHeight(150)
       .setLabel("Blackboard variable")
       .setHeight(12)
     ;
@@ -152,7 +109,58 @@ class SetBBTask extends Task {
     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
     ;
 
+    create_gui_toggle(localx, localy+(2*localoffset), w, g, cb_enter);
+
     return g;
+  }
+
+  CallbackListener generate_callback_enter() {
+    return new CallbackListener() {
+        public void controlEvent(CallbackEvent theEvent) {
+
+          String s = theEvent.getController().getName();
+          //println(s + " was entered");
+
+          if (s.equals(get_gui_id() + "/name")) {
+              String text = theEvent.getController().getValueLabel().getText();
+              update_variable_name(text);
+              System.out.println(s + " " + text);
+          }
+          if (s.equals(get_gui_id() + "/value")) {
+              String newvalue = theEvent.getController().getValueLabel().getText();
+              update_value(new Expression(newvalue));
+              System.out.println(s + " " + newvalue);
+          }
+
+          check_repeat_toggle(s, theEvent);
+        }
+    };
+  }
+
+    CallbackListener generate_callback_leave() {
+      return new CallbackListener() {
+        public void controlEvent(CallbackEvent theEvent) {
+
+          String s = theEvent.getController().getName();
+
+          String newtext = theEvent.getController().getValueLabel().getText();
+          String oldtext = "";
+
+          if (s.equals(get_gui_id() + "/name"))
+            oldtext = variableName;
+          else if (s.equals(get_gui_id() + "/value"))
+            oldtext = value.toString();
+          else  return;
+
+          //if the user tried to change but did not press enter
+          if (!newtext.replace(" ", "").equals(oldtext)) {
+            //resets the test for the original
+            //ControlP5 cp5 = HFSMPrototype.instance().cp5();
+            Textfield t = (Textfield)cp5.get(s);
+            t.setText(oldtext);
+          }
+        }
+      };
   }
 
 }

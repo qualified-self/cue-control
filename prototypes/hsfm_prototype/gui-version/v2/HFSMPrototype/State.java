@@ -508,6 +508,30 @@ public class State implements Serializable {
     //println(selected + " " + pie.options[selected]);
   }
 
+  //method that initializes a random osc balckboard var
+  void init_bb_osc_task () {
+    String taskname = generate_random_name();
+    SetBBOscillatorTask t = new SetBBOscillatorTask(p, cp5);
+    this.add_task(t);
+    //println(selected + " " + pie.options[selected]);
+  }
+
+  //method that initializes a random balckboard var
+  void init_bb_rand_task () {
+    String taskname = generate_random_name();
+    SetBBRandomTask t = new SetBBRandomTask(p, cp5);
+    this.add_task(t);
+    //println(selected + " " + pie.options[selected]);
+  }
+
+  //method that initializes a ramp balckboard var
+  void init_bb_ramp_task () {
+    String taskname = generate_random_name();
+    SetBBRampTask t = new SetBBRampTask(p, cp5);
+    this.add_task(t);
+    //println(selected + " " + pie.options[selected]);
+  }
+
 
   int get_number_of_connections() {
     return connections.size();
@@ -1017,10 +1041,10 @@ public class State implements Serializable {
       p.println("state receive " + selected + " as a result");
 
       switch(selected) {
-        case 0:
-          init_random_set_blackboard_task();
-          hide_pie();
-          break;
+        //case 0:
+        //  init_random_set_blackboard_task();
+        //  hide_pie();
+        //  break;
         case 7:
           init_osc_task();
           hide_pie();
@@ -1059,6 +1083,18 @@ public class State implements Serializable {
           break;
         case 30:
           init_stop_dmx_task();
+          hide_pie();
+          break;
+        case 42:
+          init_bb_osc_task();
+          hide_pie();
+          break;
+        case 43:
+          init_bb_ramp_task();
+          hide_pie();
+          break;
+        case 40:
+          init_bb_rand_task();
           hide_pie();
           break;
       }

@@ -147,9 +147,21 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
     draw_header_gui();
     int i=0;
     for (ConcurrentHashMap.Entry<String, Object> element : entrySet()) {
-      drawItem(element, x, y+(myheight*(i+1))+i+1, mywidth, myheight);
-      i++;
+      if (!blacklisted(element)) {
+        drawItem(element, x, y+(myheight*(i+1))+i+1, mywidth, myheight);
+        i++;
+      }
     }
+  }
+
+  //list of memory items that should not be displyed to the use
+  boolean blacklisted(ConcurrentHashMap.Entry<String, Object> element) {
+    String varname = element.getKey().toString();
+    if ((varname.contains("frequency") && varname.length() > 25)||
+        (varname.contains("amplitude") && varname.length() > 25))
+        //add a new item here
+        return false;//true;
+    else return false;
   }
 
 
@@ -169,7 +181,7 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
     p.textAlign(p.CENTER, p.CENTER);
     String type_name = element.getValue().getClass().getName();
     Object value     = element.getValue();
-    String value_string = value.toString();;
+    String value_string = value.toString();
 
     //in case it's a float, only exhibits two decimal points.
     if (value instanceof Float) value_string = round((float)value, 2).toString();
