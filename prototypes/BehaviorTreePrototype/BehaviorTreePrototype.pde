@@ -401,14 +401,12 @@ void autocompleteNode() {
 }
 
 void changeSelectedDropdown(int move) {
-  println("changeleefadfd");
   ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getDescription(), placeholderNode.isDecorator());
   if (autocompleteListCurrentSelected == null && autocompleteOptions.size() > 0)
     autocompleteListCurrentSelected = autocompleteOptions.get(0);
   else
   {
     int index = autocompleteOptions.indexOf(autocompleteListCurrentSelected);
-    println("index:" + index);
     if (index >= 0)
     {
       index = constrain(index +  move, 0, autocompleteOptions.size()-1);
