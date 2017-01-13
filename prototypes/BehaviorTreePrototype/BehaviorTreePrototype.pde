@@ -394,10 +394,10 @@ void removeNode() {
   }
 }
 
+
 void autocompleteNode() {
   ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getDescription(), placeholderNode.isDecorator());
-  if (autocompleteOptions.size() == 1)
-    placeholderNode.assign(autocompleteOptions.get(0));
+  placeholderNode.assign(getLongestCommonPrefix(autocompleteOptions));
 }
 
 void changeSelectedDropdown(int move) {
@@ -478,4 +478,24 @@ private static BehaviorTreePrototype inst;
 
 public static BehaviorTreePrototype instance() {
   return inst;
+}
+
+// Source: http://codereview.stackexchange.com/questions/84523/finding-the-common-prefix-in-a-list-of-strings
+public static String getLongestCommonPrefix(ArrayList<String> strings) {
+    int commonPrefixLength = 0;
+    while (allCharactersAreSame(strings, commonPrefixLength)) {
+        commonPrefixLength++;
+    }
+    return strings.get(0).substring(0, commonPrefixLength);
+}
+
+private static boolean allCharactersAreSame(ArrayList<String> strings, int pos) {
+    String first = strings.get(0);
+    for (String curString : strings) {
+        if (curString.length() <= pos
+                || curString.charAt(pos) != first.charAt(pos)) {
+            return false;
+        }
+    }
+    return true;
 }

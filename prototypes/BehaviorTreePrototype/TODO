@@ -1,6 +1,6 @@
 High priority:
 [ ] CTRL-DEL is not working
-[ ] Tab in autocomplete should complete common prefixes
+[x] Tab in autocomplete should complete common prefixes
 [x] Autocomplete list should be selectable using arrows (and/or mouse)
 [x] Allow erasing the root node (all of this would be highly facilitated by simply adding a RootNode that takes a single child).
 [ ] Add a help button
