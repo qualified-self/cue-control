@@ -16,12 +16,21 @@ import processing.core.PApplet;
 //implementing a task for OSC messages
 public class ControlRemoteSoundTask extends RemoteOSCTask {
 
+  String filename;
+  Object  volume;
+  Object  pan;
+
   //contructor loading the file
   public ControlRemoteSoundTask (PApplet p, ControlP5 cp5, String id) {
     super(p, cp5, id);
 
-    this.content = new Object[] {0.5};
-    this.message = "/speaker/amp/0";
+    this.message  = "/speaker/control";
+    this.filename = "example.mp3";
+    this.volume   = new Expression("0.0");
+    this.pan      = new Expression("0.5");
+
+    update_content();
+    //this.content  = new Object[] {this.filename, this.volume, this.pan};
 
     //this.build(p, cp5);
   }
@@ -30,14 +39,34 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
     return new ControlRemoteSoundTask(this.p, this.cp5, this.name);
   }
 
+  void update_name(String name) {
+    this.filename = name;
+    update_content();
+  }
+
+  void update_volume(String vol) {
+    this.volume = new Expression(vol);
+    update_content ();
+  }
+
+  void update_pan(String pn) {
+    this.pan = new Expression(pn);
+    update_content ();
+  }
+
+  void update_content () {
+    this.content  = new Object[] {this.filename, this.volume, this.pan};
+  }
+
 
   //UI config
   Group load_gui_elements(State s) {
 
-    //CallbackListener cb_enter = generate_callback_enter();
+    CallbackListener cb_enter = generate_callback_enter();
     //CallbackListener cb_leave = generate_callback_leave();
 
-    this.set_gui_id(s.get_name() + " " + this.get_name());
+    //this.set_gui_id(s.get_name() + " " + this.get_name());
+    //p.println("name: " + this.get_gui_id() + " task: " + this.getClass());
     String g_name = this.get_gui_id();
 
     //ControlP5 cp5 = HFSMPrototype.instance().cp5();
@@ -45,16 +74,14 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
     Group g = cp5.addGroup(g_name)
     //.setPosition(x, y) //change that?
     .setHeight(12)
-    .setBackgroundHeight(50)
+    .setBackgroundHeight(180)
     .setColorBackground(p.color(255, 50)) //color of the task
     .setBackgroundColor(p.color(255, 25)) //color of task when openned
     .setLabel("Control audio")
     ;
 
-
     g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 
-    /*
     int localx = 10, localy = 15, localoffset = 40;
     int w = g.getWidth()-10;
 
@@ -65,25 +92,11 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
       .setAutoClear(false)
       .setLabel("filename")
       .setText(this.filename)
+      .align(ControlP5.CENTER, ControlP5.CENTER,ControlP5.CENTER, ControlP5.CENTER)
       .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
+      .onReleaseOutside(cb_enter)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
     ;
-
-    /*
-    // add a vertical slider
-    cp5.addSlider(g_name+ "/volume")
-      .setPosition(localx, localy+localoffset)
-      .setSize(w, 15)
-      .setRange(0, 1)
-      .setGroup(g)
-      .setValue(1)
-      .setLabel("volume")
-      .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
-      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
-    ;
-
 
     cp5.addTextfield(g_name+ "/volume")
       .setPosition(localx, localy+localoffset)
@@ -93,14 +106,64 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
       .setLabel("volume")
       .setText(this.volume+"")
       .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
+      .onReleaseOutside(cb_enter)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
       ;
-    */
+
+      cp5.addTextfield(g_name+ "/pan")
+        .setPosition(localx, localy+(2*localoffset))
+        .setSize(w, 15)
+        .setGroup(g)
+        .setAutoClear(false)
+        .setLabel("pan")
+        .setText(this.pan+"")
+        .onChange(cb_enter)
+        .onReleaseOutside(cb_enter)
+        .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
+        ;
+
+    create_gui_toggle(localx, localy+(3*localoffset), w, g, cb_enter);
 
     return g;
   }
 
+
+  CallbackListener generate_callback_enter() {
+    return new CallbackListener() {
+          public void controlEvent(CallbackEvent theEvent) {
+
+            String s = theEvent.getController().getName();
+
+            if (s.equals(get_gui_id() + "/filename")) {
+                String nv = theEvent.getController().getValueLabel().getText();
+                update_name(nv);
+                System.out.println(s + " " + nv);
+            }
+
+            if (s.equals(get_gui_id() + "/volume")) {
+                String nv = theEvent.getController().getValueLabel().getText();
+                if (nv.trim().equals("")) {
+                  nv="0.0";
+                  ((Textfield)cp5.get(get_gui_id()+ "/volume")).setText(nv);
+                }
+                update_volume(nv);
+                //System.out.println(s + " " + nv);
+            }
+
+            if (s.equals(get_gui_id() + "/pan")) {
+                String nv = theEvent.getController().getValueLabel().getText();
+                if (nv.trim().equals("")) {
+                  nv="0.0";
+                  ((Textfield)cp5.get(get_gui_id()+ "/pan")).setText(nv);
+                }
+                update_pan(nv);
+
+            }
+
+            check_repeat_toggle(s, theEvent);
+          }
+    };
+  }
 
 
 

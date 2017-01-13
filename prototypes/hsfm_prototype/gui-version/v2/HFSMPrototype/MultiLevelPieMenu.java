@@ -65,6 +65,7 @@ class MultiLevelPieMenu {
   }
 
   void draw() {
+    p.noStroke();
     light.draw();
     sound.draw();
     haptics.draw();

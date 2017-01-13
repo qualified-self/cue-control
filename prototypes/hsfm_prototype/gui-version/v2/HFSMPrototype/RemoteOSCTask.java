@@ -21,12 +21,13 @@ public abstract class RemoteOSCTask extends Task {
   // private OscP5      oscP5;
   //transient private NetAddress broadcast;
   //private OscMessage message;
-  protected Object[]  content;
-  protected String    message;
-  transient private NetAddress broadcast;
-  transient private OscP5      oscP5;
+  protected Object[]    content;
+  protected String      message;
+  transient protected NetAddress broadcast;
+  transient protected OscP5      oscP5;
 
-  static String    ip   = "192.168.1.10";
+  //static String    ip   = "192.168.1.10";
+  static String    ip   = "localhost";
   static int       port = 12000;
 
   //contructor loading the file
@@ -46,8 +47,15 @@ public abstract class RemoteOSCTask extends Task {
     this.oscP5 = HFSMPrototype.instance().oscP5();
   }
 
-
   void run () {
+    //checkes if this should be executed only once
+    if (!repeat) {
+      //if this is the first time, go on
+      if (first_time) first_time = false;
+      //if it's not the first time, do not execute anything
+      else return;
+    }
+
     this.status = Status.RUNNING;
 
     OscMessage msg = create_message();

@@ -112,7 +112,7 @@ class SetBBTask extends Task {
     int c1 = p.color(255, 50);
     int c2 = p.color(255, 25);
 
-		this.set_gui_id(s.get_name() + " " + this.get_name());
+		//this.set_gui_id(s.get_name() + " " + this.get_name());
 		String g_name = this.get_gui_id();
 
     Group g = cp5.addGroup(g_name)

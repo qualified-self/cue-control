@@ -400,7 +400,7 @@ public class State implements Serializable {
 
   //method that generates a random name for the demo task
   String generate_random_name() {
-    return ("/" + this.name + "/exmpl/"+((int)p.random(-100, 100)));
+    return ("/" + this.name + ((int)p.random(-100, 100)));
   }
 
 
@@ -754,7 +754,9 @@ public class State implements Serializable {
     //looks for the group
     //Group g = cp5.get(Group.class, this.name + " " + t.get_name());
     //removes this task from the accordion
-    cp5.getGroup(this.name + " " + t.get_name()).remove();
+    p.println("removing task " + t.get_gui_id());
+    cp5.getGroup(t.get_gui_id()).remove();
+    //cp5.getGroup(this.name + " " + t.get_name()).remove();
   }
 
   //draws the status of this state
@@ -1090,7 +1092,7 @@ public class State implements Serializable {
     //iterates of all tasks related to this state
     for (Task t : tasks) {
       //gets the group related to this task
-      Group g = cp5.get(Group.class, this.name + " " + t.get_name());
+      Group g = cp5.get(Group.class, t.get_gui_id());
 
       if (g==null) {
         p.println("g==null");

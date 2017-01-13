@@ -198,7 +198,7 @@ class AudioTask extends Task {
     CallbackListener cb_enter = generate_callback_enter();
     CallbackListener cb_leave = generate_callback_leave();
 
-    this.set_gui_id(s.get_name() + " " + this.get_name());
+    //this.set_gui_id(s.get_name() + " " + this.get_name());
     String g_name = this.get_gui_id();
 
     //ControlP5 cp5 = HFSMPrototype.instance().cp5();

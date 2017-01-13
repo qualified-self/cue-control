@@ -219,7 +219,7 @@ class OSCTask extends Task {
     CallbackListener cb_enter = generate_callback_enter();
     CallbackListener cb_leave = generate_callback_leave();
 
-    this.set_gui_id(s.get_name() + " " + this.get_name());
+    //this.set_gui_id(s.get_name() + " " + this.get_name());
     String g_name = this.get_gui_id();
 
     //creates the group

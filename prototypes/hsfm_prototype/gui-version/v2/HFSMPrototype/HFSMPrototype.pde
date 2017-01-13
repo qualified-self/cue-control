@@ -26,10 +26,23 @@ void setup() {
   board  = new Blackboard(this);
   canvas = new MainCanvas(this, cp5);
 
+  setup_expression_loading_bug();
+
   textSize(cp5.getFont().getSize());
   textFont(cp5.getFont().getFont());
 
   is_loading = false;
+}
+
+//solves the freezing problem when loading the first expression
+void setup_expression_loading_bug() {
+  Expression test = new Expression("0");
+  try {
+    ((Expression)test).eval(board);
+  }
+  catch (ScriptException e) {
+    System.out.println("ScriptExpression thrown, unhandled update.");
+  }
 }
 
 void draw() {

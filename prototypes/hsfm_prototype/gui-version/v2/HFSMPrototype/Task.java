@@ -1,10 +1,6 @@
 /************************************************
  ** Abstract Task class and all possible kids (audio, osc, etc)
  ************************************************
- ** MISSING: ************************************
- **  - DMX: http://motscousus.com/stuff/2011-01_dmxP512/
- **  - MIDI: The MIDI Bus (Tools > Add Tool) ****
- **  - Blackboard *******************************
  ************************************************
  ** jeraman.info, Sep. 30 2016 ******************
  ************************************************
@@ -14,6 +10,7 @@ import java.io.Serializable;
 import processing.core.PApplet;
 import controlP5.*;
 import javax.script.*;
+import java.util.UUID;
 
 ////////////////////////////////////////
 //this is the abstract class every task needs to implement
@@ -21,15 +18,21 @@ public abstract class Task implements Serializable {
   protected Status status;
   protected String name; //@TODO THIS SHOULD BE AN ID INSTEAD!!!
   protected String group_gui_id;
+  protected boolean repeat;
+  protected boolean first_time;
   //protected State  parent;
   transient protected PApplet  p;
   transient protected ControlP5 cp5;
+
 
   public Task (PApplet p, ControlP5 cp5, String taskname) {
     this.p = p;
     this.cp5 = cp5;
     this.name   = taskname;
+    this.repeat = true;
     this.status = Status.INACTIVE;
+    this.group_gui_id = UUID.randomUUID().toString();
+    first_time = true;
 
     System.out.println("task " + this.toString() + " created!");
   }
@@ -55,9 +58,22 @@ public abstract class Task implements Serializable {
     return this.group_gui_id;
   }
 
+  /*
+  //method that generates a random name for the demo task
+  String generate_random_group_id(State s) {
+    this.group_gui_id = ("/" + s.get_name() + "/"+ this.getClass() + "/"+ ((int)p.random(-100, 100)));
+    return this.group_gui_id;
+  }
+
+  String get_gui_id() {
+    return this.group_gui_id;
+  }
+
   void set_gui_id(String g_name) {
     this.group_gui_id = g_name;
   }
+  */
+
 
   Status get_status () {
     return this.status;
@@ -69,6 +85,7 @@ public abstract class Task implements Serializable {
 
   void interrupt() {
     this.stop();
+    this.first_time = true;
     this.status = Status.DONE;
   }
 
@@ -108,8 +125,39 @@ public abstract class Task implements Serializable {
   abstract void update_status();
   abstract void stop();
   abstract Task clone_it();
+
+
+  //////////////////////////////
+  //gui commands
+  void check_repeat_toggle(String s, CallbackEvent theEvent) {
+    if (s.equals(get_gui_id() + "/repeat")) {
+        float value = theEvent.getController().getValue();
+        if (value==0.0)  {
+          this.repeat = false; //once
+          this.first_time = true;
+        } else             this.repeat = true;  //repeat
+    }
+  }
+
+  void create_gui_toggle (int x, int y, int w, Group g, CallbackListener cb) {
+    // create a toggle
+    cp5.addToggle(get_gui_id()+"/repeat")
+       .setPosition(x, y)
+       .setSize(w, 15)
+       .setGroup(g)
+       .setMode(ControlP5.SWITCH)
+       .setLabel("repeat           once")
+       .setValue(this.repeat)
+       .onChange(cb)
+       .onReleaseOutside(cb)
+       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
+       ;
+  }
+
   //abstract CallbackListener generate_callback_leave(){}
   //abstract CallbackListener generate_callback_enter(){}
   //Group load_gui_elements(State s) { return null; }
   abstract Group load_gui_elements(State s);
+
+
 }

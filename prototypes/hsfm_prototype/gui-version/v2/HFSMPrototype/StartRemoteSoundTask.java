@@ -7,6 +7,8 @@
  ************************************************
  ************************************************/
 
+import oscP5.*;
+import netP5.*;
 import controlP5.*;
 import processing.core.PApplet;
 
@@ -14,12 +16,17 @@ import processing.core.PApplet;
 //implementing a task for OSC messages
 public class StartRemoteSoundTask extends RemoteOSCTask {
 
+  String filename;
+
   //contructor loading the file
   public StartRemoteSoundTask (PApplet p, ControlP5 cp5, String id) {
     super(p, cp5, id);
 
-    this.content = new Object[] {1};
-    this.message = "/speaker/enable";
+    this.message = "/speaker/start";
+    this.filename = "example.mp3";
+
+    update_content();
+    //this.content = new Object[] {filename};
 
     //this.build(p, cp5);
   }
@@ -28,14 +35,23 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
     return new StartRemoteSoundTask(this.p, this.cp5, this.name);
   }
 
+  void update_name(String name) {
+    this.filename = name;
+    update_content();
+  }
+
+  void update_content () {
+    this.content = new Object[] {filename};
+  }
 
   //UI config
   Group load_gui_elements(State s) {
 
-    //CallbackListener cb_enter = generate_callback_enter();
+    CallbackListener cb_enter = generate_callback_enter();
     //CallbackListener cb_leave = generate_callback_leave();
 
-    this.set_gui_id(s.get_name() + " " + this.get_name());
+    //p.println(generate_random_group_id(s));
+    //this.set_gui_id(s.get_name() + " " + this.get_name());
     String g_name = this.get_gui_id();
 
     //ControlP5 cp5 = HFSMPrototype.instance().cp5();
@@ -49,10 +65,8 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
     .setLabel("Start audio")
     ;
 
-
     g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 
-    /*
     int localx = 10, localy = 15, localoffset = 40;
     int w = g.getWidth()-10;
 
@@ -63,43 +77,33 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
       .setAutoClear(false)
       .setLabel("filename")
       .setText(this.filename)
+      .align(ControlP5.CENTER, ControlP5.CENTER,ControlP5.CENTER, ControlP5.CENTER)
       .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
+      .onReleaseOutside(cb_enter)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
     ;
 
-    /*
-    // add a vertical slider
-    cp5.addSlider(g_name+ "/volume")
-      .setPosition(localx, localy+localoffset)
-      .setSize(w, 15)
-      .setRange(0, 1)
-      .setGroup(g)
-      .setValue(1)
-      .setLabel("volume")
-      .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
-      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
-    ;
-
-
-    cp5.addTextfield(g_name+ "/volume")
-      .setPosition(localx, localy+localoffset)
-      .setSize(w, 15)
-      .setGroup(g)
-      .setAutoClear(false)
-      .setLabel("volume")
-      .setText(this.volume+"")
-      .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
-      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
-      ;
-    */
+    create_gui_toggle(localx, localy+localoffset, w, g, cb_enter);
 
     return g;
   }
 
 
+  CallbackListener generate_callback_enter() {
+    return new CallbackListener() {
+          public void controlEvent(CallbackEvent theEvent) {
 
+            String s = theEvent.getController().getName();
+
+            if (s.equals(get_gui_id() + "/filename")) {
+                String newFilename = theEvent.getController().getValueLabel().getText();
+                update_name(newFilename);
+                System.out.println(s + " - " + newFilename);
+            }
+
+            check_repeat_toggle(s, theEvent);
+          }
+    };
+  }
 
 }

@@ -32,10 +32,11 @@ public class StartRemoteAuraTask extends RemoteOSCTask {
   //UI config
   Group load_gui_elements(State s) {
 
-    //CallbackListener cb_enter = generate_callback_enter();
+    CallbackListener cb_enter = generate_callback_enter();
     //CallbackListener cb_leave = generate_callback_leave();
 
-    this.set_gui_id(s.get_name() + " " + this.get_name());
+    //p.println(generate_random_group_id(s));
+    //this.set_gui_id(s.get_name() + " " + this.get_name());
     String g_name = this.get_gui_id();
 
     //ControlP5 cp5 = HFSMPrototype.instance().cp5();
@@ -46,57 +47,28 @@ public class StartRemoteAuraTask extends RemoteOSCTask {
     .setBackgroundHeight(50)
     .setColorBackground(p.color(255, 50)) //color of the task
     .setBackgroundColor(p.color(255, 25)) //color of task when openned
-    .setLabel("Start haptics")
+    .setLabel("Start aura")
     ;
-
 
     g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 
-    /*
     int localx = 10, localy = 15, localoffset = 40;
     int w = g.getWidth()-10;
 
-    cp5.addTextfield(g_name+ "/filename")
-      .setPosition(localx, localy)
-      .setSize(w, 15)
-      .setGroup(g)
-      .setAutoClear(false)
-      .setLabel("filename")
-      .setText(this.filename)
-      .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
-      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
-    ;
-
-    /*
-    // add a vertical slider
-    cp5.addSlider(g_name+ "/volume")
-      .setPosition(localx, localy+localoffset)
-      .setSize(w, 15)
-      .setRange(0, 1)
-      .setGroup(g)
-      .setValue(1)
-      .setLabel("volume")
-      .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
-      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
-    ;
-
-
-    cp5.addTextfield(g_name+ "/volume")
-      .setPosition(localx, localy+localoffset)
-      .setSize(w, 15)
-      .setGroup(g)
-      .setAutoClear(false)
-      .setLabel("volume")
-      .setText(this.volume+"")
-      .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
-      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
-      ;
-    */
+    create_gui_toggle(localx, localy, w, g, cb_enter);
 
     return g;
+  }
+
+
+  CallbackListener generate_callback_enter() {
+    return new CallbackListener() {
+          public void controlEvent(CallbackEvent theEvent) {
+
+            String s = theEvent.getController().getName();
+            check_repeat_toggle(s, theEvent);
+          }
+    };
   }
 
 

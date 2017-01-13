@@ -265,7 +265,7 @@ public class StateMachine extends Task {
 
       //remove all connection from this state
       s.remove_all_connections();
-      
+
       //remove all connections to this state
       this.remove_all_connections_to_a_state(s);
 
@@ -509,8 +509,10 @@ public class StateMachine extends Task {
     CallbackListener cb_enter = generate_callback_enter();
 		CallbackListener cb_leave = generate_callback_leave();
     //ControlP5 cp5 = HFSMPrototype.instance().cp5();
-		String g_name = s.get_name() + " " + this.get_name();
-    this.set_gui_id(g_name);
+
+    //String g_name = s.get_name() + " " + this.get_name();
+    //this.set_gui_id(g_name);
+    String g_name = get_gui_id();
 
     int c1 = p.color(255, 50);
     int c2 = p.color(255, 25);
