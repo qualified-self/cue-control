@@ -93,7 +93,7 @@ class SetBBTask extends Task {
     .setLabel("name")
     .setText(this.variableName)
     .onChange(cb_enter)
-    .onReleaseOutside(cb_leave)
+    .onReleaseOutside(cb_enter)
     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
   ;
 
@@ -105,7 +105,7 @@ class SetBBTask extends Task {
     .setLabel("value")
     .setText(this.value.toString())
     .onChange(cb_enter)
-    .onReleaseOutside(cb_leave)
+    .onReleaseOutside(cb_enter)
     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
     ;
 
