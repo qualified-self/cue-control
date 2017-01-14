@@ -404,9 +404,22 @@ public class StateMachine extends Task {
      end.draw();
      end.draw_end();
 
+     //drawing all pie menus  in a layer
+     //draw_pie_menus();
+
      //drawing the actual, if running
      if (this.status==Status.RUNNING)
        actual.draw_actual();
+   }
+
+   void draw_pie_menus () {
+     //drawing the entry state
+     begin.draw_pie();
+     //drawing the states begining to this state machine
+     for (State s : states)
+       s.draw();
+     //drawing the end state
+     end.draw_pie();
    }
 
     void update_gui () {

@@ -174,11 +174,12 @@ class PieMenu {
     //fill(0, 0, 0);
     //ellipse(0, 0, diam+5, diam+5);
 
-    p.fill(0, 0, 0);
-    p.ellipse(0, 0, diam+5, diam+5);
+    p.fill(0, 0, 0, 150);
+    p.ellipse(0, 0, diam+3, diam+3);
 
     p.noStroke();
-    p.fill(125);
+    //p.fill(125);
+    //p.fill(255);
 
     float mouseTheta = p.atan2(p.mouseY-this.y, p.mouseX-this.x);
     float piTheta    = mouseTheta>=0?mouseTheta:mouseTheta+p.TWO_PI;
