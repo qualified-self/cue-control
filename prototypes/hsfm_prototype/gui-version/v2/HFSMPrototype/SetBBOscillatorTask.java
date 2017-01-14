@@ -122,6 +122,11 @@ class SetBBOscillatorTask extends SetBBTask {
 
             if (s.equals(get_gui_id() + "/name")) {
                 String text = theEvent.getController().getValueLabel().getText();
+                //if the name is empty, resets
+                if (text.trim().equalsIgnoreCase("")) {
+                  ((Textfield)cp5.get(get_gui_id() + "/name")).setText(name);
+                  return;
+                }
                 update_variable_name(text);
                 System.out.println(s + " " + text);
             }

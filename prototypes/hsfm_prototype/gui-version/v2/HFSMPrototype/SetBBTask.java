@@ -118,16 +118,29 @@ class SetBBTask extends Task {
     return new CallbackListener() {
         public void controlEvent(CallbackEvent theEvent) {
 
+          //if this group is not open, returns...
+          if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
+
           String s = theEvent.getController().getName();
           //println(s + " was entered");
 
           if (s.equals(get_gui_id() + "/name")) {
               String text = theEvent.getController().getValueLabel().getText();
+              //if the name is empty, resets
+              if (text.trim().equalsIgnoreCase("")) {
+                ((Textfield)cp5.get(get_gui_id() + "/name")).setText(name);
+                return;
+              }
               update_variable_name(text);
               System.out.println(s + " " + text);
           }
           if (s.equals(get_gui_id() + "/value")) {
               String newvalue = theEvent.getController().getValueLabel().getText();
+              //if the name is empty, resets
+              if (newvalue.trim().equalsIgnoreCase("")) {
+                ((Textfield)cp5.get(get_gui_id() + "/value")).setText(value.toString());
+                return;
+              }
               update_value(new Expression(newvalue));
               System.out.println(s + " " + newvalue);
           }

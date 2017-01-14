@@ -69,7 +69,7 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
     int localx = 10, localy = 15, localoffset = 40;
     int w = g.getWidth()-10;
 
-    cp5.addTextfield(g_name+ "/filename")
+    cp5.addTextfield(g_name+ "/intensity")
       .setPosition(localx, localy)
       .setSize(w, 15)
       .setGroup(g)
@@ -91,10 +91,17 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
     return new CallbackListener() {
           public void controlEvent(CallbackEvent theEvent) {
 
+            //if this group is not open, returns...
+            if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
+
             String s = theEvent.getController().getName();
+            p.println("qu'est-ce que y a la? " + s);
 
             if (s.equals(get_gui_id() + "/intensity")) {
                 String nv = theEvent.getController().getValueLabel().getText();
+
+                p.println("qu'est-ce que y a la? " + nv);
+
                 if (nv.trim().equals("")) {
                   nv="0.0";
                   ((Textfield)cp5.get(get_gui_id()+ "/intensity")).setText(nv);

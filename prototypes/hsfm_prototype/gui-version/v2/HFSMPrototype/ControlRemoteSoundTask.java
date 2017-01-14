@@ -132,10 +132,20 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
     return new CallbackListener() {
           public void controlEvent(CallbackEvent theEvent) {
 
+            //if this group is not open, returns...
+            if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
+
             String s = theEvent.getController().getName();
 
             if (s.equals(get_gui_id() + "/filename")) {
                 String nv = theEvent.getController().getValueLabel().getText();
+
+                //if the filename is empty, resets
+                if (nv.trim().equalsIgnoreCase("")) {
+                  ((Textfield)cp5.get(get_gui_id() + "/filename")).setText(filename);
+                  return;
+                }
+
                 update_name(nv);
                 System.out.println(s + " " + nv);
             }

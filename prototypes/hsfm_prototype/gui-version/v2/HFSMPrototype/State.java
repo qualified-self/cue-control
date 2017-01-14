@@ -684,34 +684,47 @@ public class State implements Serializable {
     accordion.show();
   }
 
+  boolean is_textfield_selected = false;
 
   CallbackListener generate_callback_enter() {
     return new CallbackListener() {
           public void controlEvent(CallbackEvent theEvent) {
 
-              String newName = theEvent.getController().getValueLabel().getText();
-              String oldName = name;
+            //if this textfield is not selected, returns...
+            //if (label.getText().equalsIgnoreCase(newName))
+            //if (!label.isFocus()) return;
 
-              MainCanvas canvas = HFSMPrototype.instance().canvas;
+            //if the name is empty, resets
+            if (label.getText().trim().equalsIgnoreCase("")) label.setText(name);
+            //if the name didn't change, no need to continue
+            if (label.getText().equalsIgnoreCase(name)) return;
 
-              //checks if there is already a state with the very same future name [BAD CODE!]
-              State is_there_a_state_with_the_new_name = canvas.root.get_state_by_name(newName);
-              State result                             = canvas.root.get_state_by_name(oldName);
+            String newName = theEvent.getController().getValueLabel().getText();
+            String oldName = name;
 
-              //if there is, prints an error and change does not occur!
-              if (is_there_a_state_with_the_new_name != null) {
-                System.out.println("There is alrealdy a state with this same name. Please, pick another name!");
+            MainCanvas canvas = HFSMPrototype.instance().canvas;
+
+            //checks if there is already a state with the very same future name [BAD CODE!]
+            State is_there_a_state_with_the_new_name = canvas.root.get_state_by_name(newName);
+            State result                             = canvas.root.get_state_by_name(oldName);
+
+            //if there is, prints an error and change does not occur!
+            if (is_there_a_state_with_the_new_name != null) {
+              System.out.println("There is alrealdy a state with this same name. Please, pick another name!");
+              //if the names are different, reset
+              if (!oldName.equals(newName))
                 result.update_name(oldName);
-                return;
-              }
+              return;
+            }
 
-              if (result != null)
-                result.update_name(newName);
-              else
-                System.out.println("a state with name " + oldName + " could not be found! ");
+            if (result != null)
+              result.update_name(newName);
+            else
+              System.out.println("a state with name " + oldName + " could not be found! ");
           }
     };
   }
+
 
   CallbackListener generate_callback_leave() {
     return new CallbackListener() {
@@ -725,13 +738,14 @@ public class State implements Serializable {
     };
   }
 
+
   //inits the label with the name of the state
   void init_state_name_gui() {
 
     //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
     CallbackListener cb_enter = generate_callback_enter();
-    CallbackListener cb_leave = generate_callback_leave();
+    //CallbackListener cb_leave = generate_callback_leave();
 
     int c1 = p.color(255, 255, 255, 255);
     int c2 = p.color(0, 0, 0, 1);
@@ -747,7 +761,7 @@ public class State implements Serializable {
       .setAutoClear(false)
       .setLabel("")
       .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
+      .onReleaseOutside(cb_enter)
       //.onDrag(cb)
       ;
   }

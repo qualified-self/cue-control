@@ -65,6 +65,9 @@ public class StartRemoteAuraTask extends RemoteOSCTask {
     return new CallbackListener() {
           public void controlEvent(CallbackEvent theEvent) {
 
+            //if this group is not open, returns...
+            if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
+
             String s = theEvent.getController().getName();
             check_repeat_toggle(s, theEvent);
           }

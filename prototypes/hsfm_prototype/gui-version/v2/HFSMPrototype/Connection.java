@@ -145,9 +145,10 @@ public class Connection implements Serializable {
         t.lock();
       //otherwise, adds user interactivity
       } else  {
-        t.onEnter(generate_callback_textfield_enter());
-        t.onLeave(generate_callback_textfield_leave());
-        t.onReleaseOutside(generate_callback_textfield_released_outside());
+        t.onEnter(generate_callback_textfield_enter()); //highlight colors
+        t.onLeave(generate_callback_textfield_leave()); //colors back to normal
+        //t.onReleaseOutside(generate_callback_textfield_released_outside());
+        t.onReleaseOutside(generate_callback_textfield_change());
         t.onChange(generate_callback_textfield_change());
       }
 
@@ -257,6 +258,12 @@ public class Connection implements Serializable {
        public void controlEvent(CallbackEvent theEvent) {
          //@TODO implement the update
          Textfield    t = get_textfield_gui();
+
+         //if the name is empty, resets
+         if (t.getText().trim().equalsIgnoreCase("")) t.setText(get_expression().toString());
+         //if the name didn't change, no need to continue
+         if (t.getText().equalsIgnoreCase(get_expression().toString())) return;
+
          Expression exp = new Expression(t.getText());
          update_expression(exp);
          reload_gui_items();

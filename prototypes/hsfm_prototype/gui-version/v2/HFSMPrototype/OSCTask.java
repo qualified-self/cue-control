@@ -157,7 +157,7 @@ class OSCTask extends Task {
     int c2 = p.color(255, 25);
 
     CallbackListener cb_enter = generate_callback_enter();
-    CallbackListener cb_leave = generate_callback_leave();
+    //CallbackListener cb_leave = generate_callback_leave();
 
     //this.set_gui_id(s.get_name() + " " + this.get_name());
     String g_name = this.get_gui_id();
@@ -186,7 +186,7 @@ class OSCTask extends Task {
       .setLabel("ip address")
       .setText(ip)
       .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
+      .onReleaseOutside(cb_enter)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
       ;
 
@@ -212,7 +212,7 @@ class OSCTask extends Task {
       .setLabel("message")
       .setText(this.message)
       .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
+      .onReleaseOutside(cb_enter)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
       ;
 
@@ -224,7 +224,7 @@ class OSCTask extends Task {
       .setLabel("parameters")
       .setText(build_string_from_content())
       .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
+      .onReleaseOutside(cb_enter)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
       ;
 
@@ -237,10 +237,18 @@ class OSCTask extends Task {
     return new CallbackListener() {
           public void controlEvent(CallbackEvent theEvent) {
 
+            //if this group is not open, returns...
+            if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
+
             String s = theEvent.getController().getName();
 
             if (s.equals(get_gui_id() + "/ip")) {
                 String text = theEvent.getController().getValueLabel().getText();
+                //if text is empty, resets
+                if (text.trim().equalsIgnoreCase("")) {
+                  ((Textfield)cp5.get(get_gui_id() + "/ip")).setText(ip);
+                  return;
+                }
                 update_ip(text);
                 //System.out.println(s + " " + text);
             }
@@ -251,12 +259,22 @@ class OSCTask extends Task {
             }
             if (s.equals(get_gui_id() + "/message")) {
                 String text = theEvent.getController().getValueLabel().getText();
+                //if text is empty, resets
+                if (text.trim().equalsIgnoreCase("")) {
+                  ((Textfield)cp5.get(get_gui_id() + "/message")).setText(message);
+                  return;
+                }
                 update_message(text);
                 //System.out.println(s + " " + text);
             }
 
             if (s.equals(get_gui_id() + "/parameters")) {
                 String text = theEvent.getController().getValueLabel().getText();
+                //if text is empty, resets
+                if (text.trim().equalsIgnoreCase("")) {
+                  ((Textfield)cp5.get(get_gui_id() + "/parameters")).setText(build_string_from_content());
+                  return;
+                }
                 update_content_from_string(text);
                 //System.out.println(s + " " + text);
             }
@@ -271,6 +289,9 @@ class OSCTask extends Task {
   CallbackListener generate_callback_leave() {
     return new CallbackListener() {
           public void controlEvent(CallbackEvent theEvent) {
+
+            //if this group is not open, returns...
+            if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
 
             String s = theEvent.getController().getName();
 
@@ -297,6 +318,8 @@ class OSCTask extends Task {
 
           }
     };
+
   }
+
 
 }
