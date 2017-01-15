@@ -90,13 +90,19 @@ public class Connection implements Serializable {
     return this.priority;
   }
 
+  String get_name() {
+    return parent.get_id() + "_TO_" + next_state.get_id();
+  }
+
   /*******************************************
    ** GUI FUNCTIONS ***************************
    ********************************************/
    //@TODO PROBLEM TAKING TIME TO LOAD IS IN THE FOLLOWING METHOD!!!
   int w=20;
   void init_gui_items() {
-    String gui_name = parent.get_name() + "_" + next_state.get_name();
+
+    //String gui_name = parent.get_name() + "_" + next_state.get_name();
+    String gui_name = get_name();
 
     ControlP5 cp5  = get_controlP5_gui();
 
@@ -156,7 +162,9 @@ public class Connection implements Serializable {
 
   void remove_gui_items() {
     //ControlP5 cp5 = get_controlP5_gui();
-    String gui_name = parent.get_name() + "_" + next_state.get_name();
+    //String gui_name = parent.get_name() + "_" + next_state.get_name();
+    String gui_name = get_name();
+
     cp5.remove(gui_name+"/priority");
     cp5.remove(gui_name+"/condition");
     //println("trying to remove");
@@ -180,12 +188,14 @@ public class Connection implements Serializable {
   }
 
   DropdownList get_dropdown_gui () {
-    String gui_name = parent.get_name() + "_" + next_state.get_name();
+    //String gui_name = parent.get_name() + "_" + next_state.get_name();
+    String gui_name = get_name();
     return (DropdownList)get_controlP5_gui().getController(gui_name+ "/priority");
   }
 
   Textfield get_textfield_gui () {
-    String gui_name = parent.get_name() + "_" + next_state.get_name();
+    //String gui_name = parent.get_name() + "_" + next_state.get_name();
+    String gui_name = get_name();
     return (Textfield)get_controlP5_gui().getController(gui_name+ "/condition");
   }
 

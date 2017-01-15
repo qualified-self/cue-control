@@ -27,6 +27,7 @@ void setup() {
   canvas = new MainCanvas(this, cp5);
 
   setup_expression_loading_bug();
+  setup_autosave();
 
   textSize(cp5.getFont().getSize());
   textFont(cp5.getFont().getFont());
@@ -66,7 +67,11 @@ void draw() {
 
   if (keyReleased)     keyReleased = false;
   if (mouseReleased) mouseReleased = false;
+
+  autosave();
 }
+
+
 
 void keyPressed(){
   //if is loading an open patch, do not draw anything

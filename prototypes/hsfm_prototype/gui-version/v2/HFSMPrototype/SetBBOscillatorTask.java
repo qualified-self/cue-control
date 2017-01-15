@@ -36,7 +36,7 @@ class SetBBOscillatorTask extends SetBBTask {
     String freq_val = (evaluate_value(this.frequency)).toString();
     String amp_val  = (evaluate_value(this.amplitude)).toString();
 
-    Expression ne = new Expression(amp_val+"*math.sin($root_stateTimer*"+freq_val+")");
+    Expression ne = new Expression(amp_val+"*math.sin($root_timer*"+freq_val+")");
 
     Blackboard board = HFSMPrototype.instance().board();
     this.status = Status.RUNNING;

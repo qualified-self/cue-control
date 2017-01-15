@@ -96,6 +96,10 @@ public class State implements Serializable {
     return this.name;
   }
 
+  String get_id() {
+    return this.id;
+  }
+
   //run all tasks associated to this node
   void run () {
     for (Task t : tasks)
@@ -124,8 +128,10 @@ public class State implements Serializable {
     this.remove_all_connections();
     //ControlP5 cp5 = HFSMPrototype.instance().cp5();
     //removes the old gui label
-    cp5.remove(this.name);
-    cp5.remove("/acc_"+this.name);
+    //cp5.remove(this.name);
+    cp5.remove(this.id+"/label");
+    //cp5.remove("/acc_"+this.name);
+    cp5.remove(this.id+"/acc");
     //removes all tasks from the gui
   }
 
@@ -705,10 +711,12 @@ public class State implements Serializable {
             String newName = theEvent.getController().getValueLabel().getText();
             String oldName = name;
 
+            update_name(newName);
+            /*
             MainCanvas canvas = HFSMPrototype.instance().canvas;
 
             //checks if there is already a state with the very same future name [BAD CODE!]
-            State is_there_a_state_with_the_new_name = canvas.root.get_state_by_name(newName);
+            State is_there_a_state_with_the_new_id = canvas.root.get_state_by_name(newName);
             State result                             = canvas.root.get_state_by_name(oldName);
 
             //if there is, prints an error and change does not occur!
@@ -721,9 +729,11 @@ public class State implements Serializable {
             }
 
             if (result != null)
+
               result.update_name(newName);
             else
               System.out.println("a state with name " + oldName + " could not be found! ");
+            */
           }
     };
   }
@@ -753,7 +763,7 @@ public class State implements Serializable {
     int c1 = p.color(255, 255, 255, 255);
     int c2 = p.color(0, 0, 0, 1);
 
-    label = cp5.addTextfield(this.name)
+    label = cp5.addTextfield(this.id+"/label")
       .setText(this.name)
       .setColorValue(c1)
       .setColorBackground(c2)
@@ -773,7 +783,8 @@ public class State implements Serializable {
   void init_accordion_gui() {
     //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
-    accordion = cp5.addAccordion("acc_"+this.name)
+    //accordion = cp5.addAccordion("acc_"+this.name)
+    accordion = cp5.addAccordion(this.id+"/acc")
       .setWidth(110)
       //.hide()
       ;

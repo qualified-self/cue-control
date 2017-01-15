@@ -62,7 +62,7 @@ class MainCanvas implements Serializable {
   //creates a new state and adds its to the root state machine
   void create_state() {
     System.out.println("creates a state");
-    State newState = new State(p, cp5, "NEW_STATE_" + ((int)p.random(0, 1000)), p.mouseX, p.mouseY);
+    State newState = new State(p, cp5, "NEW_STATE_" + ((int)p.random(0, 10)), p.mouseX, p.mouseY);
     root.add_state(newState);
   }
 

@@ -33,7 +33,7 @@ class SetBBRampTask extends SetBBTask {
     String dur_val = (evaluate_value(this.duration)).toString();
     String amp_val  = (evaluate_value(this.amplitude)).toString();
 
-    Expression ne = new Expression(amp_val+"*(($root_stateTimer/"+dur_val+") % 1)");
+    Expression ne = new Expression(amp_val+"*(($root_timer/"+dur_val+") % 1)");
 
     Blackboard board = HFSMPrototype.instance().board();
     this.status = Status.RUNNING;

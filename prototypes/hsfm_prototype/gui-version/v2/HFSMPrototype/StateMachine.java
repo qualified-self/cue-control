@@ -245,8 +245,10 @@ public class StateMachine extends Task {
 
   //add a state s to this State_Machine
   void add_state(State s) {
+    /*
     //check if there is already a state with the same name
-    State result = get_state_by_name(s.get_name());
+    //State result = get_state_by_name(s.get_name());
+    State result = get_state_by_id(s.get_id());
 
     //in case there isn't
     if (result==null) {
@@ -255,6 +257,9 @@ public class StateMachine extends Task {
     } else {
       System.out.println("There is alrealdy a state with this same name. Please, pick another name!");
     }
+    */
+    states.addElement(s);
+    System.out.println("State " + s.get_name() + " added to State_Machine " + this.name);
   }
 
   //remove a state s from this State_Machine
@@ -271,7 +276,8 @@ public class StateMachine extends Task {
 
       //ControlP5 cp5 = HFSMPrototype.instance().cp5();
       //removes its ui components
-      cp5.remove(s.get_name());
+      //cp5.remove(s.get_name());
+      cp5.remove(s.get_id()+"/label");
       //remove the state fmor the list
       this.states.removeElement(s);
     } else
@@ -303,6 +309,8 @@ public class StateMachine extends Task {
       s.remove_all_connections_to_a_state(dest);
   }
 
+  /*
+
   //returns a state by its name. returns null if not available
   State get_state_by_name(String name) {
       State result = null;
@@ -313,6 +321,28 @@ public class StateMachine extends Task {
       //iterates over all states
       for (State s : states)
         if (s.get_name().equalsIgnoreCase(name)) result=s;
+
+      if (result!=null)
+        System.out.println("found! " + result.toString());
+      else
+        System.out.println("problem!");
+
+      //returns the proper result
+      return result;
+  }
+
+  */
+
+  //returns a state by its unique id. returns null if not available
+  State get_state_by_id(String id) {
+      State result = null;
+
+      if (this.begin.get_id().equalsIgnoreCase(id)) result=this.begin;
+      if (this.end.get_id().equalsIgnoreCase(id))   result=this.end;
+
+      //iterates over all states
+      for (State s : states)
+        if (s.get_id().equalsIgnoreCase(id)) result=s;
 
       if (result!=null)
         System.out.println("found! " + result.toString());
@@ -349,13 +379,13 @@ public class StateMachine extends Task {
 
   //inits the global variables related to this blackboard
   void init_global_variables() {
-    HFSMPrototype.instance().board.put(this.title+"_stateTimer", 0);
+    HFSMPrototype.instance().board.put(this.title+"_timer", 0);
   }
 
   //updates the global variable related to this blackboard
   void update_global_variables() {
     update_state_timer();
-    HFSMPrototype.instance().board.replace(this.title+"_stateTimer", this.stateTimer);
+    HFSMPrototype.instance().board.replace(this.title+"_timer", this.stateTimer);
     //println("update variable " + this.stateTimer);
   }
 

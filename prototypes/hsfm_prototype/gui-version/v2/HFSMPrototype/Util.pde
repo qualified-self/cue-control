@@ -77,3 +77,22 @@ void oscEvent(OscMessage msg) {
 
   board.oscEvent(msg);
 }
+
+int autosavetime = 2; //minutes
+int timestamp;
+File autosave_file;
+
+void setup_autosave() {
+  timestamp     = minute();
+  autosave_file = new File(sketchPath() + "/data/patches/temp.txt");
+  println(sketchPath());
+}
+void autosave() {
+  int time_elapsed = abs(minute()-timestamp);
+
+  if (time_elapsed > autosavetime) {
+    serializer._saveAs(autosave_file);
+    println("saving!");
+    timestamp = minute();
+  }
+}
