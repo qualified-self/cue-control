@@ -84,6 +84,8 @@ class MainCanvas implements Serializable {
   void stop() {
     root.end.run();
     root.stop();
+    Blackboard board = HFSMPrototype.instance().board();
+    board.reset();
   }
 
   //processes the multiple interpretations of the '+' key

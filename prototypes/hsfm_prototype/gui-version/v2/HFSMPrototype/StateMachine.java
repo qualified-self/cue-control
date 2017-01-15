@@ -385,7 +385,7 @@ public class StateMachine extends Task {
   //updates the global variable related to this blackboard
   void update_global_variables() {
     update_state_timer();
-    HFSMPrototype.instance().board.replace(this.title+"_timer", this.stateTimer);
+    HFSMPrototype.instance().board.put(this.title+"_timer", this.stateTimer);
     //println("update variable " + this.stateTimer);
   }
 

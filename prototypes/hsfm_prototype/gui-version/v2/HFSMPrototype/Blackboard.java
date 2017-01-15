@@ -12,6 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.io.Serializable;
 import processing.core.PApplet;
 import java.util.regex.*;
+import java.util.*;
+import java.util.Collection;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import oscP5.*;
@@ -67,6 +69,11 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
     replace("key", p.key);
     replace("keyCode", p.keyCode);
     replace("keyPressed", p.keyPressed);
+  }
+
+  void reset() {
+    this.clear();
+    this.init_global_variables();
   }
 
   /**
@@ -146,12 +153,23 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
   void draw_bb_items () {
     draw_header_gui();
     int i=0;
+
+    List<String> ordered = new ArrayList<String>(this.keySet());
+    Collections.sort(ordered);
+
+    for(String val : ordered) {
+        drawItem(val, this.get(val), x, y+(myheight*(i+1))+i+1, mywidth, myheight);
+        i++;
+    }
+
+    /*
     for (ConcurrentHashMap.Entry<String, Object> element : entrySet()) {
       if (!blacklisted(element)) {
         drawItem(element, x, y+(myheight*(i+1))+i+1, mywidth, myheight);
         i++;
       }
     }
+    */
   }
 
   //list of memory items that should not be displyed to the use
@@ -165,7 +183,8 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
   }
 
 
-  void drawItem(ConcurrentHashMap.Entry<String, Object> element, int posx, int posy, int mywidth, int myheight) {
+  //void drawItem(ConcurrentHashMap.Entry<String, Object> element, int posx, int posy, int mywidth, int myheight) {
+  void drawItem(String var_name, Object var_value, int posx, int posy, int mywidth, int myheight) {
     int xoffset = mywidth+1;
     //if the blackboard wasn't loaded yet
 
@@ -179,16 +198,17 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
 
     p.fill(200);
     p.textAlign(p.CENTER, p.CENTER);
-    String type_name = element.getValue().getClass().getName();
-    Object value     = element.getValue();
-    String value_string = value.toString();
+
+    String type_name = var_value.getClass().getName();
+    //Object value     = element.getValue();
+    String value_string = var_value.toString();
 
     //in case it's a float, only exhibits two decimal points.
-    if (value instanceof Float) value_string = round((float)value, 2).toString();
-    if (value instanceof Double) value_string = round((float)((double)value), 2).toString();
+    if (var_value instanceof Float) value_string = round((float)var_value, 2).toString();
+    if (var_value instanceof Double) value_string = round((float)((double)var_value), 2).toString();
 
     p.text(type_name.replace("java.lang.", ""), posx, posy);
-    p.text(element.getKey().toString(),   posx+xoffset, posy);
+    p.text(var_name,   posx+xoffset, posy);
     p.text(value_string, posx+xoffset+xoffset+5, posy);
   }
 
