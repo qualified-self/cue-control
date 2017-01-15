@@ -9,11 +9,14 @@ import processing.core.PApplet;
 
 
 class SetBBRampTask extends SetBBTask {
-  Object duration;
-  Object amplitude;
+  protected Object duration;
+  protected Object amplitude;
+  protected boolean is_up;
 
   public SetBBRampTask (PApplet p, ControlP5 cp5) {
     super(p, cp5, ("ramp_" + (int)p.random(0, 100)), new Expression("1"));
+
+    this.is_up = true;
 
     update_duration("1");
     update_amplitude("1");
@@ -30,10 +33,12 @@ class SetBBRampTask extends SetBBTask {
   void run() {
     if (!should_run()) return;
 
-    String dur_val = (evaluate_value(this.duration)).toString();
-    String amp_val  = (evaluate_value(this.amplitude)).toString();
+    String dur_val = evaluate_value(this.duration).toString();
+    String amp_val = evaluate_value(this.amplitude).toString();
 
-    Expression ne = new Expression(amp_val+"*(($root_timer/"+dur_val+") % 1)");
+    Expression ne;
+    if (is_up) ne = new Expression(amp_val+"*(($root_timer/"+dur_val+") % 1)");
+    else       ne = new Expression("math.abs("+amp_val+"-("+amp_val+"*(($root_timer/"+dur_val+") % 1)))");
 
     Blackboard board = HFSMPrototype.instance().board();
     this.status = Status.RUNNING;
@@ -55,7 +60,7 @@ class SetBBRampTask extends SetBBTask {
     Group g = cp5.addGroup(g_name)
     //.setPosition(x, y) //change that?
     .setHeight(12)
-    .setBackgroundHeight(180)
+    .setBackgroundHeight(220)
     .setColorBackground(p.color(255, 50)) //color of the task
     .setBackgroundColor(p.color(255, 25)) //color of task when openned
     .setLabel("Ramp variable")
@@ -80,8 +85,21 @@ class SetBBRampTask extends SetBBTask {
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
     ;
 
+    // create a toggle
+    cp5.addToggle(get_gui_id()+"/type")
+       .setPosition(localx, localy+(1*localoffset))
+       .setSize(w, 15)
+       .setGroup(g)
+       .setMode(ControlP5.SWITCH)
+       .setLabel("up              down")
+       .setValue(this.is_up)
+       .onChange(cb_enter)
+       .onReleaseOutside(cb_enter)
+       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
+       ;
+
     cp5.addTextfield(g_name+ "/duration")
-      .setPosition(localx, localy+(1*localoffset))
+      .setPosition(localx, localy+(2*localoffset))
       .setSize(w, 15)
       .setGroup(g)
       .setAutoClear(false)
@@ -94,7 +112,7 @@ class SetBBRampTask extends SetBBTask {
     ;
 
     cp5.addTextfield(g_name+ "/amplitude")
-      .setPosition(localx, localy+(2*localoffset))
+      .setPosition(localx, localy+(3*localoffset))
       .setSize(w, 15)
       .setGroup(g)
       .setAutoClear(false)
@@ -106,7 +124,7 @@ class SetBBRampTask extends SetBBTask {
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
     ;
 
-    create_gui_toggle(localx, localy+(3*localoffset), w, g, cb_enter);
+    create_gui_toggle(localx, localy+(4*localoffset), w, g, cb_enter);
 
     return g;
   }
@@ -129,6 +147,12 @@ class SetBBRampTask extends SetBBTask {
                 }
                 update_variable_name(text);
                 System.out.println(s + " " + text);
+            }
+
+            if (s.equals(get_gui_id() + "/type")) {
+                float value = theEvent.getController().getValue();
+                if (value==0.0)  is_up = false; //once
+                else             is_up = true;  //repeat
             }
 
             if (s.equals(get_gui_id() + "/duration")) {
