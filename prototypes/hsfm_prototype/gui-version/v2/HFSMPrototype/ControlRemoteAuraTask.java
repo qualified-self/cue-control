@@ -95,13 +95,11 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
             if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
 
             String s = theEvent.getController().getName();
-            p.println("qu'est-ce que y a la? " + s);
+            //p.println("qu'est-ce que y a la? " + s);
 
             if (s.equals(get_gui_id() + "/intensity")) {
                 String nv = theEvent.getController().getValueLabel().getText();
-
-                p.println("qu'est-ce que y a la? " + nv);
-
+                
                 if (nv.trim().equals("")) {
                   nv="0.0";
                   ((Textfield)cp5.get(get_gui_id()+ "/intensity")).setText(nv);

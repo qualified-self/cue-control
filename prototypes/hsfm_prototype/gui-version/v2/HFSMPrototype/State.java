@@ -11,6 +11,7 @@ import java.util.*;
 import java.io.Serializable;
 import processing.core.PApplet;
 import controlP5.*;
+import java.util.UUID;
 
 ////////////////////////////////////////
 //the state class
@@ -25,10 +26,11 @@ public class State implements Serializable {
   static boolean is_dragging_someone = false;
 
   //variables used for the gui
-  public int x;
-  public int y;
-  private final int size = 50;
+  public int          x;
+  public int          y;
+  private final int   size = 50;
   private final float arrow_scale_offset = 1.25f;
+  private String      id;
   //accordion that stores the tasks
 
   //gui elements
@@ -51,6 +53,7 @@ public class State implements Serializable {
     this.y = (int)p.random(10, p.height-size);
     this.movement_status = MovementStatus.FREE;
     this.debug = HFSMPrototype.instance().debug();
+    this.id    = UUID.randomUUID().toString();
 
     init_gui();
     hide_gui();
@@ -792,6 +795,10 @@ public class State implements Serializable {
     //looks for the group
     //Group g = cp5.get(Group.class, this.name + " " + t.get_name());
     //removes this task from the accordion
+    if (t==null || cp5==null) {
+      p.println("OPPPAAAAAAA!!!! NULL POINTER!!!! WTF!!!!");
+      return;
+    }
     p.println("removing task " + t.get_gui_id());
     cp5.getGroup(t.get_gui_id()).remove();
     //cp5.getGroup(this.name + " " + t.get_name()).remove();
