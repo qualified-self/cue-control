@@ -409,7 +409,7 @@ public class State implements Serializable {
 
   //method that generates a random name for the demo task
   String generate_random_name() {
-    return ("/" + this.name + ((int)p.random(-100, 100)));
+    return ("example" + ((int)p.random(0, 100)));
   }
 
 
@@ -1117,18 +1117,24 @@ public class State implements Serializable {
           init_stop_dmx_task();
           hide_pie();
           break;
-        case 42:
+
+        case 43:
+          init_bb_rand_task();
+          hide_pie();
+          break;
+        case 44:
           init_bb_osc_task();
           hide_pie();
           break;
-        case 43:
+        case 45:
           init_bb_ramp_task();
           hide_pie();
           break;
         case 40:
-          init_bb_rand_task();
+          init_set_blackboard_task();
           hide_pie();
           break;
+
       }
 
       /*

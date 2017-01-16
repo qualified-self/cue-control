@@ -15,7 +15,7 @@ class MultiLevelPieMenu {
   private String[] light_list      = {"Stop DMX", "", "Start DMX", "Control DMX"};
   private String[] sound_list      = {"Stop audio", "", "Start audio", "Control audio"};
   private String[] haptics_list    = {"Stop aura", "", "Start aura", "Control aura"};
-  private String[] blackboard_list = {"Random", "", "Oscillator", "Ramp"};
+  private String[] blackboard_list = {"Default", "", "", "Random", "Oscillator", "Ramp"};
 
   //MLP_Status status;
 
