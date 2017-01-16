@@ -21,7 +21,7 @@ public class StopRemoteSoundTask extends RemoteOSCTask {
     super(p, cp5, id);
 
     this.message = "/speaker/stop";
-    this.filename = "example.mp3";
+    this.filename = "example.wav";
 
     update_content();
 

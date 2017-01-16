@@ -102,8 +102,11 @@ public class State implements Serializable {
 
   //run all tasks associated to this node
   void run () {
-    for (Task t : tasks)
+    for (Task t : tasks) {
       t.run();
+      if (get_name().equals("END_ROOT"))
+        p.println("executing" + t);
+    }
 
     this.status = Status.RUNNING;
 
@@ -150,6 +153,12 @@ public class State implements Serializable {
   void refresh() {
     for (Task t : tasks)
         t.refresh();
+  }
+
+  //if it's entering a state, you need to refresh it
+  void reset_first_time() {
+    for (Task t : tasks)
+        t.reset_first_time();
   }
 
   //only refreshes and reruns completed tasks
@@ -239,14 +248,18 @@ public class State implements Serializable {
 
         //if it's going to another state
         if (next_state != this) {
-          if (debug)
-            System.out.println("State was " + this.name + " . Now it is changing to " + next_state.name);
           //interrupts current activities that are still going on
           this.interrupt();
           //refresh the next state
           next_state.refresh();
+          //reset_first_time
+          next_state.reset_first_time();
           //runs the next state
           next_state.run();
+
+          //if (next_state.get_name().equals("END_ROOT"))
+          //  System.out.println("State was " + this.name + " . Now it is changing to " + next_state.name);
+
           break;
         }
 

@@ -83,9 +83,13 @@ public abstract class Task implements Serializable {
     this.stop();
   }
 
+  void reset_first_time() {
+    this.first_time = true;
+  }
+
   void interrupt() {
     this.stop();
-    this.first_time = true;
+    this.reset_first_time();
     this.status = Status.DONE;
   }
 
@@ -135,11 +139,14 @@ public abstract class Task implements Serializable {
     return result;
   }
 
+  void stop () {
+
+  }
   //these method should be reimplemented
   abstract void run();
   abstract void build(PApplet p, ControlP5 cp5);
   abstract void update_status();
-  abstract void stop();
+  //abstract void stop();
   abstract Task clone_it();
 
 

@@ -26,8 +26,8 @@ public abstract class RemoteOSCTask extends Task {
   transient protected NetAddress broadcast;
   transient protected OscP5      oscP5;
 
-  //static String    ip   = "192.168.1.10";
-  static String    ip   = "localhost";
+  static String    ip   = "192.168.1.12";
+  //static String    ip   = "localhost";
   static int       port = 12000;
 
   //contructor loading the file
@@ -48,7 +48,10 @@ public abstract class RemoteOSCTask extends Task {
   }
 
   void run () {
-    if (!should_run()) return;
+    if (!should_run())
+      //p.println("not not execute " + this);
+      return;
+
 
     this.status = Status.RUNNING;
 
@@ -86,6 +89,7 @@ public abstract class RemoteOSCTask extends Task {
   }
 
   void stop() {
+    super.stop();
     //Object[] args = message.arguments();
     //message.clear();
     //update_message(args);
@@ -139,151 +143,5 @@ public abstract class RemoteOSCTask extends Task {
 
     content=result;
   }
-
-  /*
-  CallbackListener generate_callback_enter() {
-    return new CallbackListener() {
-          public void controlEvent(CallbackEvent theEvent) {
-
-            String s = theEvent.getController().getName();
-
-            if (s.equals(get_gui_id() + "/ip")) {
-                String text = theEvent.getController().getValueLabel().getText();
-                update_ip(text);
-                //System.out.println(s + " " + text);
-            }
-            if (s.equals(get_gui_id() + "/port")) {
-                int newport = (int)theEvent.getController().getValue();
-                update_port(newport);
-                //System.out.println(s + " " + newport);
-            }
-            if (s.equals(get_gui_id() + "/message")) {
-                String text = theEvent.getController().getValueLabel().getText();
-                update_message(text);
-                //System.out.println(s + " " + text);
-            }
-
-            if (s.equals(get_gui_id() + "/parameters")) {
-                String text = theEvent.getController().getValueLabel().getText();
-                update_content_from_string(text);
-                //System.out.println(s + " " + text);
-            }
-          }
-    };
-  }
-
-  CallbackListener generate_callback_leave() {
-    return new CallbackListener() {
-          public void controlEvent(CallbackEvent theEvent) {
-
-            String s = theEvent.getController().getName();
-
-            String newtext = theEvent.getController().getValueLabel().getText();
-            String oldtext = "";
-
-            if (s.equals(get_gui_id() + "/ip"))
-              oldtext = ip;
-            //else if (s.equals(get_gui_id() + "/port"))
-            //  oldtext = broadcast.port()+"";
-            else if (s.equals(get_gui_id() + "/message"))
-              oldtext = message;
-            else if (s.equals(get_gui_id() + "/parameters"))
-              oldtext = build_string_from_content();
-            else  return;
-
-            //if the user tried to change but did not press enter
-            if (!newtext.replace(" ", "").equals(oldtext)) {
-              //resets the test for the original
-              //ControlP5 cp5 = HFSMPrototype.instance().cp5();
-              Textfield t = (Textfield)cp5.get(s);
-              t.setText(oldtext);
-            }
-
-          }
-    };
-  }
-
-  Group load_gui_elements(State s) {
-    //do we really need this?
-    //this.parent = s;
-    //PApplet p = HFSMPrototype.instance();
-    //ControlP5 cp5 = HFSMPrototype.instance().cp5();
-    int c1 = p.color(255, 50);
-    int c2 = p.color(255, 25);
-
-    CallbackListener cb_enter = generate_callback_enter();
-    CallbackListener cb_leave = generate_callback_leave();
-
-    this.set_gui_id(s.get_name() + " " + this.get_name());
-    String g_name = this.get_gui_id();
-
-    //creates the group
-    Group g = cp5.addGroup(g_name)
-      .setColorBackground(c1) //color of the task
-      .setBackgroundColor(c2) //color of task when openned
-      .setBackgroundHeight(180)
-      .setLabel(this.get_prefix() + "   " + this.get_name())
-      .setHeight(12)
-      ;
-
-    int w = g.getWidth()-10;
-
-    g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-
-    int localx = 10, localy = 15, localoffset = 40;
-
-    cp5.addTextfield(g_name+"/ip")
-      .setPosition(localx, localy)
-      .setSize(w, 15)
-      .setGroup(g)
-      .setAutoClear(false)
-      .setLabel("ip address")
-      .setText(ip)
-      .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
-      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
-      ;
-
-    Numberbox port_gui = cp5.addNumberbox(g_name+"/port")
-      .setPosition(localx, localy+localoffset)
-      .setSize(w, 15)
-      .setValue(port)
-      .setGroup(g)
-      .setLabel("port")
-      .onChange(cb_enter)
-      //.onReleaseOutside(cb_leave)
-      ;
-
-    port_gui.getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
-
-    HFSMPrototype.instance().makeEditable( port_gui );
-
-    cp5.addTextfield(g_name+"/message")
-      .setPosition(localx, localy+(2*localoffset))
-      .setSize(w, 15)
-      .setGroup(g)
-      .setAutoClear(false)
-      .setLabel("message")
-      .setText(this.message)
-      .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
-      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
-      ;
-
-    cp5.addTextfield(g_name+"/parameters")
-      .setPosition(localx, localy+(3*localoffset))
-      .setSize(w, 15)
-      .setAutoClear(false)
-      .setGroup(g)
-      .setLabel("parameters")
-      .setText(build_string_from_content())
-      .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
-      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
-      ;
-
-    return g;
-  }
-  */
 
 }

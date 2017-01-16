@@ -23,7 +23,7 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
     super(p, cp5, id);
 
     this.message = "/speaker/start";
-    this.filename = "example.mp3";
+    this.filename = "example.wav";
 
     update_content();
     //this.content = new Object[] {filename};

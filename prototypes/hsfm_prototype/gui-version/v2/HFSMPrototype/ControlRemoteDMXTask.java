@@ -26,7 +26,7 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
     super(p, cp5, id);
 
     this.message   = "/dmx/control";
-    this.universe  = new Expression("0");
+    this.universe  = new Expression("1");
     this.intensity = new Expression("0");
     this.rate      = new Expression("0");
     this.duration  = new Expression("0");

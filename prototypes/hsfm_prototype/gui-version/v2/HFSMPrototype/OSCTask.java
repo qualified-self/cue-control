@@ -88,6 +88,7 @@ class OSCTask extends Task {
   }
 
   void stop() {
+    super.stop();
     //Object[] args = message.arguments();
     //message.clear();
     //update_message(args);

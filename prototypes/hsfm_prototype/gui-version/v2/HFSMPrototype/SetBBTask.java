@@ -45,6 +45,7 @@ class SetBBTask extends Task {
   }
 
   void stop() {
+    super.stop();
     this.status = Status.INACTIVE;
   }
 

@@ -25,7 +25,7 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
     super(p, cp5, id);
 
     this.message  = "/speaker/control";
-    this.filename = "example.mp3";
+    this.filename = "example.wav";
     this.volume   = new Expression("0.0");
     this.pan      = new Expression("0.5");
 

@@ -20,8 +20,8 @@ public class StopRemoteDMXTask extends RemoteOSCTask {
   public StopRemoteDMXTask (PApplet p, ControlP5 cp5, String id) {
     super(p, cp5, id);
 
-    this.message = "/dmx/disable";
-    this.universe = new Expression("0");
+    this.message = "/dmx/stop";
+    this.universe = new Expression("1");
 
     update_content();
   }

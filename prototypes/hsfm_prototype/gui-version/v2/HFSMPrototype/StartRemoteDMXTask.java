@@ -20,8 +20,8 @@ public class StartRemoteDMXTask extends RemoteOSCTask {
   public StartRemoteDMXTask (PApplet p, ControlP5 cp5, String id) {
     super(p, cp5, id);
 
-    this.message = "/dmx/enable";
-    this.universe = new Expression("0");
+    this.message = "/dmx/start";
+    this.universe = new Expression("1");
 
     update_content();
 

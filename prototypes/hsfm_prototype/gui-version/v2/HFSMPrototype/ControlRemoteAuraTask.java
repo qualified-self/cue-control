@@ -22,7 +22,7 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
   public ControlRemoteAuraTask (PApplet p, ControlP5 cp5, String id) {
     super(p, cp5, id);
 
-    this.message = "/aura/amp/0";
+    this.message = "/aura/control";
     this.intensity = new Expression("0.0");
 
     update_content();
@@ -99,7 +99,7 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
 
             if (s.equals(get_gui_id() + "/intensity")) {
                 String nv = theEvent.getController().getValueLabel().getText();
-                
+
                 if (nv.trim().equals("")) {
                   nv="0.0";
                   ((Textfield)cp5.get(get_gui_id()+ "/intensity")).setText(nv);

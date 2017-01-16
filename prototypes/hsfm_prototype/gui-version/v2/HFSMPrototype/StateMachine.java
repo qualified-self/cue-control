@@ -89,12 +89,20 @@ public class StateMachine extends Task {
 
   //stops all tasks associated to this node
   void stop() {
+    super.stop();
+
     //stopping all states...
-    for (State s : states)
+    for (State s : states) {
+      s.reset_first_time();
       s.stop();
+    }
 
     //stop begin and end
+    begin.reset_first_time();
     begin.stop();
+
+    end.reset_first_time();
+    end.run();
     end.stop();
 
     //updating the actual
@@ -183,6 +191,8 @@ public class StateMachine extends Task {
 
     //if this state finished. test this condition, maybe you need to overload the comparison!
     if (actual==end) {
+      //p.println("reached an end!");
+      end.run();
       this.status = Status.DONE;
       if (debug)
         System.out.println("State_Machine " + this.name +  " has reached its end and has successfully executed!");
@@ -198,11 +208,6 @@ public class StateMachine extends Task {
     //checks if currect actual has any empty transition
     //check_for_empty_transition();
   }
-
-  //function called by State_Machine at every update looking for empty connections
-  //void check_for_empty_transition () {
-  //  tick(Input.EMPTY);
-  //}
 
   //function called everytime there is a new input
   void tick() {

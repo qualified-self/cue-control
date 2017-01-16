@@ -87,6 +87,7 @@ void setup_autosave() {
   autosave_file = new File(sketchPath() + "/data/patches/temp.txt");
   println(sketchPath());
 }
+
 void autosave() {
   int time_elapsed = abs(minute()-timestamp);
 

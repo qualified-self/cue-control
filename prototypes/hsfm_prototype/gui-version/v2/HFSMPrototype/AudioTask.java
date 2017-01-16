@@ -103,6 +103,7 @@ class AudioTask extends Task {
   }
 
   void stop() {
+    super.stop();
     soundfile.pause();
     soundfile.rewind();
     this.status = Status.INACTIVE;

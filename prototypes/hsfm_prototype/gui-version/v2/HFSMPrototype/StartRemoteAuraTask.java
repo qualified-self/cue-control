@@ -19,7 +19,7 @@ public class StartRemoteAuraTask extends RemoteOSCTask {
     super(p, cp5, id);
 
     this.content = new Object[] {1};
-    this.message = "/aura/enable";
+    this.message = "/aura/start";
 
     //this.build(p, cp5);
   }
