@@ -113,6 +113,29 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
     };
   }
 
+  CallbackListener test() {
+    return new CallbackListener() {
+          public void controlEvent(CallbackEvent theEvent) {
+            reset_gui_fields();
+          }
+    };
+  }
+
+  void reset_gui_fields() {
+    String g_name = this.get_gui_id();
+    String nv;
+
+    if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
+
+    nv = ((Textfield)cp5.get(g_name+"/intensity")).getText();
+
+    if (nv.trim().equals("")) {
+      nv="0.0";
+      ((Textfield)cp5.get(get_gui_id()+ "/intensity")).setText(nv);
+    }
+    update_intensity(nv);
+  }
+
 
 
 

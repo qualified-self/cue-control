@@ -116,4 +116,16 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
     };
   }
 
+  void reset_gui_fields() {
+    String g_name = this.get_gui_id();
+    String nv;
+
+    //if this group is not open, returns...
+    if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
+
+    nv = ((Textfield)cp5.get(g_name+"/filename")).getText();
+    update_name(nv);
+
+  }
+
 }

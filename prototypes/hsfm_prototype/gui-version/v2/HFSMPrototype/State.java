@@ -672,7 +672,13 @@ public class State implements Serializable {
 
   //resets the name of this state
   void reset_name () {
-    this.update_name(this.name);
+    //iterates of all tasks related to this state
+    for (Task t : tasks)
+      t.reset_gui_fields();
+      
+    //this.update_name(this.name);
+    //p.println("reseting name: " + this.label.getText());
+    this.update_name(this.label.getText());
   }
 
   //inits gui elements related to controlP5

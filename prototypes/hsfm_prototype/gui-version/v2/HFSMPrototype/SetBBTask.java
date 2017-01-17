@@ -177,4 +177,18 @@ class SetBBTask extends Task {
       };
   }
 
+  void reset_gui_fields() {
+    String g_name = this.get_gui_id();
+    String nv;
+
+    //if this group is not open, returns...
+    if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
+
+    nv = ((Textfield)cp5.get(g_name+"/name")).getText();
+    update_variable_name(nv);
+    nv = ((Textfield)cp5.get(g_name+"/value")).getText();
+    update_value(nv);
+
+  }
+
 }

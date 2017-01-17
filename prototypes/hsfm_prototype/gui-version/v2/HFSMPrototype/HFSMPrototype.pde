@@ -10,15 +10,15 @@ MainCanvas canvas     ;
 Blackboard board      ;
 Serializer serializer = new Serializer();
 
-boolean debug = false;
+boolean debug = true;
 boolean keyReleased = false;
 boolean mouseReleased = false;
 boolean is_loading = false;
 
 void setup() {
   is_loading = true;
-  //fullScreen();
-  size(1024,700);
+  fullScreen();
+  //size(1024,700);
   background(0);
   smooth();
   inst = this;

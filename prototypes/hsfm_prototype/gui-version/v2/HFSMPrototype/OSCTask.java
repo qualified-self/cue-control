@@ -323,4 +323,21 @@ class OSCTask extends Task {
   }
 
 
+  void reset_gui_fields() {
+    String g_name = this.get_gui_id();
+    String nv;
+
+    //if this group is not open, returns...
+    if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
+
+    nv = ((Textfield)cp5.get(g_name+"/ip")).getText();
+    update_ip(nv);
+    nv = ((Textfield)cp5.get(g_name+"/message")).getText();
+    update_message(nv);
+    nv = ((Textfield)cp5.get(g_name+"/parameters")).getText();
+    update_content_from_string(nv);
+
+  }
+
+
 }

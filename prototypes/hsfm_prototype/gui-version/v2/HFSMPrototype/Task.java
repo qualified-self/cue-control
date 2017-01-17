@@ -181,6 +181,5 @@ public abstract class Task implements Serializable {
   abstract CallbackListener generate_callback_enter();
   //Group load_gui_elements(State s) { return null; }
   abstract Group load_gui_elements(State s);
-
-
+  abstract void reset_gui_fields();
 }

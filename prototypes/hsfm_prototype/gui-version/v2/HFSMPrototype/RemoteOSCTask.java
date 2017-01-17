@@ -26,7 +26,8 @@ public abstract class RemoteOSCTask extends Task {
   transient protected NetAddress broadcast;
   transient protected OscP5      oscP5;
 
-  static String    ip   = "192.168.1.12";
+  //static String    ip   = "192.168.1.11";
+  static String    ip   = "192.168.1.101";
   //static String    ip   = "localhost";
   static int       port = 12000;
 

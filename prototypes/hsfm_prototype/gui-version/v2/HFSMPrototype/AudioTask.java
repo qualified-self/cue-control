@@ -230,25 +230,6 @@ class AudioTask extends Task {
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
     ;
 
-    /*
-    // add a vertical slider
-    cp5.addSlider(g_name+ "/volume")
-      .setPosition(localx, localy+localoffset)
-      .setSize(w, 15)
-      .setRange(0, 1)
-      .setGroup(g)
-      .setValue(1)
-      .setLabel("volume")
-      .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
-      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
-    ;
-
-    // reposition the Label for controller 'slider'
-    cp5.getController(g_name+ "/volume").getValueLabel().align(ControlP5.RIGHT, ControlP5.BOTTOM_OUTSIDE).setPaddingX(0);
-    cp5.getController(g_name+ "/volume").getCaptionLabel().align(ControlP5.LEFT, ControlP5.BOTTOM_OUTSIDE).setPaddingX(0);
-    */
-
     cp5.addTextfield(g_name+ "/volume")
       .setPosition(localx, localy+localoffset)
       .setSize(w, 15)
@@ -263,6 +244,15 @@ class AudioTask extends Task {
 
 
     return g;
+  }
+
+  void reset_gui_fields() {
+    String g_name = this.get_gui_id();
+    String nv;
+    nv = ((Textfield)cp5.get(g_name+"/filename")).getText();
+    update_name(nv);
+    nv = ((Textfield)cp5.get(g_name+"/volume")).getText();
+    set_volume(new Expression(nv));
   }
 
 }

@@ -35,7 +35,7 @@ Minim       minim;
 
 
 //system's default port for receiveing osc messages
-final int OSC_RECV_PORT = 12001;
+final int OSC_RECV_PORT = 12345;
 
 //calls all other utils
 void setup_util() {
@@ -68,14 +68,50 @@ public static BigDecimal round(float d, int decimalPlace) {
     return bd;
 }
 
+/*
+void setup_synapse () {
+  NetAddress host = new NetAddress("localhost", 12346);
+  OscMessage om;
+  om = new OscMessage("righthand_trackjointpos");
+  om.add(1);
+  oscP5.send(om, host);
+  om = new OscMessage("lefthand_trackjointpos");
+  om.add(1);
+  oscP5.send(om, host);
+}
+
+*/
+
+
+boolean is_kinect(String address) {
+
+if (address.contains("righthand") ||
+    address.contains("lefthand") ||
+    address.contains("head") ||
+    address.contains("torso"))
+      return true;
+  else
+      return false;
+}
+
+boolean is_not_blacklisted(String address) {
+  if (address.contains("bitalino") || is_kinect(address))
+      return true;
+  else
+      return false;
+}
+
 void oscEvent(OscMessage msg) {
   if (debug) {
-    System.out.print("### received an osc message.");
-    System.out.print(" addrpattern: "+msg.addrPattern());
-    System.out.print(" typetag: "+msg.typetag());
+    System.out.println("### received an osc message.");
+    System.out.println(" addrpattern: "+msg.addrPattern());
+    System.out.println(" typetag: "+msg.typetag());
   }
-
-  board.oscEvent(msg);
+  String addr = msg.addrPattern();
+  if (is_not_blacklisted(addr))   {
+    if (is_kinect(addr)) msg.setAddrPattern("/knct/"+addr);
+    board.oscEvent(msg);
+  }
 }
 
 int autosavetime = 2; //minutes

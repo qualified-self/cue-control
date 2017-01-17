@@ -198,7 +198,22 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
     };
   }
 
+  void reset_gui_fields() {
+    String g_name = this.get_gui_id();
+    String nv;
 
+    //if this group is not open, returns...
+    if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
+
+    nv = ((Textfield)cp5.get(g_name+"/universe")).getText();
+    update_universe(nv);
+    nv = ((Textfield)cp5.get(g_name+"/intensity")).getText();
+    update_intensity(nv);
+    nv = ((Textfield)cp5.get(g_name+"/rate")).getText();
+    update_rate(nv);
+    nv = ((Textfield)cp5.get(g_name+"/duration")).getText();
+    update_duration(nv);
+  }
 
 
 }

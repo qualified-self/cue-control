@@ -18,7 +18,7 @@ public class StartRemoteAuraTask extends RemoteOSCTask {
   public StartRemoteAuraTask (PApplet p, ControlP5 cp5, String id) {
     super(p, cp5, id);
 
-    this.content = new Object[] {1};
+    this.content = new Object[] {};
     this.message = "/aura/start";
 
     //this.build(p, cp5);
@@ -72,6 +72,16 @@ public class StartRemoteAuraTask extends RemoteOSCTask {
             check_repeat_toggle(s, theEvent);
           }
     };
+  }
+
+  void reset_gui_fields() {
+    String g_name = this.get_gui_id();
+    String nv;
+
+    //if this group is not open, returns...
+    if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
+
+    //nothing in here!
   }
 
 

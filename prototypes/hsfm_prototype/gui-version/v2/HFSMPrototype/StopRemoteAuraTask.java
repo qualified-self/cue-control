@@ -74,6 +74,17 @@ public class StopRemoteAuraTask extends RemoteOSCTask {
     };
   }
 
+  void reset_gui_fields() {
+    String g_name = this.get_gui_id();
+    String nv;
+
+    //if this group is not open, returns...
+    if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
+
+    //nothing in here!
+  }
+
+
 
 
 

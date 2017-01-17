@@ -139,14 +139,14 @@ class MultiLevelPieMenu {
     result = main.get_selection();
     if (result != -1) return result;
 
-    p.println("a) result is " + result);
+    //p.println("a) result is " + result);
 
     //testing if selection is a sound message (between 10 and 19)
     result = sound.get_selection();
 
     if (result != -1) return result+10;
 
-    p.println("b) result is " + result);
+    //p.println("b) result is " + result);
 
     //testing if selection is a haptics message (between 20 and 29)
     result = haptics.get_selection();
