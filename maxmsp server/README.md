@@ -1,5 +1,7 @@
 #Server
-These are the steps for configuring the system:
+This server controls wirelessly all media used in the piece via OSC messages.
+
+These are the steps you need to follow for configuring the server:
 
 ##Setting up Audio & Haptics
 
@@ -9,7 +11,7 @@ These are the steps for configuring the system:
 
 1. Wire up the speakers and the aura to the firestudio. The firestudio should be connected to the computer;
 
-2. Test and make sure this audio setup is properly working and configured in your computer;
+2. Make sure this audio setup is properly configured in your computer before continuing;
 
 #Setting up rounter & DMX
 
@@ -19,9 +21,9 @@ These are the steps for configuring the system:
 
 1. Connect the DMX strobe into the Enttec device;
 
-2. Connect the Enttec to the D-Link. Make sure your Enttec device is properly configured to work wirelessly with the router. See details [here](https://d2lsjit0ao211e.cloudfront.net/pdf/manuals/70305.pdf));
+2. Connect the Enttec to the D-Link router. Make sure your Enttec device is properly configured to work wirelessly with the router. See details [here](https://d2lsjit0ao211e.cloudfront.net/pdf/manuals/70305.pdf));
 
-3. Test and make sure the DMX system is properly working (e.g. ping the Enttec device);
+3. Test and make sure the DMX system is properly working (e.g. ping the Enttec device) before continuing;
 
 #Setting up the server
 
