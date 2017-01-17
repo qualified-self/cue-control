@@ -82,7 +82,7 @@ void setup_synapse () {
 
 */
 
-
+/*
 boolean is_kinect(String address) {
 
 if (address.contains("righthand") ||
@@ -112,6 +112,18 @@ void oscEvent(OscMessage msg) {
     if (is_kinect(addr)) msg.setAddrPattern("/knct/"+addr);
     board.oscEvent(msg);
   }
+}
+*/
+
+void oscEvent(OscMessage msg) {
+  if (debug) {
+    System.out.println("### received an osc message.");
+    System.out.println(" addrpattern: "+msg.addrPattern());
+    System.out.println(" typetag: "+msg.typetag());
+  }
+
+  board.oscEvent(msg);
+
 }
 
 int autosavetime = 2; //minutes

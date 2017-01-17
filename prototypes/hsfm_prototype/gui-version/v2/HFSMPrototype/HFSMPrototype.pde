@@ -10,7 +10,7 @@ MainCanvas canvas     ;
 Blackboard board      ;
 Serializer serializer = new Serializer();
 
-boolean debug = true;
+boolean debug = false;
 boolean keyReleased = false;
 boolean mouseReleased = false;
 boolean is_loading = false;

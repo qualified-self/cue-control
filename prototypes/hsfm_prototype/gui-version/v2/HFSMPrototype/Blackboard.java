@@ -227,27 +227,43 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
     name = name.substring(1, name.length());
     name = name.replace("/", "_");
 
-    //value will be stored in this variable
-    Object value = null;
+    String typetag = msg.typetag();
+    int typetag_size = typetag.length();
 
-    //checks for the right data type
-         if (msg.checkTypetag("i")) //integer
-      value = msg.get(0).intValue();
-    else if (msg.checkTypetag("f")) //float
-      value = msg.get(0).floatValue();
-    else if (msg.checkTypetag("d")) //double
-      value = msg.get(0).doubleValue();
-    else if (msg.checkTypetag("s")) //string
-      value = msg.get(0).stringValue();
-    else if (msg.checkTypetag("b")) //boolean
-      value = msg.get(0).booleanValue();
-    else if (msg.checkTypetag("l")) //long
-      value = msg.get(0).longValue();
-    else if (msg.checkTypetag("c")) //char
-      value = msg.get(0).charValue();
+    p.println(msg.typetag());
 
-    if (!containsKey(name)) put(name, value);
-    else                    replace(name, value);
+    for (int i = 0; i < typetag_size; i++) {
+
+      //value will be stored in this variable
+      Object value = null;
+
+      //checks for the right data type
+
+      //     if (typetag.charAt(i).equals("i")) //integer
+      if (typetag.charAt(i)=='i')//integer
+        value = msg.get(i).intValue();
+      //else if (msg.checkTypetag("f")) //float
+      if (typetag.charAt(i)=='f')//float
+        value = msg.get(i).floatValue();
+      //else if (msg.checkTypetag("d")) //double
+      if (typetag.charAt(i)=='d')//double
+        value = msg.get(i).doubleValue();
+      //else if (msg.checkTypetag("s")) //string
+      if (typetag.charAt(i)=='s')//string
+        value = msg.get(i).stringValue();
+      //else if (msg.checkTypetag("b")) //boolean
+      if (typetag.charAt(i)=='b')//boolean
+        value = msg.get(i).booleanValue();
+      //else if (msg.checkTypetag("l")) //long
+      if (typetag.charAt(i)=='l')//long
+        value = msg.get(i).longValue();
+      //else if (msg.checkTypetag("c")) //char
+      if (typetag.charAt(i)=='c')//char
+        value = msg.get(i).charValue();
+
+      if (!containsKey(name+"_"+i)) put(name+"_"+i, value);
+      else                    replace(name+"_"+i, value);
+    }
   }
 
 
