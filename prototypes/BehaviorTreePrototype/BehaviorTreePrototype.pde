@@ -396,12 +396,12 @@ void removeNode() {
 
 
 void autocompleteNode() {
-  ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getDescription(), placeholderNode.isDecorator());
+  ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getNodeType(), placeholderNode.isDecorator());
   placeholderNode.assign(getLongestCommonPrefix(autocompleteOptions));
 }
 
 void changeSelectedDropdown(int move) {
-  ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getDescription(), placeholderNode.isDecorator());
+  ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getNodeType(), placeholderNode.isDecorator());
   if (autocompleteListCurrentSelected == null && autocompleteOptions.size() > 0)
     autocompleteListCurrentSelected = autocompleteOptions.get(0);
   else
@@ -480,11 +480,15 @@ public static BehaviorTreePrototype instance() {
 
 // Source: http://codereview.stackexchange.com/questions/84523/finding-the-common-prefix-in-a-list-of-strings
 public static String getLongestCommonPrefix(ArrayList<String> strings) {
+  if (strings.size() == 0)
+    return "";
+  else {
     int commonPrefixLength = 0;
     while (allCharactersAreSame(strings, commonPrefixLength)) {
         commonPrefixLength++;
     }
     return strings.get(0).substring(0, commonPrefixLength);
+  }
 }
 
 private static boolean allCharactersAreSame(ArrayList<String> strings, int pos) {
