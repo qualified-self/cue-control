@@ -42,10 +42,21 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
 
     // Iterate over every variable.
     for (Map.Entry<String, Object> entry : entrySet()) {
+      // Get value as string and process it.
+      String stringValue = entry.getValue().toString();
+      if (stringValue.equals(" "))
+        stringValue = "' '";
+      else if (stringValue.replaceAll(" ", "").isEmpty()) // ie. string is only whitespaces
+        stringValue = "\"" + stringValue + "\"";
+      else if (stringValue == null || stringValue.trim().isEmpty()) {
+        stringValue = "null";
+      }
+
       // Replace $varName by ${varName}.
       expr = expr.replaceAll("\\$" + entry.getKey() + "([^\\w]+)", "\\$\\{" + entry.getKey() + "\\}$1");
-      // Replace ${varName} by actual value.
-      expr = expr.replaceAll("\\$\\{" + entry.getKey()+"\\}", entry.getValue().toString());
+
+      // Replace ${varName} by actual value OR null if empty value.
+      expr = expr.replaceAll("\\$\\{" + entry.getKey()+"\\}", stringValue);
     }
 
 		return expr;
