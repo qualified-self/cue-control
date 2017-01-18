@@ -8,6 +8,6 @@ High priority:
 [x] Fix bug: bad support for javascript expressions when it comes to text (string) variables eg. while "$key !== 'a'" does not work
 
 Mid priority:
-[ ] Add a button to "comment out" (ie. activate/deactivate) a node / decorator
+[x] Add a button to "comment out" (ie. activate/deactivate) a node / decorator
 [x] Add colors to the console (notice/log, warning, error)
 [ ] Bring all colors in a single file as constants

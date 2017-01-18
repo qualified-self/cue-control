@@ -90,9 +90,17 @@ public abstract class CompositeNode extends BaseNode
   }
 
   ArrayList<BaseNode> getChildren() { return children; }
+  ArrayList<BaseNode> getEnabledChildren() {
+    ArrayList<BaseNode> enabledChildren = new ArrayList<BaseNode>();
+    for (BaseNode child : children)
+      if (child.isEnabled())
+        enabledChildren.add(child);
+    return enabledChildren;
+  }
   // CompositeNode insertChild(... )
 
   int nChildren() { return children.size(); }
+  int nEnabledChildren() { return getEnabledChildren().size(); }
 
   State execute(Blackboard agent)
   {
@@ -100,7 +108,7 @@ public abstract class CompositeNode extends BaseNode
 
     // If parent has stopped, stop any running children.
     if (state != State.RUNNING) {
-      for (BaseNode node : children)
+      for (BaseNode node : getEnabledChildren())
         if (node.getState() == State.RUNNING)
           node.init(agent);
     }

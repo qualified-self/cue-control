@@ -92,7 +92,12 @@ int drawNode(PApplet app, BaseNode node, int x, int y)
   }
   else {
     // Draw node.
-  	drawItem(app, x, y, stateToColor(node.getState()), !node.hasDecorator(), true, selectedNode == node);
+    color nodeColor;
+    if (node.isEnabled())
+      nodeColor = stateToColor(node.getState());
+    else
+      nodeColor = color(#777777);
+  	drawItem(app, x, y, nodeColor, !node.hasDecorator(), true, selectedNode == node);
 
     // Animation for running nodes.
     if (node.getState() == State.RUNNING) {
@@ -106,16 +111,34 @@ int drawNode(PApplet app, BaseNode node, int x, int y)
     }
 
   	// Draw item text.
-  	drawItemText(app, node.type(), node.getDescription(), x, y, NODE_TEXT_COLOR);
+  	drawItemText(app, node.type(), node.getDescription(), x+NODE_HEIGHT, y, NODE_TEXT_COLOR);
+
+    // Draw enable button.
+    float enableXPosition = x+INDENT/4;
+    app.strokeWeight(3);
+    app.stroke(#000000);
+    app.fill( node.isEnabled() ? color(#000000) : color(255, 255, 255, 0) );
+    app.ellipseMode(CENTER);
+    app.ellipse(enableXPosition, y+NODE_HEIGHT/2, NODE_HEIGHT/2, NODE_HEIGHT/2);
+
+		// Check for click.
+		if (click.roundButtonWasClicked(enableXPosition, y+NODE_HEIGHT/2, NODE_HEIGHT/2))
+		{
+			node.toggleEnabled();
+			click.reset();
+      reset(); // reset everything
+		}
 
   	// Draw expand button and deal with it.
   	if (node instanceof CompositeNode)
   	{
+      float expandXPosition = x+INDENT/4+NODE_HEIGHT/2+INDENT/4;
   		CompositeNode cn = (CompositeNode)node;
   		// Draw button.
+      app.noStroke();
   		app.fill(NODE_EXPANSION_BUTTON_COLOR);
   		app.pushMatrix();
-  		app.translate(x+INDENT/4, y+NODE_HEIGHT/2);
+  		app.translate(expandXPosition, y+NODE_HEIGHT/2);
   		app.scale(NODE_HEIGHT/4);
   		if (!cn.isExpanded())
   			app.rotate(radians(-90));
@@ -124,7 +147,7 @@ int drawNode(PApplet app, BaseNode node, int x, int y)
   		app.popMatrix();
 
   		// Check for click.
-  		if (click.roundButtonWasClicked(x+INDENT/4, y+NODE_HEIGHT/2, NODE_HEIGHT/2))
+  		if (click.roundButtonWasClicked(expandXPosition, y+NODE_HEIGHT/2, NODE_HEIGHT/2))
   		{
   			cn.toggleExpanded();
   			click.reset();

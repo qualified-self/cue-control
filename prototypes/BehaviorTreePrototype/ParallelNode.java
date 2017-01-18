@@ -8,6 +8,8 @@ class ParallelNode extends CompositeNode
   int nFailure;
   int nSuccess;
 
+  ArrayList<BaseNode> enabledChildren;
+
   public ParallelNode() {
     this("");
   }
@@ -34,12 +36,12 @@ class ParallelNode extends CompositeNode
 
     // go through all children and update the childrenRunning
     // TODO: implement avec ceci: https://github.com/NetEase/pomelo-bt/blob/master/lib/node/parallel.js
-    for (int i = 0; i<nChildren(); i++)
+    for (int i = 0; i<enabledChildren.size(); i++)
     {
 //      BehaviorTreePrototype.instance().println("processing " + childrenRunning);
       if (childrenRunning.get(i).booleanValue())
       {
-        State status = children.get(i).execute(agent);
+        State status = enabledChildren.get(i).execute(agent);
         childrenRunning.set(i, new Boolean(status == State.RUNNING));
 
         if (status == State.SUCCESS)
@@ -49,12 +51,12 @@ class ParallelNode extends CompositeNode
       }
     }
 
-    if (nFailure == nChildren() || (sequencePolicy && nFailure >= 1))
+    if (nFailure == enabledChildren.size() || (sequencePolicy && nFailure >= 1))
     {
 //      childrenRunning = null;
       return State.FAILURE;
     }
-    else if (nSuccess == nChildren() || (!sequencePolicy && nSuccess >= 1))
+    else if (nSuccess == enabledChildren.size() || (!sequencePolicy && nSuccess >= 1))
     {
 //      childrenRunning = null;
       return State.SUCCESS;
@@ -66,11 +68,12 @@ class ParallelNode extends CompositeNode
   void doInit(Blackboard agent)
   {
 //    BehaviorTreePrototype.instance().println("do init par for " + nChildren());
-    childrenRunning = new ArrayList<Boolean>(nChildren());
+    enabledChildren = getEnabledChildren();
+    childrenRunning = new ArrayList<Boolean>(enabledChildren.size());
 
-    for (int i=0; i<nChildren(); i++) {
+    for (int i=0; i<nEnabledChildren(); i++) {
 //      BehaviorTreePrototype.instance().println("init on kid " + i);
-      children.get(i).init(agent);
+      enabledChildren.get(i).init(agent);
       childrenRunning.add(new Boolean(true));
     }
 

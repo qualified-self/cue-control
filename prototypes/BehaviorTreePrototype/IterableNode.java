@@ -27,7 +27,7 @@ public abstract class IterableNode extends CompositeNode {
         return ((IterableDecorator)decorator).iterator();
     }
 
-    return children.iterator(); // default
+    return getEnabledChildren().iterator(); // default
   }
 
   BaseNode current() {

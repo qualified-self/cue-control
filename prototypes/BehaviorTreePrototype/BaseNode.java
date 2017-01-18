@@ -12,6 +12,8 @@ public abstract class BaseNode implements Serializable
 
   CompositeNode parent;
 
+  boolean isEnabled;
+
   BaseNode()
   {
     this(null);
@@ -21,6 +23,7 @@ public abstract class BaseNode implements Serializable
   {
     this.parent = null;
     this.description = description;
+    isEnabled = true;
     state = State.UNDEFINED;
   }
 
@@ -65,6 +68,14 @@ public abstract class BaseNode implements Serializable
 
   CompositeNode getParent() { return parent; }
 
+  boolean isEnabled() { return isEnabled; }
+  void setEnabled(boolean isEnabled) {
+    this.isEnabled = isEnabled;
+  }
+  void toggleEnabled() {
+    isEnabled = !isEnabled;
+  }
+
   void init(Blackboard agent) {
 
     // BehaviorTreePrototype.instance().println("init called on class " + type());
@@ -86,6 +97,11 @@ public abstract class BaseNode implements Serializable
 //    BehaviorTreePrototype.instance().println("exec called on class " + type());
     if (needsInit) {
       init(agent);
+    }
+
+    if (!isEnabled()) {
+      Console.instance().error("A disabled node has been executed: this should not be happening.");
+      return state;
     }
 
     if (hasDecorator())

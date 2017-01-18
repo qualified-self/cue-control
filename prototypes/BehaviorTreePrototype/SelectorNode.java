@@ -24,7 +24,7 @@ public class SelectorNode extends IterableNode
 
   public State doExecute(Blackboard agent)
   {
-    if (nChildren() == 0)
+    if (nEnabledChildren() == 0)
       return State.SUCCESS;
 
     // if (currentPosition == -1) //starting out

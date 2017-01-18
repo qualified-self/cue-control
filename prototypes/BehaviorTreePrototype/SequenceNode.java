@@ -13,7 +13,7 @@ class SequenceNode extends IterableNode
 
   public State doExecute(Blackboard agent)
   {
-    if (nChildren() == 0)
+    if (nEnabledChildren() == 0)
       return State.SUCCESS;
 
 //    BaseNode currentTask = children.get(currentPosition);

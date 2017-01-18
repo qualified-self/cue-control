@@ -11,7 +11,7 @@ class RandomizeDecorator extends IterableDecorator {
   }
 
   Iterator<BaseNode> iterator() {
-    return new RandomIterator(getNode().getChildren());
+    return new RandomIterator(getNode().getEnabledChildren());
   }
 
 }
