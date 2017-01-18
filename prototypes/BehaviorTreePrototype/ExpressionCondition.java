@@ -12,7 +12,8 @@ class ExpressionCondition extends Condition {
       return ((Boolean)expression.eval(agent)).booleanValue();
     }
     catch (Exception e) {
-//      println("ERROR: " + e.toString());
+      Console.instance().error("Invalid expression: \"" + expression.toString() + "\".");
+      Console.instance().error(e.getMessage());
       return false;
     }
   }
