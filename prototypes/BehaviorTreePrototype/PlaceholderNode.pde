@@ -60,6 +60,9 @@ class PlaceholderNode extends Decorator {
 
   String getDescription() { return declaration; }
 
+  // Node type is just the first part of the string before the first space.
+  String getNodeType() { return getDescription().replaceAll(" .*", ""); }
+
   public State doExecute(Blackboard agent) { return State.UNDEFINED; }
   public void doInit(Blackboard agent) {}
   public String type() { return ""; }
