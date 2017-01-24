@@ -33,6 +33,17 @@ These commands apply to currently selected node or decorator.
 
 (\*) Switches to node/decorator creation mode. When a node or decorator is added, the user needs to input the node/decorator *type* followed by arguments (if applicable). User can interrupt node/decorator creation by pressing *DELETE*.
 
+## Node/decorator creation
+
+These commands apply while a node/decorator is currently created.
+
+| Key | Action | Description |
+| ----| ------------- | ------------- |
+| TAB | Autocomplete  | Autocompletes node/decorator name based on currently typed string. |
+| UP/DOWN | Move in drop-down | Moves in drop-down menu: name can be selected by typing ENTER. |
+| ESC | Cancel creation | Cancels node/decorator creation. |
+| ENTER | Create node/decorator | Creates node/decorator (if syntax is correct). |
+
 # Node reference
 
 ## Composite nodes
