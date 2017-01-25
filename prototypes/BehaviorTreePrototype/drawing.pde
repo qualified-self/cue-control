@@ -211,6 +211,20 @@ void drawEditor(PApplet app) {
 
       // Draw item text.
       drawItemText(app, "", autocompleteOptions.get(i), editorX, yOption, NODE_TEXT_COLOR);
+
+      float x2 = width-INDENT;
+      float y2 = yOption+NODE_HEIGHT;
+
+      // Check if hover on list element.
+      if (editorX <= app.mouseX && app.mouseX <= x2 && yOption <= app.mouseY && app.mouseY <= y2) {
+        autocompleteListCurrentSelected = autocompleteOptions.get(i);
+      }
+
+      // Check if click on list element.
+      if (click.rectButtonWasClicked(editorX, yOption, x2, y2)) {
+        placeholderNode.assign(autocompleteOptions.get(i) + " ");
+        autocompleteListCurrentSelected = null;
+      }
     }
   }
 }

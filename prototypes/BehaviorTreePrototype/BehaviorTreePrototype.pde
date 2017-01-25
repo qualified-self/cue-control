@@ -197,7 +197,7 @@ void keyPressed() {
         if (autocompleteListCurrentSelected == null) submitNode();
         else
         {
-          placeholderNode.assign(autocompleteListCurrentSelected);
+          placeholderNode.assign(autocompleteListCurrentSelected + " ");
           autocompleteListCurrentSelected = null;
         }
         break;
@@ -381,7 +381,7 @@ void editNode() {
     else if (selectedNode.hasParent())
       selectedNode.getParent().replaceChild(selectedNode, placeholderNode);
     else // root
-      println("Weird error");
+      Console.instance().error("Something wrong happened: selected node has no parent.");
 
     if (selectedNode.hasDecorator())
       placeholderNode.setDecorator(selectedNode.getDecorator());
@@ -420,7 +420,20 @@ void removeNode() {
 
 void autocompleteNode() {
   ArrayList<String> autocompleteOptions = factory.nodesStartingWith(placeholderNode.getNodeType(), placeholderNode.isDecorator());
-  placeholderNode.assign(getLongestCommonPrefix(autocompleteOptions));
+  String prefix = getLongestCommonPrefix(autocompleteOptions);
+  if (autocompleteOptions.contains(prefix)) {
+    autocompleteOptions.remove(prefix);
+    boolean optionIsOnlyOneWithPrefix = true;
+    for (String option : autocompleteOptions)
+      if (option.startsWith(prefix)) {
+        optionIsOnlyOneWithPrefix = false;
+        break;
+      }
+    if (optionIsOnlyOneWithPrefix)
+      prefix += " ";
+  }
+  placeholderNode.assign(prefix);
+  autocompleteListCurrentSelected = null;
 }
 
 void changeSelectedDropdown(int move) {
