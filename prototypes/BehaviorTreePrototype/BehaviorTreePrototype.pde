@@ -239,6 +239,7 @@ void keyPressed() {
           break;
 
         case KeyEvent.VK_D:                  addDecorator(); break;
+        case KeyEvent.VK_E:                  editNode(); break;
 
         case KeyEvent.VK_ENTER:              addSibling(); break;
         case KeyEvent.VK_TAB:                addChild(); break;
@@ -367,6 +368,28 @@ void addDecorator() {
   }
 }
 
+void editNode() {
+  if (selectedNode != null) {
+    setEditState(true);
+    placeholderNode.reset();
+    placeholderNode.assign(selectedNode.loadDeclaration());
+
+    if (selectedNode instanceof Decorator) {
+      ((Decorator)selectedNode).getNode().setDecorator(placeholderNode);
+//      ((Decorator)selectedNode).setNode(null);
+    }
+    else if (selectedNode.hasParent())
+      selectedNode.getParent().replaceChild(selectedNode, placeholderNode);
+    else // root
+      println("Weird error");
+
+    if (selectedNode.hasDecorator())
+      placeholderNode.setDecorator(selectedNode.getDecorator());
+
+    selectedNode = null;
+//    selectedNode = newNode;
+  }
+}
 void submitNode() {
   BaseNode newNode = placeholderNode.submit();
   if (newNode != null) {

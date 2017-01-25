@@ -24,9 +24,10 @@ These commands apply to currently selected node or decorator.
 
 | Key (CTRL+)   | Action | Description |
 | ------------- | ------------- | ------------- |
-| D  | Add decorator (\*) | Adds a decorator to selected node or decorator |
 | ENTER | Add sibling (\*) | Adds a new node after selected node |
 | TAB  | Add child (\*) | Adds a new child to selected node (if applicable) |
+| E  | Edit node/decorator (\*) | Edits selected node or decorator |
+| D  | Add decorator (\*) | Adds a decorator to selected node or decorator |
 | DELETE/BACKSPACE | Remove node or decorator | Removes selected node/decorator. If parent node, will also remove all children. |
 | UP/DOWN | Move within | Moves selected node within its current hierarchy |
 | LEFT/RIGHT | Move accross | Moves selected node accross its current hierarchy |

@@ -14,6 +14,9 @@ public abstract class BaseNode implements Serializable
 
   boolean isEnabled;
 
+  // Saved string description of the node (for later retrieval).
+  private String savedDeclaration;
+
   BaseNode()
   {
     this(null);
@@ -31,6 +34,12 @@ public abstract class BaseNode implements Serializable
     state = State.UNDEFINED;
     needsInit = true;
   }
+
+  void saveDeclaration(String declaration) {
+    savedDeclaration = declaration;
+  }
+
+  String loadDeclaration() { return savedDeclaration; }
 
   BaseNode setDecorator(Decorator decorator) {
     decorator.setNode(this);

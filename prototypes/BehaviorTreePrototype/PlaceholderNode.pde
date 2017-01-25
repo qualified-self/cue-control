@@ -39,10 +39,14 @@ class PlaceholderNode extends Decorator {
     BaseNode newNode = compile();
     if (newNode != null)
     {
+      newNode.saveDeclaration(declaration);
       if (useAsDecorator)
         node.setDecorator((Decorator)newNode);
       else
         parent.replaceChild(this, newNode);
+        
+      if (hasDecorator())
+        newNode.setDecorator(getDecorator());
     }
     return newNode;
   }
