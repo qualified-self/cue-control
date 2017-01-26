@@ -229,6 +229,38 @@ void drawEditor(PApplet app) {
   }
 }
 
+void drawToolBar(PApplet app) {
+  app.fill(32);
+  app.rect(0, 0, app.width, TOOLBAR_HEIGHT);
+
+  app.textSize(TOOLBAR_HEIGHT/2);
+  app.textAlign(CENTER);
+
+  String text;
+  color textColor;
+  if (isEditing()) {
+    text = "EDITING";
+    textColor = #ffffff;
+  }
+  else if (isPlaying()) {
+    text = "PLAY";
+    textColor = stateToColor(State.RUNNING);
+  }
+  else if (isFinished()) {
+    text = "FINISHED";
+    textColor = stateToColor(rootState);
+  }
+  else
+  {
+    text = "PAUSE";
+    textColor = stateToColor(State.RUNNING);
+  }
+
+  app.fill(textColor);
+  app.text(text, app.width/2, TOOLBAR_HEIGHT/2+10);
+  app.textAlign(LEFT); // switch back to normal
+}
+
 color stateToColor(State state) {
 if (state == State.RUNNING)
   return color(#52F3F7);
