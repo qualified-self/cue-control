@@ -211,6 +211,8 @@ void keyPressed() {
       case BACKSPACE:          placeholderNode.backspace(); break;
       case TAB:                autocompleteNode(); break;
 
+      case ' ':                placeholderNode.append(' ');
+                               autocompleteListCurrentSelected = null; break; // cancel selection
      case CODED:
      {
        switch (keyCode)
