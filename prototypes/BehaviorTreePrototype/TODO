@@ -3,6 +3,7 @@ High priority:
 [ ] Chrono problem: it is not restarted when resetting
 [ ] Add auto-save
 [ ] Prevent scrolling too much such that text disappears
+[x] Add copy-cut-paste option
 [x] CTRL-DEL is not working
 [x] Tab in autocomplete should complete common prefixes
 [x] Autocomplete list should be selectable using arrows (and/or mouse)

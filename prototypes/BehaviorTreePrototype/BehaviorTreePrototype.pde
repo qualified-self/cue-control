@@ -34,6 +34,7 @@ Serializer serializer = new Serializer();
 Blackboard board = new Blackboard();
 Console console = Console.instance();
 CompositeNode root;
+BaseNode clipBoardNode; // clipped node
 
 NodeFactory factory;
 
@@ -252,6 +253,10 @@ void keyPressed() {
         case KeyEvent.VK_D:                  addDecorator(); break;
         case KeyEvent.VK_E:                  editNode(); break;
 
+        case KeyEvent.VK_X:                  cutNode(); break;
+        case KeyEvent.VK_C:                  copyNode(); break;
+        case KeyEvent.VK_V:                  pasteNode(); break;
+
         case KeyEvent.VK_ENTER:              addSibling(); break;
         case KeyEvent.VK_TAB:                addChild(); break;
 
@@ -310,7 +315,6 @@ void reset() {
 
 void clear() {
   root = new SequenceNode();
-
   reset();
 
   setPlayState(false);
@@ -350,14 +354,21 @@ void pause() {
   setPlayState(false);
 }
 
+boolean _addSibling(BaseNode node, BaseNode newSibling) {
+  if (node != null && node.hasParent()) {
+    node.getParent().insertChild(node, newSibling);
+    return true;
+  }
+  else
+    return false;
+}
+
 void addSibling() {
-  if (selectedNode != null && selectedNode.hasParent()) {
+  if (_addSibling(selectedNode, placeholderNode)) {
     setEditState(true);
     placeholderNode.reset();
-    selectedNode.getParent().insertChild(selectedNode, placeholderNode);
     selectedNode = null;
     autocompleteListCurrentSelected = null;
-//    selectedNode = newNode;
   }
 }
 
@@ -406,6 +417,44 @@ void editNode() {
 //    selectedNode = newNode;
   }
 }
+
+void _copyNode(boolean remove) {
+  if (selectedNode != null) {
+    clipBoardNode = (BaseNode)selectedNode.clone();
+    clipBoardNode.removeParent();
+    if (remove)
+      removeNode();
+  }
+}
+
+void cutNode() {
+  _copyNode(true);
+}
+
+void copyNode() {
+  _copyNode(false);
+}
+
+void pasteNode() {
+  if (clipBoardNode != null) {
+    if (selectedNode == null)
+      selectedNode = root;
+
+    // Make copy of clipboard (cause you might want to paste multiple times.)
+    BaseNode pastedNode = (BaseNode)clipBoardNode.clone();
+    if (pastedNode instanceof Decorator) {
+      selectedNode.setDecorator((Decorator)pastedNode);
+    }
+    else if (selectedNode instanceof CompositeNode) {
+      ((CompositeNode)selectedNode).addChild(pastedNode);
+    }
+    else {
+      _addSibling(selectedNode, pastedNode);
+    }
+    selectedNode = pastedNode;
+  }
+}
+
 void submitNode() {
   BaseNode newNode = placeholderNode.submit();
   if (newNode != null) {

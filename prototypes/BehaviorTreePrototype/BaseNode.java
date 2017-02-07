@@ -1,4 +1,4 @@
-import java.io.Serializable;
+import java.io.*;
 
 public abstract class BaseNode implements Serializable
 {
@@ -158,4 +158,22 @@ public abstract class BaseNode implements Serializable
 
   void play()  { setPlayState(true); }
   void pause() { setPlayState(false); }
+
+  public BaseNode clone() {
+    try {
+      ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      ObjectOutputStream oos = new ObjectOutputStream(bos);
+      oos.writeObject(this);
+      oos.flush();
+      oos.close();
+      bos.close();
+      byte[] byteData = bos.toByteArray();
+
+      ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
+      return (BaseNode) new ObjectInputStream(bais).readObject();
+    } catch (Exception e) {
+      Console.instance().error("Could not copy node.");
+      return null;
+    }
+  }
 }
