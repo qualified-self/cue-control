@@ -115,4 +115,10 @@ public abstract class CompositeNode extends BaseNode
 
     return state;
   }
+
+  void setPlayState(boolean playing) {
+    super.setPlayState(playing);
+    for (BaseNode c : children)
+      c.setPlayState(playing);
+  }
 }

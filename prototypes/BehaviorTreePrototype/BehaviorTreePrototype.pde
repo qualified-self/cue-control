@@ -13,6 +13,8 @@ final int NODE_HEIGHT = 25;
 final int NODE_SPACING = 5;
 final int BLACKBOARD_WIDTH = 600;
 
+final int TOOLBAR_HEIGHT = 100;
+
 final int OSC_SEND_PORT = 12000;
 final int OSC_RECV_PORT = 14000;
 final String OSC_IP     = "192.168.1.101";
@@ -41,8 +43,9 @@ boolean playing;
 // Are we currently in the process of adding/editing a node.
 boolean editing;
 
-// Vertical offset (for scrolling)
-float yOffset = 0;
+// Vertical offset (for scrolling)  size(displayWidth-BLACKBOARD_WIDTH, displayHeight, P2D);
+
+float yOffset = TOOLBAR_HEIGHT+10;
 
 // Placeholder node used to add/edit new nodes.
 PlaceholderNode placeholderNode = new PlaceholderNode();
@@ -121,6 +124,7 @@ void draw() {
       selectedNode = null;
     drawMainTree(this);
     drawEditor(this);
+    drawToolBar(this);
     click.reset();
 
     if (isPlaying() && !isEditing()) {
@@ -139,9 +143,10 @@ void draw() {
       // Execute (if running).
       if (rootState == State.RUNNING) {
         rootState = root.execute(board);
+        nSteps++;
       }
-
-      nSteps++;
+      else
+        playing = false;
     }
   }
 }
@@ -225,7 +230,10 @@ void keyPressed() {
     {
       switch (keyCode)
       {
-        case KeyEvent.VK_SPACE:            togglePlay(); break;
+        case KeyEvent.VK_SPACE:
+          if (isFinished()) reset();
+          togglePlay();
+          break;
         case KeyEvent.VK_R:                reset();      break;
         case KeyEvent.VK_N:                if (keyEvent.isShiftDown()) clear(); break;
 
@@ -314,8 +322,13 @@ boolean isEditing() {
   return editing;
 }
 
+boolean isFinished() {
+  return (rootState != State.RUNNING);
+}
+
 void setPlayState(boolean playing) {
   this.playing = playing;
+  root.setPlayState(playing);
 }
 
 void setEditState(boolean editing) {
@@ -323,7 +336,7 @@ void setEditState(boolean editing) {
 }
 
 void togglePlay() {
-  playing = !playing;
+  setPlayState(!playing);
 }
 
 void play() {

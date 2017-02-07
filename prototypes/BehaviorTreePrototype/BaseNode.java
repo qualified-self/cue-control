@@ -150,4 +150,12 @@ public abstract class BaseNode implements Serializable
   }
 
   void scheduleInit() { needsInit = true; }
+
+  void setPlayState(boolean playing) {
+    if (hasDecorator())
+      getDecorator().setPlayState(playing);
+  }
+
+  void play()  { setPlayState(true); }
+  void pause() { setPlayState(false); }
 }
