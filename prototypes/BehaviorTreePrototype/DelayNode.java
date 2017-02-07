@@ -5,6 +5,7 @@ class DelayNode extends BaseNode {
 	Chrono chrono;
   Expression timeOut;
   float currentTimeOut;
+  boolean chronoNeedsRestart;
 
 	public DelayNode(float timeOut) {
 		this(Float.toString(timeOut));
@@ -22,13 +23,16 @@ class DelayNode extends BaseNode {
 		super(description);
 		this.timeOut = new Expression(timeOut);
 		chrono = new Chrono(false);
+    chronoNeedsRestart = true;
 	}
 
   public State doExecute(Blackboard agent) {
-		if (!chrono.isRunning())
+		if (chronoNeedsRestart)
     {
       try {
         currentTimeOut = ((Number)timeOut.eval(agent)).floatValue();
+  			chrono.restart();
+        chronoNeedsRestart = false;
       }
       catch (Exception e) {
         Console.instance().error(e.toString());
@@ -36,20 +40,34 @@ class DelayNode extends BaseNode {
 			  chrono.restart();
         return State.FAILURE;
       }
-			chrono.restart();
+
     }
 
-		return (chrono.hasPassed(PApplet.ceil(currentTimeOut*1000)) ? State.SUCCESS : State.RUNNING);
+		if (chrono.hasPassed(PApplet.ceil(currentTimeOut*1000))) {
+      chronoNeedsRestart = true;
+      return State.SUCCESS;
+    }
+    else
+      return State.RUNNING;
   }
 
   public void doInit(Blackboard agent)
   {
     chrono.stop();
+    chronoNeedsRestart = true;
   }
 
   String getDynamicDescription() {
 		float timeLeft = currentTimeOut - chrono.elapsed()/1000.0f;
 		return PApplet.nf(PApplet.max(timeLeft, 0), 0, 1) + " / " + PApplet.nf(currentTimeOut, 0, 1);
+  }
+
+  void setPlayState(boolean playing) {
+    super.setPlayState(playing);
+    if (playing)
+      chrono.resume();
+    else
+      chrono.stop();
   }
 
 }
