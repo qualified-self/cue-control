@@ -134,6 +134,7 @@ void draw() {
       board.put("mouseY", mouseY);
       board.put("keyPressed", keyPressed);
       board.put("key", keyPressed ? key : 0);
+      board.put("seconds", millis() / 1000.0f);
 
   //    println(nSteps);
 
