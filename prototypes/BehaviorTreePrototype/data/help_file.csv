@@ -1,0 +1,7 @@
+key,action,description
+SPACE,Play/pause,Toggles play/pause playback
+R,Reset,Resets execution process at startup and pauses playback
+SHIFT+N,New document,Creates a new document (will clear current document)
+O,Open,Opens a document
+S,Save,Saves current document
+SHIFT+S,Save as...,Saves current document in new file
