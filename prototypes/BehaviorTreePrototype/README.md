@@ -25,6 +25,9 @@ These commands apply to currently selected node or decorator.
 | Key (CTRL+)   | Action | Description |
 | ------------- | ------------- | ------------- |
 | D  | Add decorator (\*) | Adds a decorator to selected node or decorator |
+| X | Cut | Cuts current node/decorator |
+| C | Copy | Copies current node/decorator  |
+| V | Paste | Pastes current node/decorator (as sibling) |
 | ENTER | Add sibling (\*) | Adds a new node after selected node |
 | TAB  | Add child (\*) | Adds a new child to selected node (if applicable) |
 | UP/DOWN | Move within | Moves selected node within its current hierarchy |
