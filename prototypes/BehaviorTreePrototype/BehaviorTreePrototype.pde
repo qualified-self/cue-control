@@ -38,6 +38,8 @@ BaseNode clipBoardNode; // clipped node
 
 NodeFactory factory;
 
+Help help;
+
 // Are we playing/paused.
 boolean playing;
 
@@ -89,6 +91,8 @@ void setup() {
   // Start sound server.
   minim = new Minim(this);
 
+  help = new Help();
+
   // Initianlize expression/script manager.
   Expression.initManager();
 
@@ -126,6 +130,7 @@ void draw() {
     drawMainTree(this);
     drawEditor(this);
     drawToolBar(this);
+    drawHelp(this);
     click.reset();
 
     if (isPlaying() && !isEditing()) {

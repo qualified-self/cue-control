@@ -8,7 +8,7 @@ High priority:
 [x] Tab in autocomplete should complete common prefixes
 [x] Autocomplete list should be selectable using arrows (and/or mouse)
 [x] Allow erasing the root node (all of this would be highly facilitated by simply adding a RootNode that takes a single child).
-[ ] Add a help button
+[x] Add a help button
 [x] Integrate tasks for tracking keyPressed, mouseX and mouseY
 [x] Fix bug: bad support for javascript expressions when it comes to text (string) variables eg. while "$key !== 'a'" does not work
 

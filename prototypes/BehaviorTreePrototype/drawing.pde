@@ -261,6 +261,10 @@ void drawToolBar(PApplet app) {
   app.textAlign(LEFT); // switch back to normal
 }
 
+void drawHelp(PApplet app) {
+  help.draw();
+}
+
 color stateToColor(State state) {
 if (state == State.RUNNING)
   return color(#52F3F7);
