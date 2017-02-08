@@ -517,18 +517,15 @@ void changeSelectedDropdown(int move) {
     {
       index = constrain(index +  move, 0, autocompleteOptions.size()-1);
       autocompleteListCurrentSelected = autocompleteOptions.get(index);
-      println("new: " + autocompleteListCurrentSelected);
     }
   }
 }
 
 void moveNodeWithinLevel(int move) {
-  println("Move withinlevel: " + move);
   if (selectedNode != null && selectedNode.hasParent()) {
     CompositeNode parent = selectedNode.getParent();
     int index = parent.indexOf(selectedNode);
     int nextIndex = constrain(index + move, 0, parent.nChildren()-1);
-    println("from " + index + " to "+nextIndex);
     parent.moveChild(index, nextIndex);
   }
 }

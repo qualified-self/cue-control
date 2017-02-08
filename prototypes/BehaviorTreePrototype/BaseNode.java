@@ -65,8 +65,7 @@ public abstract class BaseNode implements Serializable
 
   BaseNode setParent(CompositeNode parent) {
     if (hasParent()) {
-//      System.out.println("Cannot set parent: already has one. Remove it first.");
-      new Exception().printStackTrace();
+      Console.instance().warning("Cannot set parent: already has one. Remove it first.");
     }
     else
       this.parent = parent;
@@ -86,11 +85,10 @@ public abstract class BaseNode implements Serializable
   }
 
   void init(Blackboard agent) {
-
-    // BehaviorTreePrototype.instance().println("init called on class " + type());
-
     needsInit = false;
 
+    // FIXME: In fact, init of node should not necessarily trigger an init of
+    // its decorator. See ChronoDecorator for example.
     if (hasDecorator())
       decorator.init(agent);
     else
@@ -98,7 +96,6 @@ public abstract class BaseNode implements Serializable
 
     // Reset previous state.
     state = State.UNDEFINED;
-//    BehaviorTreePrototype.instance().println("END init called on class " + type());
   }
 
   State execute(Blackboard agent)
