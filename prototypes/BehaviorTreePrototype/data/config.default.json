@@ -1,0 +1,5 @@
+{
+  "osc_recv_port": 14000,
+  "osc_send_port": 12000,
+  "osc_send_ip"  : "127.0.0.1"
+}

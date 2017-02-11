@@ -15,9 +15,11 @@ final int BLACKBOARD_WIDTH = 600;
 
 final int TOOLBAR_HEIGHT = 100;
 
-final int OSC_SEND_PORT = 12000;
-final int OSC_RECV_PORT = 14000;
-final String OSC_IP     = "192.168.1.101";
+final int DEFAULT_OSC_SEND_PORT = 12000;
+final int DEFAULT_OSC_RECV_PORT = 14000;
+final String DEFAULT_OSC_SEND_IP     = "127.0.0.1";
+
+//final String OSC_IP     = "192.168.1.101";
 
 final color DECORATOR_FILL_COLOR = #6a6a6a;
 final color DECORATOR_TEXT_COLOR = #eeeeee;
@@ -27,6 +29,8 @@ final color NODE_TEXT_COLOR = #000000;
 final color NODE_EXPANSION_BUTTON_COLOR = #333333;
 
 final int AUTO_SAVE_INTERVAL = 10; // seconds
+
+JSONObject config;
 
 OscP5 oscP5;
 NetAddress remoteLocation;
@@ -81,14 +85,31 @@ void setup() {
   smooth();
 //  frameRate(5);
 
+	// Get config.
+	try {
+		config = loadJSONObject("config.json");
+	} catch (Exception e) {
+		Console.instance().warning("Could not load configuration file 'config.json'.");
+		config = null;
+	}
+
+	int oscRecvPort  = configInt   ("osc_recv_port", DEFAULT_OSC_RECV_PORT);
+	int oscSendPort  = configInt   ("osc_send_port", DEFAULT_OSC_SEND_PORT);
+	String oscSendIp = configString("osc_send_ip",   DEFAULT_OSC_SEND_IP);
+
+	Console.instance().log("Initializing OSC");
+	Console.instance().log("  recv_port="+oscRecvPort);
+	Console.instance().log("  send_port="+oscSendPort);
+	Console.instance().log("  send_ip  ="+oscSendIp);
+
   // Create factory.
   factory = new NodeFactory();
 
   // Start oscP5, listening for incoming messages.
-  oscP5 = new OscP5(this, OSC_RECV_PORT);
+  oscP5 = new OscP5(this, oscRecvPort);
 
   // Location to send OSC messages
-  remoteLocation = new NetAddress(OSC_IP, OSC_SEND_PORT);
+  remoteLocation = new NetAddress(oscSendIp, oscSendPort);
 
   // Start sound server.
   minim = new Minim(this);
@@ -629,4 +650,20 @@ void autosave() {
     println("saving!");
     timestamp = second();
   }
+}
+
+int configInt(String param, int defaultValue) {
+	if (config == null)
+		return defaultValue;
+
+	else
+		return config.isNull(param)  ? defaultValue : config.getInt(param);
+}
+
+String configString(String param, String defaultValue) {
+	if (config == null)
+		return defaultValue;
+
+	else
+		return config.isNull(param)  ? defaultValue : config.getString(param);
 }
