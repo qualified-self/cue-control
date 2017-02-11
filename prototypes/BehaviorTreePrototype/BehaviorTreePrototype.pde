@@ -28,7 +28,7 @@ final color NODE_TEXT_COLOR = #000000;
 
 final color NODE_EXPANSION_BUTTON_COLOR = #333333;
 
-final int AUTO_SAVE_INTERVAL = 10; // seconds
+final int AUTO_SAVE_INTERVAL = 60; // seconds
 
 JSONObject config;
 
@@ -643,7 +643,7 @@ void initAutosave() {
 }
 
 void autosave() {
-  long timeElapsed = abs(second()-timestamp);
+  long timeElapsed = (long)abs(second()-timestamp);
 
   if (timeElapsed > AUTO_SAVE_INTERVAL) {
     serializer.saveAs(autosaveFile);
