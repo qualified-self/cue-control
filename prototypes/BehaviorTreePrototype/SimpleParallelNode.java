@@ -19,18 +19,19 @@ class SimpleParallelNode extends CompositeNode
 
     // go through all children and update the childrenRunning
     // TODO: implement avec ceci: https://github.com/NetEase/pomelo-bt/blob/master/lib/node/parallel.js
+		boolean firstSucceeded = false;
     for (int i = 0; i<nChildren(); i++)
     {
       State status = children.get(i).execute(agent);
 
       if (status == State.FAILURE)
         return State.FAILURE;
-      // NOTE: as soon as main children stops, everything stops
+      // NOTE: as soon as main children stops, let everyone run one last time and then stop.
       else if (i == 0 && status == State.SUCCESS)
-        return State.SUCCESS;
+        firstSucceeded = true;
     }
 
-    return State.RUNNING;
+		return (firstSucceeded ? State.SUCCESS : State.RUNNING);
   }
 
   void doInit(Blackboard agent)
