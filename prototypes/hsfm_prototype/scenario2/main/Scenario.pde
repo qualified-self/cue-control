@@ -24,6 +24,8 @@ class Scenario {
   StateMachine light_control;
   State        config_1, config_2, config_3;
 
+  String dest_ip = "192.168.1.10";
+
   /*
   //setup
   OSCTask      begin_speaker_enable;
@@ -137,12 +139,12 @@ class Scenario {
     // Expression expr3  = new Expression("(${bitalino_0}/1000) * 255");
 
     //tasks for the state setup
-    //OSCTask begin_speaker_disable   = new OSCTask(p, "/speaker/enable", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask begin_speaker_enable   = new OSCTask(p, "/speaker/enable", 12000, "192.168.1.100", new Object[]{1.});
-    OSCTask begin_ambient_silence  = new OSCTask(p, "/speaker/amp/1", 12000, "192.168.1.100", new Object[]{0.});
-    OSCTask begin_heart_silence    = new OSCTask(p, "/speaker/amp/0", 12000, "192.168.1.100", new Object[]{0.});
-    OSCTask begin_aura_silence     = new OSCTask(p, "/aura/amp/0", 12000, "192.168.1.100", new Object[]{0.});
-    OSCTask begin_dmx_silence        = new OSCTask(p, "/dmx/enable", 12000, "192.168.1.100", new Object[]{0.});
+    //OSCTask begin_speaker_disable   = new OSCTask(p, "/speaker/enable", 12000, dest_ip, new Object[]{0});
+    OSCTask begin_speaker_enable   = new OSCTask(p, "/speaker/enable", 12000, dest_ip, new Object[]{1.});
+    OSCTask begin_ambient_silence  = new OSCTask(p, "/speaker/amp/1", 12000, dest_ip, new Object[]{0.});
+    OSCTask begin_heart_silence    = new OSCTask(p, "/speaker/amp/0", 12000, dest_ip, new Object[]{0.});
+    OSCTask begin_aura_silence     = new OSCTask(p, "/aura/amp/0", 12000, dest_ip, new Object[]{0.});
+    OSCTask begin_dmx_silence        = new OSCTask(p, "/dmx/enable", 12000, dest_ip, new Object[]{0.});
     //root.begin.add_task(begin_speaker_disable);
     root.begin.add_task(begin_speaker_enable);
     root.begin.add_task(begin_ambient_silence);
@@ -151,15 +153,15 @@ class Scenario {
     root.begin.add_task(begin_dmx_silence);
 
     //taks for the state intro
-    OSCTask intro_ambient_increase = new OSCTask(p, "/speaker/amp/1", 12000, "192.168.1.100", new Object[]{inc_timer});
-    OSCTask intro_aura_increase    = new OSCTask(p, "/aura/amp/0", 12000, "192.168.1.100", new Object[]{inc_timer});
+    OSCTask intro_ambient_increase = new OSCTask(p, "/speaker/amp/1", 12000, dest_ip, new Object[]{inc_timer});
+    OSCTask intro_aura_increase    = new OSCTask(p, "/aura/amp/0", 12000, dest_ip, new Object[]{inc_timer});
     intro.add_task(intro_ambient_increase);
     intro.add_task(intro_aura_increase);
 
     //tasks for the stage the self appears
     OSCTask selfa_aura_silence     = begin_aura_silence.clone();
     OSCTask selfa_ambient_silence  = begin_ambient_silence.clone();
-    OSCTask selfa_heart_starts     = new OSCTask(p, "/speaker/amp/0", 12000, "192.168.1.100", new Object[]{1.});
+    OSCTask selfa_heart_starts     = new OSCTask(p, "/speaker/amp/0", 12000, dest_ip, new Object[]{1.});
     //loading light control state machine
     load_light_control_state_machine();
 
@@ -170,19 +172,19 @@ class Scenario {
 
 
     //tasks for the sync state
-    OSCTask sync_ambient_stable    = new OSCTask(p, "/speaker/amp/1", 12000, "192.168.1.100", new Object[]{inc_timer_high});
-    OSCTask sync_heart_increase    = new OSCTask(p, "/speaker/amp/0", 12000, "192.168.1.100", new Object[]{inc_timer_high});
-    OSCTask sync_aura_increase     = new OSCTask(p, "/aura/amp/0", 12000, "192.168.1.100", new Object[]{inc_timer_high});
+    OSCTask sync_ambient_stable    = new OSCTask(p, "/speaker/amp/1", 12000, dest_ip, new Object[]{inc_timer_high});
+    OSCTask sync_heart_increase    = new OSCTask(p, "/speaker/amp/0", 12000, dest_ip, new Object[]{inc_timer_high});
+    OSCTask sync_aura_increase     = new OSCTask(p, "/aura/amp/0", 12000, dest_ip, new Object[]{inc_timer_high});
     sync.add_task(sync_ambient_stable);
     sync.add_task(sync_heart_increase);
     sync.add_task(sync_aura_increase);
     //tasks for the outro state
-    OSCTask outro_ambient_fades    = new OSCTask(p, "/speaker/amp/1", 12000, "192.168.1.100", new Object[]{fadeout});
-    OSCTask outro_heart_fades      = new OSCTask(p, "/speaker/amp/0", 12000, "192.168.1.100", new Object[]{fadeout});
-    OSCTask outro_aura_fades       = new OSCTask(p, "/aura/amp/0", 12000, "192.168.1.100", new Object[]{fadeout});
-    OSCTask outro_dmx_i_fades      = new OSCTask(p, "/dmx/intensity", 12000, "192.168.1.100", new Object[]{fadeout});
-    OSCTask outro_dmx_d_fades      = new OSCTask(p, "/dmx/duration", 12000, "192.168.1.100", new Object[]{fadeout});
-    OSCTask outro_dmx_r_fades      = new OSCTask(p, "/dmx/rate", 12000, "192.168.1.100", new Object[]{fadeout});
+    OSCTask outro_ambient_fades    = new OSCTask(p, "/speaker/amp/1", 12000, dest_ip, new Object[]{fadeout});
+    OSCTask outro_heart_fades      = new OSCTask(p, "/speaker/amp/0", 12000, dest_ip, new Object[]{fadeout});
+    OSCTask outro_aura_fades       = new OSCTask(p, "/aura/amp/0", 12000, dest_ip, new Object[]{fadeout});
+    OSCTask outro_dmx_i_fades      = new OSCTask(p, "/dmx/intensity", 12000, dest_ip, new Object[]{fadeout});
+    OSCTask outro_dmx_d_fades      = new OSCTask(p, "/dmx/duration", 12000, dest_ip, new Object[]{fadeout});
+    OSCTask outro_dmx_r_fades      = new OSCTask(p, "/dmx/rate", 12000, dest_ip, new Object[]{fadeout});
     outro.add_task(outro_ambient_fades);
     outro.add_task(outro_heart_fades);
     outro.add_task(outro_aura_fades);
@@ -190,14 +192,14 @@ class Scenario {
     outro.add_task(outro_dmx_d_fades);
     outro.add_task(outro_dmx_r_fades);
     //tasks for the root.end
-    OSCTask end_speaker_enable     = new OSCTask(p, "/speaker/enable", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask end_ambient_silence    = new OSCTask(p, "/speaker/amp/1", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask end_heart_silence      = new OSCTask(p, "/speaker/amp/0", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask end_aura_silence       = new OSCTask(p, "/aura/amp/0", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask end_dmx_silence        = new OSCTask(p, "/dmx/enable", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask end_dmx_i_silence      = new OSCTask(p, "/dmx/intensity", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask end_dmx_d_silence      = new OSCTask(p, "/dmx/duration", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask end_dmx_r_silence      = new OSCTask(p, "/dmx/rate", 12000, "192.168.1.100", new Object[]{0});
+    OSCTask end_speaker_enable     = new OSCTask(p, "/speaker/enable", 12000, dest_ip, new Object[]{0});
+    OSCTask end_ambient_silence    = new OSCTask(p, "/speaker/amp/1", 12000, dest_ip, new Object[]{0});
+    OSCTask end_heart_silence      = new OSCTask(p, "/speaker/amp/0", 12000, dest_ip, new Object[]{0});
+    OSCTask end_aura_silence       = new OSCTask(p, "/aura/amp/0", 12000, dest_ip, new Object[]{0});
+    OSCTask end_dmx_silence        = new OSCTask(p, "/dmx/enable", 12000, dest_ip, new Object[]{0});
+    OSCTask end_dmx_i_silence      = new OSCTask(p, "/dmx/intensity", 12000, dest_ip, new Object[]{0});
+    OSCTask end_dmx_d_silence      = new OSCTask(p, "/dmx/duration", 12000, dest_ip, new Object[]{0});
+    OSCTask end_dmx_r_silence      = new OSCTask(p, "/dmx/rate", 12000, dest_ip, new Object[]{0});
     root.end.add_task(end_speaker_enable);
     root.end.add_task(end_ambient_silence);
     root.end.add_task(end_heart_silence);
@@ -248,23 +250,23 @@ class Scenario {
     //light_control.end.connect(light_control.end);
 
     //creating tasks related to config_1
-    OSCTask config_1_dmx_intensity    = new OSCTask(p, "/dmx/intensity", 12000, "192.168.1.100", new Object[]{1.});
-    OSCTask config_1_dmx_duration     = new OSCTask(p, "/dmx/duration", 12000, "192.168.1.100", new Object[]{0.1});
-    OSCTask config_1_dmx_rate         = new OSCTask(p, "/dmx/rate", 12000, "192.168.1.100", new Object[]{0.1});
+    OSCTask config_1_dmx_intensity    = new OSCTask(p, "/dmx/intensity", 12000, dest_ip, new Object[]{1.});
+    OSCTask config_1_dmx_duration     = new OSCTask(p, "/dmx/duration", 12000, dest_ip, new Object[]{0.1});
+    OSCTask config_1_dmx_rate         = new OSCTask(p, "/dmx/rate", 12000, dest_ip, new Object[]{0.1});
     config_1.add_task(config_1_dmx_intensity);
     config_1.add_task(config_1_dmx_duration);
     config_1.add_task(config_1_dmx_rate);
     //creating tasks related to config_2
-    OSCTask config_2_dmx_intensity    = new OSCTask(p, "/dmx/intensity", 12000, "192.168.1.100", new Object[]{1.});
-    OSCTask config_2_dmx_duration     = new OSCTask(p, "/dmx/duration", 12000, "192.168.1.100", new Object[]{0.5});
-    OSCTask config_2_dmx_rate         = new OSCTask(p, "/dmx/rate", 12000, "192.168.1.100", new Object[]{0.5});
+    OSCTask config_2_dmx_intensity    = new OSCTask(p, "/dmx/intensity", 12000, dest_ip, new Object[]{1.});
+    OSCTask config_2_dmx_duration     = new OSCTask(p, "/dmx/duration", 12000, dest_ip, new Object[]{0.5});
+    OSCTask config_2_dmx_rate         = new OSCTask(p, "/dmx/rate", 12000, dest_ip, new Object[]{0.5});
     config_2.add_task(config_2_dmx_intensity);
     config_2.add_task(config_2_dmx_duration);
     config_2.add_task(config_2_dmx_rate);
     //creating tasks related to config_3
-    OSCTask config_3_dmx_intensity    = new OSCTask(p, "/dmx/intensity", 12000, "192.168.1.100", new Object[]{0.3});
-    OSCTask config_3_dmx_duration     = new OSCTask(p, "/dmx/duration", 12000, "192.168.1.100", new Object[]{0.1});
-    OSCTask config_3_dmx_rate         = new OSCTask(p, "/dmx/rate", 12000, "192.168.1.100", new Object[]{0.1});
+    OSCTask config_3_dmx_intensity    = new OSCTask(p, "/dmx/intensity", 12000, dest_ip, new Object[]{0.3});
+    OSCTask config_3_dmx_duration     = new OSCTask(p, "/dmx/duration", 12000, dest_ip, new Object[]{0.1});
+    OSCTask config_3_dmx_rate         = new OSCTask(p, "/dmx/rate", 12000, dest_ip, new Object[]{0.1});
     config_3.add_task(config_3_dmx_intensity);
     config_3.add_task(config_3_dmx_duration);
     config_3.add_task(config_3_dmx_rate);
@@ -319,14 +321,14 @@ class Scenario {
   }
 
   void reset_server() {
-    OSCTask end_speaker_enable     = new OSCTask(p, "/speaker/enable", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask end_ambient_silence    = new OSCTask(p, "/speaker/amp/1", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask end_heart_silence      = new OSCTask(p, "/speaker/amp/0", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask end_aura_silence       = new OSCTask(p, "/aura/amp/0", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask end_dmx_silence        = new OSCTask(p, "/dmx/enable", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask end_dmx_i_silence      = new OSCTask(p, "/dmx/intensity", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask end_dmx_d_silence      = new OSCTask(p, "/dmx/duration", 12000, "192.168.1.100", new Object[]{0});
-    OSCTask end_dmx_r_silence      = new OSCTask(p, "/dmx/rate", 12000, "192.168.1.100", new Object[]{0});
+    OSCTask end_speaker_enable     = new OSCTask(p, "/speaker/enable", 12000, dest_ip, new Object[]{0});
+    OSCTask end_ambient_silence    = new OSCTask(p, "/speaker/amp/1", 12000, dest_ip, new Object[]{0});
+    OSCTask end_heart_silence      = new OSCTask(p, "/speaker/amp/0", 12000, dest_ip, new Object[]{0});
+    OSCTask end_aura_silence       = new OSCTask(p, "/aura/amp/0", 12000, dest_ip, new Object[]{0});
+    OSCTask end_dmx_silence        = new OSCTask(p, "/dmx/enable", 12000, dest_ip, new Object[]{0});
+    OSCTask end_dmx_i_silence      = new OSCTask(p, "/dmx/intensity", 12000, dest_ip, new Object[]{0});
+    OSCTask end_dmx_d_silence      = new OSCTask(p, "/dmx/duration", 12000, dest_ip, new Object[]{0});
+    OSCTask end_dmx_r_silence      = new OSCTask(p, "/dmx/rate", 12000, dest_ip, new Object[]{0});
 
     end_speaker_enable.run();
     end_ambient_silence.run();

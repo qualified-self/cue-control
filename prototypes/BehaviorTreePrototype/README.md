@@ -26,8 +26,8 @@ These commands apply to currently selected node or decorator.
 | ------------- | ------------- | ------------- |
 | ENTER | Add sibling (\*) | Adds a new node after selected node |
 | TAB  | Add child (\*) | Adds a new child to selected node (if applicable) |
-| E  | Edit node/decorator (\*) | Edits selected node or decorator |
 | D  | Add decorator (\*) | Adds a decorator to selected node or decorator |
+| E  | Edit node/decorator (\*) | Edits selected node or decorator |
 | DELETE/BACKSPACE | Remove node or decorator | Removes selected node/decorator. If parent node, will also remove all children. |
 | UP/DOWN | Move within | Moves selected node within its current hierarchy |
 | LEFT/RIGHT | Move accross | Moves selected node accross its current hierarchy |
@@ -68,7 +68,7 @@ Constructors:
  * **selector** *description(string)*
  * **selector** *restart(boolean)*
  * **selector** *description(string)* *restart(boolean)*
-
+ 
 ### Parallel
 
 Executes all of the node's children in parallel.
@@ -76,7 +76,7 @@ Executes all of the node's children in parallel.
 Parameter *isSequencePolicy* (default: true) determines how the node reacts to the return result of its children:
  * Sequence policy (isSequencePolicy=true): FAILS as soon as any one of the node's children FAILS; if all children SUCCEED, returns SUCCESS
  * Selector policy (isSequencePolicy=false): SUCCEEDS as soon as any one of the node's children SUCCEEDS; if all children FAIL, returns FAILURE
-
+ 
 Constructors:
  * **parallel**
  * **parallel** *description(string)*
@@ -141,7 +141,7 @@ Waits for an OSC message to arrive and sets a blackboard variable according to t
 Constructors:
  * **osc-receive** *message(string)* *variable-name(string)*
  * **osc-receive** *message(string)* *variable-name(string)* *timeout(float)*
-
+ 
 ### OSC send
 
 Sends an OSC message (optionally based on an expression).
@@ -190,7 +190,7 @@ Constructors:
  * **guard** *value(boolean)*
  * **guard** *expression(string)*
  * **guard** *expression(string)* *succeedOnFalse(boolean)*
-
+ 
 ## Randomize
 
 Executes children in a random order. Can only be added as a decorator of a composite node (sequence, selector, parallel).
