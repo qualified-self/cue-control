@@ -266,12 +266,12 @@ void drawHelp(PApplet app) {
 }
 
 color stateToColor(State state) {
-if (state == State.RUNNING)
-  return color(#52F3F7);
-else if (state == State.SUCCESS)
-  return color(#73FC74);
-else if (state == State.FAILURE)
-  return color(#E33535);
-else
-  return color(#AAAAAA);
+  if (state == State.RUNNING)
+    return color(#52F3F7);
+  else if (state == State.SUCCESS)
+    return color(#73FC74);
+  else if (state == State.FAILURE)
+    return color(#E33535);
+  else
+    return color(#AAAAAA);
 }
