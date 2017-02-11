@@ -1,6 +1,7 @@
 High priority:
 [ ] BlackboardRamp problem: try creating a node "blackboard-ramp test 0 1 10.0" (does not work)
 [ ] Chrono problem: it is not restarted when resetting
+[ ] Text problem: try "text 1000"
 [ ] Add auto-save
 [ ] Prevent scrolling too much such that text disappears
 [x] Add copy-cut-paste option

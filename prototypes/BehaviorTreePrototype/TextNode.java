@@ -1,16 +1,21 @@
 public class TextNode extends BaseNode {
 
-	String text;
+	Expression text;
 
-	public TextNode(String text)
+	public TextNode(Object expression)
 	{
-		super(text);
-		this.text = text;
+		super(expression.toString());
+		this.text = new Expression(expression);
 	}
 
 	State doExecute(Blackboard agent)
 	{
-		Console.instance().log(agent.processExpression(text));
+		try {
+			Console.instance().log(text.eval(agent));
+		} catch (Exception e) {
+      Console.instance().error(e.getMessage());
+			return State.FAILURE;
+		}
 		return State.SUCCESS;
 	}
 
