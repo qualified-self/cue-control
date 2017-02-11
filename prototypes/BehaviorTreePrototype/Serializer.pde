@@ -8,18 +8,18 @@ public class Serializer {
     if (lastSaveFile == null)
       saveAs();
     else
-      _saveAs(lastSaveFile);
+      saveAs(lastSaveFile);
   }
 
   void saveAs() {
-    selectOutput("Select file: ", "_saveAs", lastSaveFile, this);
+    selectOutput("Select file: ", "saveAs", lastSaveFile, this);
   }
 
   void load() {
-    selectInput("Select file: ", "_load", lastSaveFile, this);
+    selectInput("Select file: ", "load", lastSaveFile, this);
   }
 
-  public void _saveAs(File file) {
+  public void saveAs(File file) {
     if (file == null)
       return;
     try {
@@ -32,7 +32,7 @@ public class Serializer {
     }
   }
 
-  public void _load(File file) {
+  public void load(File file) {
     println("Trying to load file: " + file);
     try {
       ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));

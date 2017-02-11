@@ -26,6 +26,8 @@ final color NODE_TEXT_COLOR = #000000;
 
 final color NODE_EXPANSION_BUTTON_COLOR = #333333;
 
+final int AUTO_SAVE_INTERVAL = 10; // seconds
+
 OscP5 oscP5;
 NetAddress remoteLocation;
 Minim minim;
@@ -96,6 +98,8 @@ void setup() {
   // Initianlize expression/script manager.
   Expression.initManager();
 
+	initAutosave();
+
   // Create new/empty structure.
   clear();
 //  root = factory.createNode("SelectorNode \"Go man!\" false");
@@ -156,6 +160,9 @@ void draw() {
         playing = false;
     }
   }
+
+	// Autosave (will save if necessary).
+	autosave();
 }
 
 class MouseClick {
@@ -603,4 +610,23 @@ private static boolean allCharactersAreSame(ArrayList<String> strings, int pos) 
         }
     }
     return true;
+}
+
+long timestamp;
+File autosaveFile;
+
+void initAutosave() {
+  timestamp    = second();
+  autosaveFile = new File(sketchPath() + "/data/patches/temp.btp");
+  println(sketchPath());
+}
+
+void autosave() {
+  long timeElapsed = abs(second()-timestamp);
+
+  if (timeElapsed > AUTO_SAVE_INTERVAL) {
+    serializer.saveAs(autosaveFile);
+    println("saving!");
+    timestamp = second();
+  }
 }
