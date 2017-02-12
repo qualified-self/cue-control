@@ -89,6 +89,10 @@ public abstract class CompositeNode extends BaseNode
     return children.get(index);
   }
 
+	void setChildren(ArrayList<BaseNode> children) {
+		this.children = children;
+	}
+
   ArrayList<BaseNode> getChildren() { return children; }
   ArrayList<BaseNode> getEnabledChildren() {
     ArrayList<BaseNode> enabledChildren = new ArrayList<BaseNode>();

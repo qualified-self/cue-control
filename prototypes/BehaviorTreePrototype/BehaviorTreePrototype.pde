@@ -428,11 +428,14 @@ void addDecorator() {
   }
 }
 
+CompositeNode savedCompositeNode;
 void editNode() {
   if (selectedNode != null) {
     setEditState(true);
     placeholderNode.reset();
     placeholderNode.assign(selectedNode.loadDeclaration());
+
+		savedCompositeNode = (selectedNode instanceof CompositeNode ? (CompositeNode)selectedNode : null);
 
     if (selectedNode instanceof Decorator) {
       ((Decorator)selectedNode).getNode().setDecorator(placeholderNode);
@@ -491,8 +494,12 @@ void pasteNode() {
 void submitNode() {
   BaseNode newNode = placeholderNode.submit();
   if (newNode != null) {
-   setEditState(false);
-   selectedNode = newNode;
+		if (newNode instanceof CompositeNode && savedCompositeNode != null)
+				((CompositeNode)newNode).setChildren(savedCompositeNode.getChildren());
+
+		savedCompositeNode = null;
+    setEditState(false);
+    selectedNode = newNode;
   }
 }
 
