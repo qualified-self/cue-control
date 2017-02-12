@@ -20,6 +20,7 @@ class PlaceholderNode extends Decorator {
   void reset() {
     useAsDecorator = false;
     declaration = "";
+		removeDecorator();
   }
 
   void append(char k) {
@@ -44,7 +45,7 @@ class PlaceholderNode extends Decorator {
         node.setDecorator((Decorator)newNode);
       else
         parent.replaceChild(this, newNode);
-        
+
       if (hasDecorator())
         newNode.setDecorator(getDecorator());
     }
