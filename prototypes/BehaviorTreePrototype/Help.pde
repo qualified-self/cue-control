@@ -51,7 +51,7 @@ class Help {
       y = _drawTable("EDIT",
                      "These commands apply to currently selected node or decorator.",
                      "(*) Switches to node/decorator creation mode. When a node or decorator is added, \nthe user needs to input the node/decorator type followed by arguments (if applicable).\nUser can interrupt node/decorator creation by pressing DELETE.",
-                     file, x, y);
+                     edit, x, y);
       popStyle();
     }
   }
