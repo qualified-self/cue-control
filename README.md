@@ -1,5 +1,7 @@
 # Prototypes
 
+[Current release](https://github.com/qualified-self/cue-control/releases/tag/v0.1)
+
 ## Behavior Tree
 
  * [Cheatsheet](http://github.com/qualified-self/cue-control/blob/master/prototypes/BehaviorTreePrototype/README.md)
