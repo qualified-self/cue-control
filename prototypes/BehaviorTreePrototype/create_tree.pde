@@ -1,11 +1,4 @@
 
-
-}
-
-
-
-}
-
 BaseNode createTree() {
 	return new SequentialNode("Wait for starting cue then launch")
 							.addChild(new BlackboardSetNode("end", "0"))
