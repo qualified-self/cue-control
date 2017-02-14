@@ -7,6 +7,10 @@ class ChronoDecorator extends WhileDecorator {
   boolean chronoNeedsRestart;
   boolean chronoTimedOut;
 
+	public ChronoDecorator(double timeOut) {
+		this((float)timeOut);
+	}
+
   public ChronoDecorator(float timeOut) {
 		super(new ChronoCondition(timeOut));
 		chrono = ((ChronoCondition)condition).getChrono();

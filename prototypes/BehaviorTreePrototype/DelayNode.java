@@ -7,6 +7,14 @@ class DelayNode extends BaseNode {
   float currentTimeOut;
   boolean chronoNeedsRestart;
 
+	public DelayNode(double timeOut) {
+		this((float)timeOut);
+	}
+
+	public DelayNode(String description, double timeOut) {
+    this(description, (float)timeOut);
+	}
+
 	public DelayNode(float timeOut) {
 		this(Float.toString(timeOut));
 	}
