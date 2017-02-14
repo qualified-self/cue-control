@@ -31,8 +31,6 @@ class DelayNode extends BaseNode {
     {
       try {
         currentTimeOut = ((Number)timeOut.eval(agent)).floatValue();
-  			chrono.restart();
-        chronoNeedsRestart = false;
       }
       catch (Exception e) {
         Console.instance().error(e.toString());
@@ -41,20 +39,22 @@ class DelayNode extends BaseNode {
         return State.FAILURE;
       }
 
+			chrono.restart();
+      chronoNeedsRestart = false;
     }
 
 		if (chrono.hasPassed(PApplet.ceil(currentTimeOut*1000))) {
       chronoNeedsRestart = true;
-      return State.SUCCESS;
+			return State.SUCCESS;
     }
-    else
-      return State.RUNNING;
+		else
+			return State.RUNNING;
   }
 
   public void doInit(Blackboard agent)
   {
     chrono.stop();
-    chronoNeedsRestart = true;
+		chronoNeedsRestart = true;
   }
 
   String getDynamicDescription() {
