@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/minim-lib/jl1.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/minim-lib/jsminim.jar"/>
+	<classpathentry kind="lib" path="libs/minim-lib/minim.jar"/>
+	<classpathentry kind="lib" path="libs/minim-lib/mp3spi1.9.5.jar"/>
+	<classpathentry kind="lib" path="libs/minim-lib/tritonus_aos.jar"/>
+	<classpathentry kind="lib" path="libs/minim-lib/tritonus_share.jar"/>
+	<classpathentry kind="lib" path="libs/controlP5.jar"/>
+	<classpathentry kind="lib" path="libs/core.jar"/>
+	<classpathentry kind="lib" path="libs/oscP5.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

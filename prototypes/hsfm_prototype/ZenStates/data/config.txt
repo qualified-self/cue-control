@@ -1,0 +1,10 @@
+##############################################
+#IMPORTANT: THIS IS A TEMPORARY SOLUTION. DO NOT MODIFY THE ORDER.
+##############################################
+#set the ip of the media server in the local network (i.e. where the max patch runs)
+#localhost
+192.168.1.101
+#set the port of the media server in the local network
+12000
+#set the port that will listen to incoming OSC messages
+8001
