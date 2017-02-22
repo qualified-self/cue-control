@@ -11,11 +11,13 @@ import processing.core.PApplet;
 
 class MultiLevelPieMenu {
 
-  private String[] task_list       = {"Blackboard", "", "", "", "Sound", "Haptics", "Light", "OSC"};
+  private String[] task_list       = {"Blackboard", "", "", "", "Sound", "Haptics", "Light", "Meta"};
   private String[] light_list      = {"Stop DMX", "", "Start DMX", "Control DMX"};
   private String[] sound_list      = {"Stop audio", "", "Start audio", "Control audio"};
   private String[] haptics_list    = {"Stop aura", "", "Start aura", "Control aura"};
+  private String[] meta_list 	   = {"OSC", "", "State Mechine", "Script (not implemented)"};
   private String[] blackboard_list = {"Default", "", "", "Random", "Oscillator", "Ramp"};
+
 
   //MLP_Status status;
 
@@ -23,6 +25,7 @@ class MultiLevelPieMenu {
   private PieMenu light;
   private PieMenu sound;
   private PieMenu haptics;
+  private PieMenu meta;
   private PieMenu blackboard;
 
   private boolean is_opening;
@@ -48,6 +51,10 @@ class MultiLevelPieMenu {
     haptics =  new PieMenu(p, main.getX(), main.getY(), (int)(main.getDiam()*1.75));
     haptics.set_inner_circle_diam(main.getDiam());
     haptics.set_options(haptics_list);
+    
+    meta	=  new PieMenu(p, main.getX(), main.getY(), (int)(main.getDiam()*1.75));
+    meta.set_inner_circle_diam(main.getDiam());
+    meta.set_options(meta_list);
 
     blackboard = new PieMenu(p, main.getX(), main.getY(), (int)(main.getDiam()*1.75));
     blackboard.set_inner_circle_diam(main.getDiam());
@@ -59,9 +66,10 @@ class MultiLevelPieMenu {
     light.setup();
     sound.setup();
     haptics.setup();
+    meta.setup();
     blackboard.setup();
-
-    direct_hide_second_layer();
+    
+    hide();
   }
 
   void draw() {
@@ -69,6 +77,7 @@ class MultiLevelPieMenu {
     light.draw();
     sound.draw();
     haptics.draw();
+    meta.draw();
     blackboard.draw();
 
     main.draw();
@@ -93,28 +102,28 @@ class MultiLevelPieMenu {
 
   void update_second_layer_selection () {
 
-    switch(get_main_selection()) {
-    case 7: // OSC
-      //if (mousePressed) println("hovering osc");
-      //is_opening = true;
-      break;
-    case 0: // Blackboard
-      if (p.mousePressed) show_blackboard();
-      is_opening = true;
-      break;
-    case 4: // Sound
-      if (p.mousePressed) show_sound();
-      is_opening = true;
-      break;
-    case 5: // Haptics
-      if (p.mousePressed) show_haptics();
-      is_opening = true;
-      break;
-    case 6: // Light
-      if (p.mousePressed) show_light();
-      is_opening = true;
-      break;
-    }
+	  switch(get_main_selection()) {
+	  case 0: // Blackboard
+		  if (p.mousePressed) show_blackboard();
+		  is_opening = true;
+		  break;
+	  case 4: // Sound
+		  if (p.mousePressed) show_sound();
+		  is_opening = true;
+		  break;
+	  case 5: // Haptics
+		  if (p.mousePressed) show_haptics();
+		  is_opening = true;
+		  break;
+	  case 6: // Light
+		  if (p.mousePressed) show_light();
+		  is_opening = true;
+		  break;
+	  case 7: // Meta
+		  if (p.mousePressed) show_meta();
+		  is_opening = true;
+		  break;
+	  }
   }
 
   void set_position (int x, int y) {
@@ -122,6 +131,7 @@ class MultiLevelPieMenu {
     light.set_position(x, y);
     sound.set_position(x, y);
     haptics.set_position(x, y);
+    meta.set_position(x, y);
     blackboard.set_position(x, y);
   }
 
@@ -136,17 +146,11 @@ class MultiLevelPieMenu {
     int result = -1;
 
     //testing if the result is an osc message (between 0 and 9)
-    result = main.get_selection();
-    if (result != -1) return result;
-
-    //p.println("a) result is " + result);
+    //if (result != -1) return result;
 
     //testing if selection is a sound message (between 10 and 19)
-    result = sound.get_selection();
-
+    result = sound.get_selection();    
     if (result != -1) return result+10;
-
-    //p.println("b) result is " + result);
 
     //testing if selection is a haptics message (between 20 and 29)
     result = haptics.get_selection();
@@ -159,6 +163,11 @@ class MultiLevelPieMenu {
     //testing if selection is a blackboard message (between 40 and 49)
     result = blackboard.get_selection();
     if (result != -1) return result+40;
+    
+	//testing if selection is a meta message (between 50 and 59)
+    result = meta.get_selection();
+    if (result != -1) return result+50;
+    
 
     return result;
   }
@@ -166,11 +175,13 @@ class MultiLevelPieMenu {
   void show() {
     main.show();
   }
+  
 
   void show_light() {
     sound.hide();
     haptics.hide();
     blackboard.hide();
+    meta.hide();
     light.show();
   }
 
@@ -178,6 +189,7 @@ class MultiLevelPieMenu {
     light.hide();
     haptics.hide();
     blackboard.hide();
+    meta.hide();
     sound.show();
   }
 
@@ -185,6 +197,7 @@ class MultiLevelPieMenu {
     light.hide();
     sound.hide();
     blackboard.hide();
+    meta.hide();
     haptics.show();
   }
 
@@ -192,7 +205,16 @@ class MultiLevelPieMenu {
     light.hide();
     sound.hide();
     haptics.hide();
+    meta.hide();
     blackboard.show();
+  }
+  
+  void show_meta() {
+    light.hide();
+    sound.hide();
+    haptics.hide();
+    blackboard.hide();
+    meta.show();
   }
 
   void hide() {
@@ -204,6 +226,7 @@ class MultiLevelPieMenu {
     light.direct_hide();
     sound.direct_hide();
     haptics.direct_hide();
+    meta.direct_hide();
     blackboard.direct_hide();
     //status = MLP_Status.CLOSING;
     is_opening = false;

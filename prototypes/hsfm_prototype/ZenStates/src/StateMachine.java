@@ -524,6 +524,7 @@ public class StateMachine extends Task {
     };
   }
 
+  /*
     CallbackListener generate_callback_leave() {
       return new CallbackListener() {
             public void controlEvent(CallbackEvent theEvent) {
@@ -547,11 +548,13 @@ public class StateMachine extends Task {
             }
       };
   }
+  
+  */
 
   Group load_gui_elements(State s) {
     //creating the callbacks
     CallbackListener cb_enter = generate_callback_enter();
-		CallbackListener cb_leave = generate_callback_leave();
+	//CallbackListener cb_leave = generate_callback_leave();
     //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
     //String g_name = s.get_name() + " " + this.get_name();
@@ -563,11 +566,11 @@ public class StateMachine extends Task {
 
     Group g = cp5.addGroup(g_name)
       .setHeight(12)
-      .setBackgroundHeight(130)
+      .setBackgroundHeight(165)
       //.setWidth(100)
       .setColorBackground(c1) //color of the task
       .setBackgroundColor(c2) //color of task when openned
-      .setLabel(this.get_prefix() + "   " + this.get_name())
+      .setLabel("State Machine")
       ;
 
     g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
@@ -583,16 +586,15 @@ public class StateMachine extends Task {
       .setLabel("name")
       .setText(this.name+"")
       .onChange(cb_enter)
-      .onReleaseOutside(cb_leave)
+      //.onReleaseOutside(cb_leave)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
     ;
 
-    //StateMachinePreview p = new StateMachinePreview(localx, localy+localoffset, g.getWidth());
-    //g.addCanvas((controlP5.Canvas)p);
-    //g.addCanvas((controlP5.Canvas)preview);
+    StateMachinePreview smp = new StateMachinePreview( (ZenStates)p, this, localx, localy+localoffset);
+    g.addCanvas((controlP5.Canvas)smp);
 
     cp5.addButton(g_name+"/open_preview")
-      .setPosition(localx, localy+15+(2*localoffset))
+      .setPosition(localx, localy+(3*localoffset))
       .setSize(w, 15)
       .setValue(0)
       .setLabel("open preview")

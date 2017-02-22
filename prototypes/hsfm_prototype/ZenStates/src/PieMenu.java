@@ -54,6 +54,7 @@ class PieMenu {
     this.size             = 0;
     this.startTime        = p.millis();
     this.maxTime          = 0.4f;
+    this.selected		  = -1;
   }
 
   //another constructor
