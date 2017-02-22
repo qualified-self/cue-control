@@ -245,32 +245,6 @@ public class ZenStates extends PApplet {
 		return result;
 	}
 
-
-	//callback functions
-	void button_play() {
-		if (is_loading) return;
-		println("b_play pressed");
-		canvas.run();
-	}
-
-	void button_stop() {
-		if (is_loading) return;
-		println("b_stop pressed");
-		canvas.stop();
-	}
-	void button_save() {
-		if (is_loading) return;
-		println("b_save pressed");
-		serializer.save();
-	}
-
-	void button_load() {
-		if (is_loading) return;
-		println("b_load pressed");
-		serializer.load();
-	}
-	
-
 	///////////////////////////////////////////////////
 	//the following code was taken from Sofians' prototype
 	//the goal is to allow serialization

@@ -15,12 +15,12 @@ class MainCanvas implements Serializable {
   StateMachine  root; //my basic state machine
   //Vector<State> states; //vector that store my states
 
-  transient private PApplet p;
+  transient private ZenStates p;
   transient private ControlP5 cp5;
 
 
   //contructor
-  public MainCanvas (PApplet p, ControlP5 cp5) {
+  public MainCanvas (ZenStates p, ControlP5 cp5) {
     this.p = p;
     this.cp5 = cp5;
     init_buttons();
@@ -28,7 +28,7 @@ class MainCanvas implements Serializable {
     setup();
   }
 
-  void build(PApplet p, ControlP5 cp5) {
+  void build(ZenStates p, ControlP5 cp5) {
     System.out.println("@TODO [CANVAS] verify what sorts of things needs to be initialize when loaded from file");
     this.p = p;
     this.cp5 = cp5;
@@ -151,6 +151,8 @@ class MainCanvas implements Serializable {
 
     int back = p.color(255, 255, 255, 50);
     int font = p.color(50);
+    
+    CallbackListener cb_click = generate_callback_click();
 
     cp5.addButton("button_play")
        .setValue(128)
@@ -158,6 +160,7 @@ class MainCanvas implements Serializable {
        .setColorBackground(back)
        .setWidth(w)
        .setHeight(h)
+       .onPress(cb_click)
        .setLabel("play")
        ;
 
@@ -168,6 +171,7 @@ class MainCanvas implements Serializable {
        .setColorBackground(back)
        .setWidth(w)
        .setHeight(h)
+       .onPress(cb_click)
        .setLabel("stop")
        ;
 
@@ -178,6 +182,7 @@ class MainCanvas implements Serializable {
        .setColorBackground(back)
        .setWidth(w)
        .setHeight(h)
+       .onPress(cb_click)
        .setLabel("save")
        ;
 
@@ -187,20 +192,49 @@ class MainCanvas implements Serializable {
        .setColorBackground(back)
        .setWidth(w)
        .setHeight(h)
+       .onPress(cb_click)
        .setLabel("load")
        ;
-
-    /*
-    cp5.addButton("b_new")
-       .setValue(128)
-       .setPosition(x+(4*w)+4, y)
-       .setColorBackground(back)
-       //.setColorCaptionLabel(font)
-       .setWidth(w)
-       .setHeight(h)
-       .setLabel("new")
-       ;
-       */
   }
+  
+
+	//callback functions
+	void button_play() {
+		if (p.is_loading) return;
+		p.println("b_play pressed");
+		p.canvas.run();
+	}
+	
+	void button_stop() {
+		if (p.is_loading) return;
+		p.println("b_stop pressed");
+		p.canvas.stop();
+	}
+	void button_save() {
+		if (p.is_loading) return;
+		p.println("b_save pressed");
+		p.serializer.save();
+	}
+	
+	void button_load() {
+		if (p.is_loading) return;
+		p.println("b_load pressed");
+		p.serializer.load();
+	}
+	
+  
+	  CallbackListener generate_callback_click() {
+		    return new CallbackListener() {
+		          public void controlEvent(CallbackEvent theEvent) {
+	
+		            String s = theEvent.getController().getName();
+	
+		            if (s.equals("button_play")) button_play();
+					if (s.equals("button_stop")) button_stop();
+					if (s.equals("button_save")) button_save();
+					if (s.equals("button_load")) button_load();
+	          }
+	    };
+	  }
 
 }

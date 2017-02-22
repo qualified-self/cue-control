@@ -1,15 +1,10 @@
-/************************************************
- ** Abstract Task class and all possible kids (audio, osc, etc)
- ************************************************
- ************************************************
- ** jeraman.info, Sep. 30 2016 ******************
- ************************************************
- ************************************************/
+
 
 import java.io.Serializable;
 import processing.core.PApplet;
 import controlP5.*;
 import javax.script.*;
+
 import java.util.UUID;
 
 ////////////////////////////////////////

@@ -16,7 +16,7 @@ class StateMachinePreview extends MainCanvas {
 	int y;
 	int w;
 	
-	public StateMachinePreview(PApplet p, ControlP5 cp5) {
+	public StateMachinePreview(ZenStates p, ControlP5 cp5) {
 		super(p, cp5);
 		// TODO Auto-generated constructor stub
 	}

@@ -1,12 +1,8 @@
-/************************************************
- ** Class representing the main State_Machine **********
- ************************************************
- ** jeraman.info, Oct. 3 2016 *******************
- ************************************************
- ************************************************/
+
 
 import processing.core.PApplet;
 import java.util.Vector;
+
 import controlP5.*;
 
 public class StateMachine extends Task {

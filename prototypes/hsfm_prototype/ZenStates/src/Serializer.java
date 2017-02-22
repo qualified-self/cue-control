@@ -10,9 +10,9 @@ import processing.core.PApplet;
 
 public class Serializer {
 
-	PApplet p;
+	ZenStates p;
 
-	Serializer(PApplet p) {
+	Serializer(ZenStates p) {
 		this.p = p;
 	}
 
@@ -38,8 +38,8 @@ public class Serializer {
 			return;
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
-			oos.writeObject(ZenStates.instance().board());
-			oos.writeObject(ZenStates.instance().canvas());
+			oos.writeObject(p.board());
+			oos.writeObject(p.canvas());
 			oos.close();
 		} catch (Exception e) {
 			p.println("ERROR saving to file: " + file + " [exception: " + e.toString() + "].");
@@ -48,35 +48,34 @@ public class Serializer {
 	}
 
 	public void _load(File file) {
-		ZenStates inst = ZenStates.instance();
 		
 		try {	
-			inst.is_loading = true;
-			inst.canvas.root.hide();
-			inst.cp5.setAutoDraw(false);
+			p.is_loading = true;
+			p.canvas.root.hide();
+			p.cp5.setAutoDraw(false);
 
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-			inst.board.clear();
-			inst.canvas.clear();
+			p.board.clear();
+			p.canvas.clear();
 
-			inst.board    = (Blackboard) ois.readObject();
-			inst.canvas   = (MainCanvas) ois.readObject();
+			p.board    = (Blackboard) ois.readObject();
+			p.canvas   = (MainCanvas) ois.readObject();
 
-			inst.board.build(p);
-			inst.canvas.build(p, inst.cp5);
+			p.board.build(p);
+			p.canvas.build(p, p.cp5);
 
 			ois.close();
 
 		} catch (Exception e) {
 			p.println("ERROR loading file: " + file + " [exception: " + e.toString() + "].");
-			inst.board  = new Blackboard(inst);
-			inst.canvas = new MainCanvas(inst, inst.cp5);
+			p.board  = new Blackboard(p);
+			p.canvas = new MainCanvas(p, p.cp5);
 
 		}
 
-		inst.canvas.root.show();
-		inst.cp5.setAutoDraw(true);
-		inst.is_loading = false;
+		p.canvas.root.show();
+		p.cp5.setAutoDraw(true);
+		p.is_loading = false;
 
 		p.println("done loading!");
 	}

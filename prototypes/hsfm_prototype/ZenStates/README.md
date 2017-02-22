@@ -1,9 +1,14 @@
 #About
 This repository stores a new version of the HFSMPrototype—temporarily named *ZenStates*. It should support:
+
 0. Code migrated to eclipse IDE;
+
 1. Hierarchical state machines;
+
 2. Reuse of existing patches;
+
 3. Scripting (Super collider? Java script?);
+
 4. Shortcuts (in order to better suit advanced users).
 
 ZenStates can be described in terms of three principles:
@@ -17,5 +22,5 @@ Because most of the commands (i.e. instrument, as defined by [1]) can be applied
 ##Reuse
 Because it should be possible to users to reuse material previously created. For example it should be possible to reuse: a) previously saved state machines (as a external abstraction in Puredata or Max/MSP);  b) previously defined variables, by providing autocomplete functionality.
 
-
+#References
 [1] Beaudouin-Lafon, M. & Mackay, W. (2000). Reification, Polymorphism and Reuse: Three Principles for Designing Visual Interfaces. Proc. Advanced Visual Interfaces, AVI 2000, Palermo (Italie), ACM Press, pp 102-109.
