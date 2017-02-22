@@ -6,6 +6,7 @@ import java.util.Vector;
 import controlP5.*;
 
 public class StateMachine extends Task {
+	
   State begin, end, actual;
   Vector<State> states;
   String title; //this should be the name. the super name should be an id instead.
@@ -14,6 +15,7 @@ public class StateMachine extends Task {
   float stateTimer          = 0;
   public boolean debug;
 
+  transient StateMachinePreview smp;
 
   //contructor
   public StateMachine (PApplet p, ControlP5 cp5, String name) {
@@ -507,7 +509,6 @@ public class StateMachine extends Task {
       s.reset_name();
   }
 
-
   CallbackListener generate_callback_enter() {
     return new CallbackListener() {
           public void controlEvent(CallbackEvent theEvent) {
@@ -523,37 +524,25 @@ public class StateMachine extends Task {
           }
     };
   }
-
-  /*
-    CallbackListener generate_callback_leave() {
-      return new CallbackListener() {
-            public void controlEvent(CallbackEvent theEvent) {
-
-              String s = theEvent.getController().getName();
-
-              String newtext = theEvent.getController().getValueLabel().getText();
-              String oldtext = "";
-
-              if (s.equals(get_gui_id() + "/name"))
-                oldtext = title;
-              else  return;
-
-              //if the user tried to change but did not press enter
-              if (!newtext.replace(" ", "").equals(oldtext)) {
-                //ControlP5 cp5 = HFSMPrototype.instance().cp5();
-                //resets the test for the original
-                Textfield t = (Textfield)cp5.get(s);
-                t.setText(oldtext);
-              }
-            }
-      };
-  }
   
-  */
+  CallbackListener generate_callback_open_substate() {
+	    return new CallbackListener() {
+	          public void controlEvent(CallbackEvent theEvent) {
 
+	            String s = theEvent.getController().getName();
+	            System.out.println("open substate " + s);
+	            
+	            smp.open();
+	            //((ZenStates)p).canvas.root.hide();
+	    		//show();
+	          }
+	    };
+	  }
+  
   Group load_gui_elements(State s) {
     //creating the callbacks
     CallbackListener cb_enter = generate_callback_enter();
+    CallbackListener cb_pressed = generate_callback_open_substate();
 	//CallbackListener cb_leave = generate_callback_leave();
     //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
@@ -590,7 +579,7 @@ public class StateMachine extends Task {
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
     ;
 
-    StateMachinePreview smp = new StateMachinePreview( (ZenStates)p, this, localx, localy+localoffset);
+    smp = new StateMachinePreview( (ZenStates)p, this, localx, localy+localoffset);
     g.addCanvas((controlP5.Canvas)smp);
 
     cp5.addButton(g_name+"/open_preview")
@@ -598,6 +587,7 @@ public class StateMachine extends Task {
       .setSize(w, 15)
       .setValue(0)
       .setLabel("open preview")
+      .onPress(cb_pressed)
       .setGroup(g)
       ;
 
@@ -652,8 +642,6 @@ public class StateMachine extends Task {
     for (State s : states)
       s.remove_all_gui_connections_to_a_state(dest);
   }
-
-
 
   void init_all_gui_connections_to_a_state (State dest) {
 

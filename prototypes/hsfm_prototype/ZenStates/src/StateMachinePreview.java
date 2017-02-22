@@ -1,6 +1,4 @@
 import controlP5.Canvas;
-import controlP5.ControlP5;
-import processing.core.PApplet;
 import processing.core.PGraphics;
 
 /******************************************************************************
@@ -12,21 +10,21 @@ import processing.core.PGraphics;
 
 class StateMachinePreview extends Canvas {
 
-	ZenStates p;
+	ZenStates 	 p;
 	StateMachine sm; //the state machine to be previewed
+	CircleEffectUI animation;
 	
 	float n;
 	float a;
 	int x;
 	int y;
-	//int w;
 
 	public StateMachinePreview(ZenStates p, StateMachine sm, int x, int y) {
 		this.p = p;
 		this.sm = sm;
 		this.x = x;
 		this.y = y;
-		//this.w = w;
+		this.animation = new CircleEffectUI(p, x, y);
 	}
 
 	public void setup(PGraphics pg) {
@@ -53,10 +51,21 @@ class StateMachinePreview extends Canvas {
 		//float zoom = p.map(p.mouseX, 0, p.width, 0.1f, 1);
 		float zoom = 0.09f;
 		p.scale(zoom);
+		//drawing the state machine preview
 		draw_state_machine();
+		//drawing the animation, if necessary
 		p.popMatrix();
+		this.animation.draw();
 		p.popMatrix();
 		p.rectMode(p.CORNER);
+	}
+	
+	public void open() {
+		animation.open();
+	}
+	
+	public void close() {
+		animation.close();
 	}
 
 

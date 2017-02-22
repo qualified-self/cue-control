@@ -40,6 +40,7 @@ public class State implements Serializable {
 	transient private Textfield label;
 	transient private PApplet   p;
 	transient private ControlP5 cp5;
+	//transient private CircleEffectUI animation;
 
 	//constructor
 	public State(PApplet p, ControlP5 cp5, String name) {
@@ -67,6 +68,7 @@ public class State implements Serializable {
 		this.x = x;
 		this.y = y;
 		pie.set_position(x,y);
+		//animation.set_position(x, y);
 	}
 
 	//@TODO IMMPLEMENT BUILD THAT LOADS THE UI ELEMENTS OF THE STATE
@@ -577,6 +579,7 @@ public class State implements Serializable {
 		draw_connections();
 		draw_pie();
 		draw_state();
+		//animation.draw();
 	}
 
 	//updates the current position of this state in screen
@@ -584,6 +587,7 @@ public class State implements Serializable {
 		this.x = newx;
 		this.y = newy;
 		this.pie.set_position(x, y);
+		//this.animation.set_position(x, y);
 		//disables the focus
 		//label.setFocus(false);
 	}
@@ -695,7 +699,11 @@ public class State implements Serializable {
 		this.pie = new MultiLevelPieMenu(p);
 		this.pie.set_position(x,y);
 		this.pie.set_inner_circle_diam((float)size);
-
+		
+	    
+	    //this.animation = new CircleEffectUI((ZenStates)p, x, y);
+	    //this.animation.set_position(x,y);
+	    
 		//ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
 		p.textSize(cp5.getFont().getSize());
