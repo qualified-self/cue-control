@@ -20,7 +20,7 @@ public class StateMachine extends Task {
   //contructor
   public StateMachine (PApplet p, ControlP5 cp5, String name) {
     super (p, cp5, name);
-    title   = "(choose a name)";
+    title   = name;
     //begin   = new State(p, cp5, "BEGIN_" + name);
     //end     = new State(p, cp5, "END_"+name);
     begin   = new State(p, cp5, "BEGIN");
@@ -31,7 +31,7 @@ public class StateMachine extends Task {
     actual = begin;
 
     //sets the global variables related to this blackboard
-    init_global_variables();
+    //init_global_variables();
 
     if (debug)
       System.out.println("State_Machine " + this.name + " is inited!");
@@ -66,7 +66,7 @@ public class StateMachine extends Task {
       s.build(p, cp5);
 
     //sets the global variables related to this blackboard
-    init_global_variables();
+    //init_global_variables();
 
     //load_gui_elements();
   }
@@ -168,7 +168,7 @@ public class StateMachine extends Task {
     Blackboard board = ZenStates.instance().board();
     board.remove(this.title+"_stateTimer");
     this.title = newtitle.replace(" ", "_");
-    init_global_variables();
+    //init_global_variables();
   }
 
   void update_actual (State next) {

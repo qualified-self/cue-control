@@ -806,6 +806,8 @@ public class State implements Serializable {
 
 		label = cp5.addTextfield(this.id+"/label")
 				.setText(this.name)
+				.setVisible(true)
+				.setLabelVisible(true)
 				.setColorValue(c1)
 				.setColorBackground(c2)
 				.setColorForeground(c2)
