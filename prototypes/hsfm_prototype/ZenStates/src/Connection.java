@@ -174,6 +174,18 @@ public class Connection implements Serializable {
     remove_gui_items();
     init_gui_items();
   }
+  
+  void hide() {
+	  String gui_name = get_name();
+	  cp5.get(gui_name+"/priority").hide();
+	  cp5.get(gui_name+"/condition").hide();
+  }
+  
+  void show() {
+	 String gui_name = get_name();
+	 cp5.get(gui_name+"/priority").show();
+	 cp5.get(gui_name+"/condition").show();
+  }
 
   int get_label_width() {
     if (parent==next_state)

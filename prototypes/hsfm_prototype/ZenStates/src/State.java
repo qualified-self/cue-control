@@ -701,7 +701,7 @@ public class State implements Serializable {
 		this.pie.set_inner_circle_diam((float)size);
 		
 	    
-	    //this.animation = new CircleEffectUI((ZenStates)p, x, y);
+	    //this.animation = new CircleEffectUI((ZenStates)p, this, x, y);
 	    //this.animation.set_position(x,y);
 	    
 		//ControlP5 cp5 = HFSMPrototype.instance().cp5();
@@ -719,6 +719,9 @@ public class State implements Serializable {
 
 		label.hide();
 		accordion.hide();
+	
+		for (Connection c:connections) 
+			c.hide();
 	}
 
 	void show_gui() {
@@ -726,6 +729,9 @@ public class State implements Serializable {
 		if (label==null||accordion==null)return;
 		label.show();
 		accordion.show();
+		
+		for (Connection c:connections) 
+			c.show();
 	}
 
 	boolean is_textfield_selected = false;

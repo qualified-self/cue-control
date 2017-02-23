@@ -11,15 +11,18 @@ class CircleEffectUI {
 
 	ZenStates 	 p;
 	CircleStatus circle_status;
-	int duration = 500;
+	StateMachine parent;
+	
+	int duration  = 500;
 	int timestamp = 0;
 	float size;
 
 	int x;
 	int y;
 
-	public CircleEffectUI(ZenStates p, int x, int y) {
-		this.p = p;
+	public CircleEffectUI(ZenStates p, StateMachine m, int x, int y) {
+		this.p 		= p;
+		this.parent = m;
 		this.x = x;
 		this.y = y;
 
@@ -70,9 +73,10 @@ class CircleEffectUI {
 		if (is_opening()) {
 			int time_elapsed = p.abs(p.millis()-timestamp);
 			if (time_elapsed > duration) { //if reached the end, stops counter
-				p.println("Open!");
+				//p.println("Open!");
 				circle_status = CircleStatus.OPEN;
 				size = 1;
+				p.canvas.push_root(parent);
 			} else  //otherwise, keep updating size
 				size = (time_elapsed*1f/duration)*2*p.width;
 		}
@@ -81,9 +85,11 @@ class CircleEffectUI {
 		if (is_closing()) {
 			int time_elapsed = p.abs(p.millis()-timestamp);
 			if (time_elapsed > duration) { //if reached the end, stops counter
-				p.println("Open!");
-				circle_status = CircleStatus.OPEN;
-				size = 1;
+				p.println("Closed!");
+				circle_status = CircleStatus.CLOSED;
+				size = 0;
+				//does not need to pop, because, the root was already popped
+				//p.canvas.pop_root();
 			} else { //otherwise, keep updating size
 				time_elapsed = duration - time_elapsed;
 				size = (time_elapsed*1f/duration)*2*p.width;

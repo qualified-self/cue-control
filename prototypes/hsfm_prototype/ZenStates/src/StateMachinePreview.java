@@ -24,7 +24,7 @@ class StateMachinePreview extends Canvas {
 		this.sm = sm;
 		this.x = x;
 		this.y = y;
-		this.animation = new CircleEffectUI(p, x, y);
+		this.animation = new CircleEffectUI(p, sm, x, y);
 	}
 
 	public void setup(PGraphics pg) {

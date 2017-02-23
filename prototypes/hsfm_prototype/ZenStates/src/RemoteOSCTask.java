@@ -49,7 +49,6 @@ public abstract class RemoteOSCTask extends Task {
 
   void run () {
     if (!should_run())
-      //p.println("not not execute " + this);
       return;
 
 

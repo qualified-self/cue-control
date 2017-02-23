@@ -20,9 +20,11 @@ public class StateMachine extends Task {
   //contructor
   public StateMachine (PApplet p, ControlP5 cp5, String name) {
     super (p, cp5, name);
-    title   = name;
-    begin   = new State(p, cp5, "BEGIN_" + name);
-    end     = new State(p, cp5, "END_"+name);
+    title   = "(choose a name)";
+    //begin   = new State(p, cp5, "BEGIN_" + name);
+    //end     = new State(p, cp5, "END_"+name);
+    begin   = new State(p, cp5, "BEGIN");
+    end     = new State(p, cp5, "END");
     states  = new Vector<State>();
     debug = ZenStates.instance().debug();
 
@@ -76,7 +78,10 @@ public class StateMachine extends Task {
 
   //run all tasks associated to this node
   void run () {
-    this.status = Status.RUNNING;
+	if (!should_run())
+	  return;
+    
+	this.status = Status.RUNNING;
 
     update_actual(begin);
 
@@ -465,6 +470,8 @@ public class StateMachine extends Task {
       for (State s : states)
         s.hide_gui();
       end.hide_gui();
+      
+      
     }
 
     void show() {
@@ -512,15 +519,23 @@ public class StateMachine extends Task {
   CallbackListener generate_callback_enter() {
     return new CallbackListener() {
           public void controlEvent(CallbackEvent theEvent) {
+        	  
+        	//if this group is not open, returns...
+            if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
 
             String s = theEvent.getController().getName();
             System.out.println(s + " was entered");
 
             if (s.equals(get_gui_id() + "/name")) {
                 String text = theEvent.getController().getValueLabel().getText();
+                if (text.trim().equals("")) {
+                	text="(choose a name)";
+                    ((Textfield)cp5.get(get_gui_id()+ "/name")).setText(text);
+                  }
                 update_title(text);
-                System.out.println(s + " " + text);
             }
+            
+            check_repeat_toggle(s, theEvent);
           }
     };
   }
@@ -531,13 +546,14 @@ public class StateMachine extends Task {
 
 	            String s = theEvent.getController().getName();
 	            System.out.println("open substate " + s);
-	            
 	            smp.open();
-	            //((ZenStates)p).canvas.root.hide();
-	    		//show();
 	          }
 	    };
 	  }
+  
+  void close () {
+	  smp.close();
+  }
   
   Group load_gui_elements(State s) {
     //creating the callbacks
@@ -555,7 +571,7 @@ public class StateMachine extends Task {
 
     Group g = cp5.addGroup(g_name)
       .setHeight(12)
-      .setBackgroundHeight(165)
+      .setBackgroundHeight(220)
       //.setWidth(100)
       .setColorBackground(c1) //color of the task
       .setBackgroundColor(c2) //color of task when openned
@@ -573,9 +589,9 @@ public class StateMachine extends Task {
       .setGroup(g)
       .setAutoClear(false)
       .setLabel("name")
-      .setText(this.name+"")
+      .setText(this.title+"")
       .onChange(cb_enter)
-      //.onReleaseOutside(cb_leave)
+      .onReleaseOutside(cb_enter)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
     ;
 
@@ -590,6 +606,8 @@ public class StateMachine extends Task {
       .onPress(cb_pressed)
       .setGroup(g)
       ;
+    
+    create_gui_toggle(localx, localy+(4*localoffset), w, g, cb_enter);
 
     return g;
   }
