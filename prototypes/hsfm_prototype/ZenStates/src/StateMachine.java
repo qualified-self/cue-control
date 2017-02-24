@@ -417,10 +417,16 @@ public class StateMachine extends Task {
 		ZenStates.instance().board.put(this.title+"_timer", 0);
 	}
 
+	String get_formated_blackboard_title () {
+		String n = this.title.replace(".", "_");
+		n = this.title.replace(" ", "_");
+		return n;
+	}
 	//updates the global variable related to this blackboard
 	void update_global_variables() {
 		update_state_timer();
-		ZenStates.instance().board.put(this.title+"_timer", this.stateTimer);
+		String n = get_formated_blackboard_title();
+		ZenStates.instance().board.put(n+"_timer", this.stateTimer);
 		//println("update variable " + this.stateTimer);
 	}
 

@@ -33,8 +33,11 @@ class SetBBRampTask extends SetBBTask {
     String amp_val = evaluate_value(this.amplitude).toString();
 
     Expression ne;
-    if (is_up) ne = new Expression(amp_val+"*(($root_timer/"+dur_val+") % 1)");
-    else       ne = new Expression("math.abs("+amp_val+"-("+amp_val+"*(($root_timer/"+dur_val+") % 1)))");
+    
+    String rootTimer = "$" + ((ZenStates)p).canvas.root.get_formated_blackboard_title() + "_timer";
+    
+    if (is_up) ne = new Expression(amp_val+"*(("+rootTimer+"/"+dur_val+") % 1)");
+    else       ne = new Expression("math.abs("+amp_val+"-("+amp_val+"*(("+rootTimer+"/"+dur_val+") % 1)))");
 
     Blackboard board = ZenStates.instance().board();
     this.status = Status.RUNNING;
