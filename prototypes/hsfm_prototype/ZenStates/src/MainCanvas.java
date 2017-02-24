@@ -278,6 +278,7 @@ class MainCanvas {
 		p.println("b_stop pressed");
 		p.canvas.stop();
 	}
+	
 	void button_save() {
 		if (p.is_loading) return;
 		p.println("b_save pressed");

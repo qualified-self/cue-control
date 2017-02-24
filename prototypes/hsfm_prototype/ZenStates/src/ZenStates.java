@@ -38,11 +38,7 @@ public class ZenStates extends PApplet {
 	boolean keyReleased = false;
 	boolean mouseReleased = false;
 	boolean is_loading = false;
-	
-	//variable to handle autosave
-	int autosavetime = 2; //minutes
-	int timestamp;
-	File autosave_file;
+
 	
 	
 	public static void main(String[] args) {
@@ -64,7 +60,6 @@ public class ZenStates extends PApplet {
 		canvas = new MainCanvas(this, cp5);
 
 		setup_expression_loading_bug();
-		setup_autosave();
 
 		textSize(cp5.getFont().getSize());
 		textFont(cp5.getFont().getFont());
@@ -105,7 +100,7 @@ public class ZenStates extends PApplet {
 		if (keyReleased)     keyReleased = false;
 		if (mouseReleased) mouseReleased = false;
 
-		autosave();
+		serializer.autosave();
 	}
 
 
@@ -155,22 +150,7 @@ public class ZenStates extends PApplet {
 		board.oscEvent(msg);
 
 	}
-	
-	void setup_autosave() {
-	  timestamp     = minute();
-	  autosave_file = new File(sketchPath() + "/data/patches/temp.zen");
-	  println(sketchPath());
-	}
-	
-	void autosave() {
-	  int time_elapsed = abs(minute()-timestamp);
-	
-	  if (time_elapsed > autosavetime) {
-	    serializer._saveAs(autosave_file);
-	    println("saving!");
-	    timestamp = minute();
-	  }
-	}
+
 	
 	void load_config() {
 	

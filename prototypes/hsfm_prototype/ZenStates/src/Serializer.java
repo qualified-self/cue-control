@@ -11,9 +11,15 @@ import processing.core.PApplet;
 public class Serializer {
 
 	ZenStates p;
+	
+	//variable to handle autosave
+	int autosavetime = 1; //minutes
+	int timestamp;
+	File autosave_file;
 
 	Serializer(ZenStates p) {
 		this.p = p;
+		setup_autosave();
 	}
 
 	File lastSaveFile = null;
@@ -47,20 +53,39 @@ public class Serializer {
 		return f;
 	}
 	
+	void setup_autosave() {
+		timestamp     = p.minute();
+		autosave_file = new File(p.sketchPath() + "/data/patches/temp.zen");
+		p.println(p.sketchPath());
+	}
+
+	void autosave() {
+		int time_elapsed = p.abs(p.minute()-timestamp);
+
+		if (time_elapsed > autosavetime) {
+			_saveAs(autosave_file, p.canvas.root, false);
+			p.println("saving!");
+			timestamp = p.minute();
+		}
+	}
+	
 	public void _saveAs(File file) {
-		_saveAs(file, p.canvas.root);
+		_saveAs(file, p.canvas.root, true);
+		lastSaveFile = file;
 	}
 	
 	public void _saveAs (String filename, StateMachine sm) {
 		File f = new File(p.sketchPath()+"/data/patches/"+filename);
-		_saveAs(f, sm);
+		_saveAs(f, sm, true);
 	}
 
-	public void _saveAs(File file, StateMachine sm) {
+	public void _saveAs(File file, StateMachine sm, boolean should_rename) {
 		if (file == null)
 			return;
 		try {
-			sm.update_title(file.getName());
+			//renames if necessary
+			if (should_rename)
+				sm.update_title(file.getName());
 			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
 			//oos.writeObject(p.board());
 			//oos.writeObject(p.canvas());
@@ -114,7 +139,8 @@ public class Serializer {
 			//p.board    = (Blackboard) ois.readObject();
 			//p.canvas   = (MainCanvas) ois.readObject();
 			p.canvas.setup((StateMachine) ois.readObject());
-
+			
+			lastSaveFile = file;
 			ois.close();
 
 		} catch (Exception e) {
