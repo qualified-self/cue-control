@@ -16,6 +16,10 @@ import java.util.UUID;
 ////////////////////////////////////////
 //the state class
 public class State implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Vector<Connection> connections;
 	private Vector<Task>       tasks;
 	private String             name;
@@ -40,7 +44,6 @@ public class State implements Serializable {
 	transient private Textfield label;
 	transient private PApplet   p;
 	transient private ControlP5 cp5;
-	//transient private CircleEffectUI animation;
 
 	//constructor
 	public State(PApplet p, ControlP5 cp5, String name) {
@@ -75,23 +78,22 @@ public class State implements Serializable {
 	void build (PApplet p, ControlP5 cp5) {
 		this.p = p;
 		this.cp5 = cp5;
-
-		//loads the gui
-		init_gui();
-		hide_gui();
+		
+		//builds the tasks
+		for (Connection c : connections)
+			c.build(p, cp5);
 
 		//builds the tasks
 		for (Task t : tasks) {
 			t.build(p, cp5);
 		}
+		
+		//loads the gui
+		init_gui();
+		hide_gui();
 
+		//add all tasks to gui
 		this.add_all_tasks_to_gui();
-
-		//builds the tasks
-		for (Connection c : connections)
-			c.build(p, cp5);
-
-
 	}
 
 	String get_name() {
@@ -711,6 +713,9 @@ public class State implements Serializable {
 		init_state_name_gui();
 		init_accordion_gui();
 		//init_tasks_gui();
+		
+		for (Connection c:connections) 
+			c.init_gui_items();
 	}
 
 	void hide_gui() {

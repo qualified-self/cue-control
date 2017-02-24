@@ -38,8 +38,9 @@ public class Serializer {
 			return;
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
-			oos.writeObject(p.board());
-			oos.writeObject(p.canvas());
+			//oos.writeObject(p.board());
+			//oos.writeObject(p.canvas());
+			oos.writeObject(p.canvas.root);
 			oos.close();
 		} catch (Exception e) {
 			p.println("ERROR saving to file: " + file + " [exception: " + e.toString() + "].");
@@ -55,25 +56,24 @@ public class Serializer {
 			p.cp5.setAutoDraw(false);
 
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-			p.board.clear();
+			
+			//p.board.clear();
 			p.canvas.clear();
 
-			p.board    = (Blackboard) ois.readObject();
-			p.canvas   = (MainCanvas) ois.readObject();
-
-			p.board.build(p);
-			p.canvas.build(p, p.cp5);
+			//p.board    = (Blackboard) ois.readObject();
+			//p.canvas   = (MainCanvas) ois.readObject();
+			p.canvas.setup((StateMachine) ois.readObject());
 
 			ois.close();
 
 		} catch (Exception e) {
-			p.println("ERROR loading file: " + file + " [exception: " + e.toString() + "].");
-			p.board  = new Blackboard(p);
-			p.canvas = new MainCanvas(p, p.cp5);
-
+			e.printStackTrace();
+			//p.println("ERROR loading file: " + file + " [exception: " + e.toString() + "].");
+			//p.board  = new Blackboard(p);
+			//p.canvas = new MainCanvas(p, p.cp5);
+			p.canvas.setup();
 		}
 
-		p.canvas.root.show();
 		p.cp5.setAutoDraw(true);
 		p.is_loading = false;
 

@@ -5,12 +5,10 @@
  ************************************************
  ************************************************/
 
-import java.io.Serializable;
-import processing.core.PApplet;
 import controlP5.*;
 import java.util.Vector;
 
-class MainCanvas implements Serializable {
+class MainCanvas {
 
 	StateMachine  	   root; 	 //my basic state machine
 	Vector<StateMachine> sm_stack; //a stack of sm used for allowing hierarchy
@@ -45,8 +43,17 @@ class MainCanvas implements Serializable {
 
 		root      = new StateMachine(this.p, cp5, "root");
 		sm_stack  = new Vector<StateMachine>();
-
 		sm_stack.add(root);
+
+		root.show();
+	}
+	
+	//initting a new root
+	void setup(StateMachine newsm){
+		root      = newsm;
+		root.build(p, cp5);
+		sm_stack  = new Vector<StateMachine>();
+		sm_stack.add(newsm);
 
 		root.show();
 	}

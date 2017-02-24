@@ -9,8 +9,6 @@
 
 import processing.core.PApplet;
 import oscP5.*;
-import netP5.*;
-
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.Vector;
@@ -52,8 +50,8 @@ public class ZenStates extends PApplet {
     }
 	
 	public void settings() {
-	  fullScreen();
-	  //size(1024,700);
+	  //fullScreen();
+	  size(1024,700);
 	}
 	
 	public void setup() {
@@ -160,7 +158,7 @@ public class ZenStates extends PApplet {
 	
 	void setup_autosave() {
 	  timestamp     = minute();
-	  autosave_file = new File(sketchPath() + "/data/patches/temp.txt");
+	  autosave_file = new File(sketchPath() + "/data/patches/.temp.zen");
 	  println(sketchPath());
 	}
 	
