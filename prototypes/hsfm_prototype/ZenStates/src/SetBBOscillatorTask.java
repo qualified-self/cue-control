@@ -109,6 +109,8 @@ class SetBBOscillatorTask extends SetBBTask {
 
     return g;
   }
+  
+  
 
   CallbackListener generate_callback_enter() {
     return new CallbackListener() {
@@ -151,5 +153,21 @@ class SetBBOscillatorTask extends SetBBTask {
             check_repeat_toggle(s, theEvent);
           }
     };
+  }
+
+  void reset_gui_fields() {
+	  String g_name = this.get_gui_id();
+	  String nv;
+
+	  //if this group is not open, returns...
+	  if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
+
+	  nv = ((Textfield)cp5.get(g_name+"/name")).getText();
+	  update_variable_name(nv);
+	  nv = ((Textfield)cp5.get(g_name+"/frequency")).getText();
+	  update_frequency(nv);
+	  nv = ((Textfield)cp5.get(g_name+"/amplitude")).getText();
+	  update_amplitude(nv);
+
   }
 }

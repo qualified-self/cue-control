@@ -158,7 +158,7 @@ public class ZenStates extends PApplet {
 	
 	void setup_autosave() {
 	  timestamp     = minute();
-	  autosave_file = new File(sketchPath() + "/data/patches/.temp.zen");
+	  autosave_file = new File(sketchPath() + "/data/patches/temp.zen");
 	  println(sketchPath());
 	}
 	

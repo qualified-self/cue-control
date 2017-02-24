@@ -173,5 +173,22 @@ class SetBBRampTask extends SetBBTask {
           }
     };
   }
+  
+
+  void reset_gui_fields() {
+	  String g_name = this.get_gui_id();
+	  String nv;
+
+	  //if this group is not open, returns...
+	  if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
+
+	  nv = ((Textfield)cp5.get(g_name+"/name")).getText();
+	  update_variable_name(nv);
+	  nv = ((Textfield)cp5.get(g_name+"/duration")).getText();
+	  update_duration(nv);
+	  nv = ((Textfield)cp5.get(g_name+"/amplitude")).getText();
+	  update_amplitude(nv);
+
+  }
 
 }
