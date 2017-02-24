@@ -48,8 +48,8 @@ class StateMachinePreview extends Canvas {
 		//p.translate(x, y);
 		p.pushMatrix();
 		p.rectMode(p.CENTER);
-		//float zoom = p.map(p.mouseX, 0, p.width, 0.1f, 1);
-		float zoom = 0.09f;
+		//inverse proportionality
+		float zoom = (0.09f*1024)/p.width;
 		p.scale(zoom);
 		//drawing the state machine preview
 		draw_state_machine();
