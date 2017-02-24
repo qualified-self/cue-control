@@ -41,7 +41,7 @@ class MainCanvas {
 
 		//ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
-		root      = new StateMachine(this.p, cp5, "root");
+		root      = new StateMachine(this.p, cp5, "unsaved file");
 		sm_stack  = new Vector<StateMachine>();
 		sm_stack.add(root);
 
@@ -76,7 +76,7 @@ class MainCanvas {
 	void draw_names() {
 		p.fill(255);
 		p.textAlign(p.LEFT);
-		String text = "ROOT";	
+		String text = root.title.toUpperCase() +" (ROOT)";	
 		
 		for (int i = 1; i < sm_stack.size(); i++) 
 			text += "   >   " + (sm_stack.get(i).title).toUpperCase();

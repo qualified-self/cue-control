@@ -24,7 +24,7 @@ public class Serializer {
 		else
 			_saveAs(lastSaveFile);
 	}
-
+	
 	void saveAs() {
 		p.selectOutput("Select file: ", "_saveAs", lastSaveFile, this);
 	}
@@ -32,21 +32,72 @@ public class Serializer {
 	void load() {
 		p.selectInput("Select file: ", "_load", lastSaveFile, this);
 	}
-
+	
+	boolean check_if_file_exists_in_sketchpath (String name) {
+		File f = new File(p.sketchPath()+"/data/patches/"+name);
+		return f.exists();
+	}
+	
+	public void delete (String name) {
+		File f = new File(p.sketchPath()+"/data/patches/"+name);
+		if (f.exists()) f.delete();
+	}
+	
+	public File returnFileTosave(File f) {
+		return f;
+	}
+	
 	public void _saveAs(File file) {
+		_saveAs(file, p.canvas.root);
+	}
+	
+	public void _saveAs (String filename, StateMachine sm) {
+		File f = new File(p.sketchPath()+"/data/patches/"+filename);
+		_saveAs(f, sm);
+	}
+
+	public void _saveAs(File file, StateMachine sm) {
 		if (file == null)
 			return;
 		try {
+			sm.update_title(file.getName());
 			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
 			//oos.writeObject(p.board());
 			//oos.writeObject(p.canvas());
-			oos.writeObject(p.canvas.root);
+			oos.writeObject(sm);
 			oos.close();
 		} catch (Exception e) {
 			p.println("ERROR saving to file: " + file + " [exception: " + e.toString() + "].");
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public StateMachine loadSubStateMachine (String filename) {
+		
+		File file = new File(p.sketchPath()+"/data/patches/"+filename);
+		
+		//if the file does not exist, return null!
+		if (!file.exists()) return null;
+		
+		StateMachine result = null;
+
+		try {	
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+			result = (StateMachine) ois.readObject();
+			result.build(p, p.cp5);
+			ois.close();
+			
+		} catch (Exception e) {
+			p.println("ERROR loading sub-statemachine: " + file + " [exception: " + e.toString() + "].");
+			e.printStackTrace();
+			//p.board  = new Blackboard(p);
+			//p.canvas = new MainCanvas(p, p.cp5);
+		}
+
+		return result;
+	}
+	
 
 	public void _load(File file) {
 		
@@ -67,8 +118,8 @@ public class Serializer {
 			ois.close();
 
 		} catch (Exception e) {
+			p.println("ERROR loading file: " + file + " [exception: " + e.toString() + "].");
 			e.printStackTrace();
-			//p.println("ERROR loading file: " + file + " [exception: " + e.toString() + "].");
 			//p.board  = new Blackboard(p);
 			//p.canvas = new MainCanvas(p, p.cp5);
 			p.canvas.setup();
@@ -79,5 +130,7 @@ public class Serializer {
 
 		p.println("done loading!");
 	}
+	
+	
 
 }

@@ -18,6 +18,7 @@ public class StateMachine extends Task {
 	float stateTimerMilestone = 0;
 	float stateTimer          = 0;
 	public boolean debug;
+	boolean brandnew; //has the user added  any state or task added to this state machine?
 
 	transient StateMachinePreview smp;
 
@@ -31,6 +32,8 @@ public class StateMachine extends Task {
 		end     = new State(p, cp5, "END");
 		states  = new Vector<State>();
 		debug = ZenStates.instance().debug();
+		
+		brandnew = true;
 
 		actual = begin;
 
@@ -78,6 +81,19 @@ public class StateMachine extends Task {
 	//so far not using this method
 	StateMachine clone_it() {
 		return null;
+	}
+	
+	//makes the current statemachine to mirror another statemachine sm
+	void mirror (StateMachine sm) {
+		this.title    = sm.title;
+		this.begin    = sm.begin;
+		this.end      = sm.end;
+		this.states   = sm.states;
+		this.brandnew = false;
+	}
+	
+	StateMachine getReferenceForThisStateMachine() {
+		return this;
 	}
 
 	//run all tasks associated to this node
@@ -167,11 +183,14 @@ public class StateMachine extends Task {
 			System.out.println("iterrupting State_Machine" + this.name);
 	}
 
-	void update_title(String newtitle) {
+	void update_title(String newtitle) {		
+		
 		Blackboard board = ZenStates.instance().board();
 		board.remove(this.title+"_stateTimer");
 		this.title = newtitle.replace(" ", "_");
 		//init_global_variables();
+		
+		
 	}
 
 	void update_actual (State next) {
@@ -253,6 +272,10 @@ public class StateMachine extends Task {
 			update_actual(next);
 
 	}
+	
+	boolean is_brandnew() {
+		return brandnew;
+	}
 
 	//add a state s to this State_Machine
 	void add_state(State s) {
@@ -269,6 +292,7 @@ public class StateMachine extends Task {
       System.out.println("There is alrealdy a state with this same name. Please, pick another name!");
     }
 		 */
+		brandnew = false; //this sm is no longer brandnew
 		states.addElement(s);
 		System.out.println("State " + s.get_name() + " added to State_Machine " + this.name);
 	}
@@ -533,10 +557,63 @@ public class StateMachine extends Task {
 						text="(choose a name)";
 						((Textfield)cp5.get(get_gui_id()+ "/name")).setText(text);
 					}
-					update_title(text);
+					//update_title(text);
+					test(text, title);
 				}
 
 				check_repeat_toggle(s, theEvent);
+			}
+			
+			public void test(String newtitle, String oldtitle) {
+				//does it finish with .zen extension?
+				if (newtitle.endsWith(".zen")) { //if yes
+					
+					//checks if there is a file named newtitle
+					boolean there_is_newtitle = ((ZenStates)p).serializer.check_if_file_exists_in_sketchpath(newtitle);
+					
+					//if there is a file named newtitle
+					if (there_is_newtitle) {
+						
+						//if the curring machine is brandnew
+						if (brandnew) {
+							
+							//p.print("we jsut loaded a sm from file! name: " + loaded.title);
+							((ZenStates)p).is_loading = true;
+							((ZenStates)p).cp5.setAutoDraw(false);
+							//load newtile from file
+							StateMachine loaded = ((ZenStates)p).serializer.loadSubStateMachine(newtitle);
+							//next step is to copy all parameters of loaded to this state machine
+							mirror(loaded);
+							((ZenStates)p).is_loading = false;
+							((ZenStates)p).cp5.setAutoDraw(true);
+						
+						//if the current machine isn't brandnew
+						} else {
+							
+							//p.println("the submachine isn't brandnew and there is already a file using this name!");
+							//remove the .zen extension
+							newtitle = newtitle.replace(".zen", "");
+							//update textfield on the ui
+							((Textfield)cp5.get(get_gui_id()+ "/name")).setText(newtitle);
+							//update title
+							update_title(newtitle);
+						}
+					
+					//if there is no file named newtitle
+					} else {		  
+						p.println("no " + newtitle + " was found in sketchpath");
+						//delete the old
+						((ZenStates)p).serializer.delete(oldtitle);
+						//update title
+						update_title(newtitle);
+						//save new
+						((ZenStates)p).serializer._saveAs(newtitle, getReferenceForThisStateMachine());
+					}
+					
+				//if it does not finish with .zen, just update the name
+				} else
+					update_title(newtitle);
+					
 			}
 		};
 	}
@@ -625,6 +702,7 @@ public class StateMachine extends Task {
 			//connects
 			s.connect(new Expression ("true"), intersected);
 			s.connect_anything_else_to_self();
+			brandnew = false; //this statemachine is no longer brandnew
 		}
 	}
 
