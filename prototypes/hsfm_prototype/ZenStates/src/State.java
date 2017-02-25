@@ -158,6 +158,13 @@ public class State implements Serializable {
 		for (Task t : tasks)
 			t.refresh();
 	}
+	
+	//in case there are statemachine inside this state, this machine should be saved to file
+	void save() {
+		for (Task t : tasks)
+			if (t instanceof StateMachine)
+				((StateMachine)t).save();
+	}
 
 	//if it's entering a state, you need to refresh it
 	void reset_first_time() {

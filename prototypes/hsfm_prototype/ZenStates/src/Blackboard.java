@@ -54,8 +54,8 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
       put("mouseY", (float)p.mouseY/p.height);
       put("mousePressed", p.mousePressed);
       put("key", p.key);
-      //put("keyCode", p.keyCode);
       put("keyPressed", p.keyPressed);
+      //put("keyCode", p.keyCode);
       //put("stateTimer", 0);
   }
 

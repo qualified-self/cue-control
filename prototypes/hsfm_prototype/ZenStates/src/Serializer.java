@@ -126,6 +126,9 @@ public class Serializer {
 
 	public void _load(File file) {
 		
+		//if there is no file to open, forget about it!
+		if (file==null) return;
+		
 		try {	
 			p.is_loading = true;
 			p.canvas.root.hide();
@@ -141,6 +144,7 @@ public class Serializer {
 			p.canvas.setup((StateMachine) ois.readObject());
 			
 			lastSaveFile = file;
+			
 			ois.close();
 
 		} catch (Exception e) {
@@ -151,6 +155,7 @@ public class Serializer {
 			p.canvas.setup();
 		}
 
+		p.board.reset();
 		p.cp5.setAutoDraw(true);
 		p.is_loading = false;
 

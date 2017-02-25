@@ -270,24 +270,28 @@ class MainCanvas {
 	void button_play() {
 		if (p.is_loading) return;
 		p.println("b_play pressed");
-		p.canvas.run();
+		run();
+		//p.canvas.run();
 	}
 
 	void button_stop() {
 		if (p.is_loading) return;
 		p.println("b_stop pressed");
-		p.canvas.stop();
+		stop();
+		//p.canvas.stop();
 	}
 	
 	void button_save() {
 		if (p.is_loading) return;
 		p.println("b_save pressed");
 		p.serializer.save();
+		root.save();
 	}
 
 	void button_load() {
 		if (p.is_loading) return;
 		p.println("b_load pressed");
+		stop();
 		p.serializer.load();
 	}
 

@@ -184,13 +184,12 @@ public class StateMachine extends Task {
 	}
 
 	void update_title(String newtitle) {		
-		
-		Blackboard board = ZenStates.instance().board();
-		board.remove(this.title+"_stateTimer");
-		this.title = newtitle.replace(" ", "_");
+		String n = get_formated_blackboard_title();
+		((ZenStates)p).board.remove(n+"_timer");
+		this.title = newtitle;
+		//board.remove(this.title+"_stateTimer");
+		//this.title = newtitle.replace(" ", "_");
 		//init_global_variables();
-		
-		
 	}
 
 	void update_actual (State next) {
@@ -271,6 +270,20 @@ public class StateMachine extends Task {
 		if (next!=null)
 			update_actual(next);
 
+	}
+	
+	//in case there are statemachine inside this state, this machine should be saved to file
+	void save() {
+		//saving the current state machine
+		((ZenStates)p).serializer._saveAs(title, this);
+		
+		//saving substatemachines inside all states...
+		for (State s : states)
+			s.save();
+
+		//save substatemachines inside begin and end
+		begin.save();
+		end.save();
 	}
 	
 	boolean is_brandnew() {
@@ -412,16 +425,19 @@ public class StateMachine extends Task {
 		System.out.println("Task " + t.name + " removed from the finalization of State_Machine " + this.name);
 	}
 
-	//inits the global variables related to this blackboard
-	void init_global_variables() {
-		ZenStates.instance().board.put(this.title+"_timer", 0);
-	}
-
+	//formats the title for the blackboard
 	String get_formated_blackboard_title () {
 		String n = this.title.replace(".", "_");
-		n = this.title.replace(" ", "_");
+		n = n.replace(" ", "_");
 		return n;
 	}
+
+	//inits the global variables related to this blackboard
+	void init_global_variables() {
+		String n = get_formated_blackboard_title();
+		ZenStates.instance().board.put(n+"_timer", 0);
+	}
+	
 	//updates the global variable related to this blackboard
 	void update_global_variables() {
 		update_state_timer();
@@ -556,6 +572,8 @@ public class StateMachine extends Task {
 
 				String s = theEvent.getController().getName();
 				System.out.println(s + " was entered");
+				
+				
 
 				if (s.equals(get_gui_id() + "/name")) {
 					String text = theEvent.getController().getValueLabel().getText();
@@ -563,14 +581,18 @@ public class StateMachine extends Task {
 						text="(choose a name)";
 						((Textfield)cp5.get(get_gui_id()+ "/name")).setText(text);
 					}
+					
+					//if the name didn't change, return
+					if(text.equals(title)) return;
+					
 					//update_title(text);
-					test(text, title);
+					process_title(text, title);
 				}
 
 				check_repeat_toggle(s, theEvent);
 			}
 			
-			public void test(String newtitle, String oldtitle) {
+			public void process_title(String newtitle, String oldtitle) {
 				//does it finish with .zen extension?
 				if (newtitle.endsWith(".zen")) { //if yes
 					
