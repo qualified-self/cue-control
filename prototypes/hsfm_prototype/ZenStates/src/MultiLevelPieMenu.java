@@ -15,7 +15,7 @@ class MultiLevelPieMenu {
   private String[] light_list      = {"Stop DMX", "", "Start DMX", "Control DMX"};
   private String[] sound_list      = {"Stop audio", "", "Start audio", "Control audio"};
   private String[] haptics_list    = {"Stop aura", "", "Start aura", "Control aura"};
-  private String[] meta_list 	   = {"OSC", "", "State Mechine", "Script (not implemented)"};
+  private String[] meta_list 	   = {"OSC", "", "State Mechine", "JS Script"};
   private String[] blackboard_list = {"Default", "", "", "Random", "Oscillator", "Ramp"};
 
 

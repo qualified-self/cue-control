@@ -272,5 +272,6 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
       bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
       return bd;
   }
+  
 
 }

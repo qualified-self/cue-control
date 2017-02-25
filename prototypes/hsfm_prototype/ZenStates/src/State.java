@@ -533,10 +533,18 @@ public class State implements Serializable {
 		//println(selected + " " + pie.options[selected]);
 	}
 	
-	//method that initializes a random demo osc task
+	//method that initializes a state machine task
 	void init_state_machine_task () {
 		String taskname = generate_random_name();
 		StateMachine t = new StateMachine(p, cp5, taskname);
+		this.add_task(t);
+	}
+	
+
+	//method that initializes a scripting task
+	void init_scripting_task () {
+		String taskname = generate_random_name();
+		ScriptingTask t = new ScriptingTask(p, cp5, "example.js");
 		this.add_task(t);
 	}
 	
@@ -1210,7 +1218,7 @@ public class State implements Serializable {
 				hide_pie();
 				break;
 			case 53:
-				p.println("@TODO: implement scripting engine");
+				init_scripting_task();
 				hide_pie();
 				break;
 			case 50:
