@@ -46,6 +46,8 @@ class MainCanvas {
 		sm_stack.add(root);
 
 		root.show();
+		
+		close_preview.hide();
 	}
 	
 	//initting a new root
@@ -56,6 +58,7 @@ class MainCanvas {
 		sm_stack.add(newsm);
 
 		root.show();
+		close_preview.hide();
 	}
 
 	//draw method
@@ -102,7 +105,8 @@ class MainCanvas {
 
 	//clears the root (not the current exhibited sm)
 	void clear() {
-		root.clear();
+		//root.clear();
+		sm_stack.lastElement().clear();
 	}
 
 	//runs the root (not the current exhibited sm)
