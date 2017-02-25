@@ -528,7 +528,7 @@ public class State implements Serializable {
 	//method that initializes a random demo osc task
 	void init_osc_task () {
 		String taskname = generate_random_name();
-		OSCTask t = new OSCTask(p, cp5, taskname, "/test/value", RemoteOSCTask.port, RemoteOSCTask.ip, new Object[]{0});
+		OSCTask t = new OSCTask(p, cp5, taskname, "/test/value", ((ZenStates)p).get_remote_port(), ((ZenStates)p).get_remote_ip(), new Object[]{0});
 		this.add_task(t);
 		//println(selected + " " + pie.options[selected]);
 	}
@@ -589,7 +589,24 @@ public class State implements Serializable {
 		draw_pie();
 		draw_state();
 		//animation.draw();
+		//draw_gui();
 	}
+	
+	/*
+	void draw_gui() {
+		//draw this cp5 elements
+		label.draw(p.g);
+		
+		
+		accordion.draw(p.g);
+		//draw cp5 elements of the tasks
+		for (Task t : tasks) 
+			t.draw_gui();
+		for (Connection c : connections) 
+			c.draw_gui();
+		
+	}
+	*/
 
 	//updates the current position of this state in screen
 	void set_position_gui(int newx, int newy) {

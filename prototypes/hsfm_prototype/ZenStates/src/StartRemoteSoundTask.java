@@ -120,5 +120,14 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
     update_name(nv);
 
   }
+  
+  /*
+  void draw_gui() {
+	  String g_name = this.get_gui_id();
+	  cp5.get(g_name).draw(p.g);
+	  cp5.get(g_name+ "/filename").draw(p.g); 
+	  cp5.get(g_name+"/repeat").draw(p.g);
+  }
+  */
 
 }

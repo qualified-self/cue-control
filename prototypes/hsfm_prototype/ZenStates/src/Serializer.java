@@ -55,7 +55,7 @@ public class Serializer {
 	
 	void setup_autosave() {
 		timestamp     = p.minute();
-		autosave_file = new File(p.sketchPath() + "/data/patches/temp.zen");
+		autosave_file = new File(p.sketchPath() + "/data/patches/_temp.zen");
 		p.println(p.sketchPath());
 	}
 

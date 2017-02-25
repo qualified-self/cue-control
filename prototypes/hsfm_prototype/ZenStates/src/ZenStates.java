@@ -39,15 +39,14 @@ public class ZenStates extends PApplet {
 	boolean mouseReleased = false;
 	boolean is_loading = false;
 
-	
-	
+		
 	public static void main(String[] args) {
         PApplet.main("ZenStates");
     }
 	
 	public void settings() {
-	  //fullScreen();
-	  size(1024,700);
+	  fullScreen();
+	  //size(1024,700);
 	}
 	
 	public void setup() {
@@ -63,6 +62,9 @@ public class ZenStates extends PApplet {
 
 		textSize(cp5.getFont().getSize());
 		textFont(cp5.getFont().getFont());
+		
+		//testing autodraw
+		//cp5.setAutoDraw(false);
 
 		is_loading = false;
 	}
@@ -170,7 +172,7 @@ public class ZenStates extends PApplet {
 	  SERVER_IP     = params.get(0);
 	  SERVER_PORT   = Integer.parseInt(params.get(1));
 	  OSC_RECV_PORT = Integer.parseInt(params.get(2));
-	
+	  
 	}
 	
 	///////////////////////////////////////

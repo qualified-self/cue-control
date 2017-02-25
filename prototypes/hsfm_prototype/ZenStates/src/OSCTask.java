@@ -113,6 +113,11 @@ class OSCTask extends Task {
     this.broadcast = new NetAddress(ip, port);
   }
 
+  void update_port (String port) {
+	  int v = Integer.parseInt(port);
+	  update_port(v);
+  }
+  
   void update_port (int port) {
     this.port = port;
     this.broadcast = new NetAddress(ip, port);
@@ -283,7 +288,7 @@ class OSCTask extends Task {
                   ((Textfield)cp5.get(get_gui_id() + "/port")).setText(Integer.toString(port));
                   return;
                 }
-                update_port(Integer.parseInt(text));
+                update_port(text);
                 //System.out.println(s + " " + text);
             }
             
@@ -317,6 +322,7 @@ class OSCTask extends Task {
     };
   }
 
+  /*
   CallbackListener generate_callback_leave() {
     return new CallbackListener() {
           public void controlEvent(CallbackEvent theEvent) {
@@ -351,6 +357,7 @@ class OSCTask extends Task {
     };
 
   }
+  */
 
 
   void reset_gui_fields() {
@@ -362,6 +369,8 @@ class OSCTask extends Task {
 
     nv = ((Textfield)cp5.get(g_name+"/ip")).getText();
     update_ip(nv);
+    nv = ((Textfield)cp5.get(g_name+"/port")).getText();
+    update_port(nv);
     nv = ((Textfield)cp5.get(g_name+"/message")).getText();
     update_message(nv);
     nv = ((Textfield)cp5.get(g_name+"/parameters")).getText();
