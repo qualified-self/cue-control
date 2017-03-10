@@ -69,10 +69,14 @@ public class Serializer {
 		}
 	}
 	
+	public void update_last_saved(File file) {
+		lastSaveFile = file;
+		autosave_file = file;		
+	}
+	
 	public void _saveAs(File file) {
 		_saveAs(file, p.canvas.root, true);
-		lastSaveFile = file;
-		autosave_file = file;
+		update_last_saved(file);
 	}
 	
 	public void _saveAs (String filename, StateMachine sm) {
@@ -144,7 +148,8 @@ public class Serializer {
 			//p.canvas   = (MainCanvas) ois.readObject();
 			p.canvas.setup((StateMachine) ois.readObject());
 			
-			lastSaveFile = file;
+			//lastSaveFile = file;
+			update_last_saved(file);
 			
 			ois.close();
 
