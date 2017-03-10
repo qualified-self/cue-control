@@ -14,7 +14,7 @@ public class StopRemoteDMXTask extends RemoteOSCTask {
     super(p, cp5, id);
 
     this.message = "/dmx/stop";
-    this.universe = new Expression("1");
+    this.universe = new Expression("0");
 
     update_content();
   }

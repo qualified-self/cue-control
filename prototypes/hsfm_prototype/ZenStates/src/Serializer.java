@@ -72,6 +72,7 @@ public class Serializer {
 	public void _saveAs(File file) {
 		_saveAs(file, p.canvas.root, true);
 		lastSaveFile = file;
+		autosave_file = file;
 	}
 	
 	public void _saveAs (String filename, StateMachine sm) {
