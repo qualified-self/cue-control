@@ -1,5 +1,6 @@
 import oscP5.*;
 import netP5.*;
+import processing.serial.*;
 import ddf.minim.*;
 import java.util.regex.*;
 import java.util.*;
@@ -19,6 +20,9 @@ final int DEFAULT_OSC_SEND_PORT = 12000;
 final int DEFAULT_OSC_RECV_PORT = 14000;
 final String DEFAULT_OSC_SEND_IP     = "127.0.0.1";
 
+final String DEFAULT_SERIAL_PORT     = "/dev/ttyUSB0";
+final int DEFAULT_SERIAL_BAUD_RATE   = 115200;
+
 //final String OSC_IP     = "192.168.1.101";
 
 final color DECORATOR_FILL_COLOR = #6a6a6a;
@@ -34,6 +38,7 @@ JSONObject config;
 
 OscP5 oscP5;
 NetAddress remoteLocation;
+Serial serial;
 Minim minim;
 Serializer serializer = new Serializer();
 
@@ -64,7 +69,7 @@ String autocompleteListCurrentSelected;
 
 public OscP5 oscP5() { return oscP5; }
 public Minim minim() { return minim; }
-
+public Serial serial() { return serial; }
 public NetAddress remoteLocation() { return remoteLocation; }
 
 void settings() {
@@ -97,6 +102,9 @@ void setup() {
 	int oscSendPort  = configInt   ("osc_send_port", DEFAULT_OSC_SEND_PORT);
 	String oscSendIp = configString("osc_send_ip",   DEFAULT_OSC_SEND_IP);
 
+	String serialPort  = configString("serial_port",   DEFAULT_SERIAL_PORT);
+	int serialBaudRate = configInt   ("serial_baud_rate", DEFAULT_SERIAL_BAUD_RATE);
+
 	Console.instance().log("Initializing OSC");
 	Console.instance().log("  recv_port="+oscRecvPort);
 	Console.instance().log("  send_port="+oscSendPort);
@@ -110,6 +118,13 @@ void setup() {
 
   // Location to send OSC messages
   remoteLocation = new NetAddress(oscSendIp, oscSendPort);
+
+	// Create serial connection.
+	try {
+		serial = new Serial(this, serialPort, serialBaudRate);
+	} catch (Exception e) {
+		Console.instance().warning(e);
+	}
 
   // Start sound server.
   minim = new Minim(this);
