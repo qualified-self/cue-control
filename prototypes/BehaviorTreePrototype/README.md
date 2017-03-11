@@ -1,4 +1,14 @@
+# Getting started
+
+You can download the code [here](http://github.com/qualified-self/cue-control/releases/tag/v0.1).
+
+For MacOS you need to download the [source code](https://github.com/qualified-self/cue-control/files/815707/BehaviorTreePrototype.src.zip ) and run it using [Processing](http://processing.org)
+
+The best way to learn about how to use the software is to watch the [video tutorials](http://www.youtube.com/playlist?list=PLO0YogNIPwXwxoIrQ3SRttTjMuancSiFb) (9 episodes, approx 1h total duration).
+
 # Cheatsheet
+
+## Mouse interaction
 
 The mouse is only used to:
  1. click on node or decorator: select one of the nodes or decorators
