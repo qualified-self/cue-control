@@ -1,5 +1,7 @@
 {
   "osc_recv_port": 14000,
   "osc_send_port": 12000,
-  "osc_send_ip"  : "127.0.0.1"
+  "osc_send_ip"  : "127.0.0.1",
+  "serial_port"  : "/dev/ttyUSB0",
+  "serial_baud_rate"  : 115200
 }
