@@ -1,20 +1,13 @@
-
-
-}
-
-
-
-}
-
 BaseNode createTree() {
-	return new SequentialNode("Wait for starting cue then launch")
+	return new SequenceNode("Wait for starting cue then launch")
 							.addChild(new BlackboardSetNode("end", "0"))
 							.addChild(new BlackboardSetNode("counter", "0"))
 							.addChild(new BlackboardSetNode("invented", "1000"))
 							.addChild(new ProbabilityNode("random event")
 								.addChild(70, new BlackboardSetNode("start", "1"))
 								.addChild(30, new BlackboardSetNode("start", "0"))
-							)
+							);
+						}
 		// BaseNode simpleTest() {
 //   return new ParallelNode().setDecorator(new ChronoDecorator(5))
 //             .addChild(new ConstantNode(State.SUCCESS))
@@ -450,95 +443,4 @@ BaseNode createTreeOct25() {
 			.addChild(new OscSendNode("/dmx/rate",       "0"))
 		)
 		;
-}
-
-BaseNode createTree() {
-	// return new SelectorNode("try to get + update variable / otherwise succeed", false).setDecorator(new WhileDecorator(new NotCondition(new KeyCondition(' '))))
-	//   .addChild(new SequenceNode()
-	// 	  .addChild(new OscReceiveNode("/VARIABLE", "var", State.FAILURE, 5))
-	// 	  .addChild(new BlackboardSetNode("var", "[var] + 10"))
-	//   )
-	//   .addChild(new ConstantNode(State.SUCCESS));
-	// return new SequenceNode()
-	// 			   .addChild(new BlackboardSetNode("var", "0"))
-	// 				 .addChild(new ParallelNode().setDecorator(new WhileDecorator(new NotCondition(new KeyCondition(' '))))
-	// 				   .addChild(new BlackboardSetNode("var", "0").setDecorator(new GuardDecorator("[var] > 10000", true)))
-	// 			     .addChild(new OscSendNode("/variable", "[var]"))
-	// 					 .addChild(new SelectorNode("try to get + update variable / otherwise succeed", false)
-	// 					   .addChild(new SequenceNode()
-	//   					   .addChild(new OscReceiveNode("/VARIABLE", "var", State.FAILURE, 1))
-	// 							 .addChild(new BlackboardSetNode("var", "[var] + 10"))
-	// 						 )
-	// 						 .addChild(new ConstantNode(State.SUCCESS))
-	// 					 )
-	// 				 );
-	return new SequenceNode("Wait for starting cue then launch")
-							.addChild(new BlackboardSetNode("end", "0"))
-							.addChild(new BlackboardSetNode("counter", "0"))
-							.addChild(new BlackboardSetNode("invented", "1000"))
-							.addChild(new ProbabilityNode("random event")
-								.addChild(1, new BlackboardSetNode("start", "1"))
-								.addChild(99, new BlackboardSetNode("start", "0"))
-							)
-							.addChild(new ConstantNode(State.SUCCESS).setDecorator(new WhileDecorator(new NotCondition(new KeyCondition('G')))))
-							.addChild(new SoundNode("123go.mp3"))
-							.addChild(new ParallelNode("Start the show", false)
-								.addChild(new SequenceNode("Stuff running in background").setDecorator(new WhileDecorator(new ExpressionCondition("[end] == 0")))
-									.addChild(new OscReceiveNode("/cue-proto/start", "start", State.SUCCESS))
-									.addChild(new OscReceiveNode("/cue-proto/level", "level", State.SUCCESS))
-									.addChild(new BlackboardSetNode("counter", "$counter+1"))
-									.addChild(new BlackboardSetNode("volume", "(math.sin( [$ounter * 0.01 ) + 1) / 2"))
-								)
-								.addChild(new SequenceNode("Start the show")
-									.addChild(new OscSendNode("/curtain/on", "1"))
-									.addChild(new OscSendNode("/lights/on", "1"))
-									.addChild(new OscSendNode("/test/start", "$start * 2"))
-									.addChild(new SelectorNode(false)
-										.addChild(new OscSendNode("/show/start", 0, 1)
-																.setDecorator(new GuardDecorator(new ExpressionCondition("$start == 1"))))
-										.addChild(new ParallelNode("Error: try again using emergency procedure")
-											.addChild(new SoundNode("error.mp3"))
-											.addChild(new OscSendNode("/show/startagain", 0, 1))
-											)
-										)
-									.addChild(new ConstantNode(State.SUCCESS).setDecorator(new WhileDecorator(new NotCondition(new KeyCondition('S')))))
-									.addChild(new ParallelNode("Stop the show")
-										.addChild(new SoundNode("stop.mp3"))
-										.addChild(new OscSendNode("/curtain/on", "0", 1, 1))
-										.addChild(new OscSendNode("/lights/on", "0", 0, 1))
-										)
-									.addChild(new BlackboardSetNode("end", "1"))
-									)
-								);
-}
-					.addChild(new ConstantNode(State.SUCCESS).setDecorator(new WhileDecorator(new NotCondition(new KeyCondition(' ')))))
-							.addChild(new SoundCueNode("123go.mp3"))
-							.addChild(new ParallelNode("Start the show", true, true)
-								.addChild(new SequentialNode("Stuff running in background").setDecorator(new WhileDecorator(new ExpressionCondition("[end] == 0")))
-									.addChild(new OscReceiveNode("/cue-proto/start", "start", State.SUCCESS))
-									.addChild(new OscReceiveNode("/cue-proto/level", "level", State.SUCCESS))
-									.addChild(new BlackboardSetNode("counter", "[counter]+0.001"))
-									.addChild(new BlackboardSetNode("volume", "math.sin( [counter] )"))
-								)
-								.addChild(new SequentialNode("Start the show")
-									.addChild(new OscSendNode("/curtain/on", "1"))
-									.addChild(new OscSendNode("/lights/on", "1"))
-									.addChild(new OscSendNode("/test/start", "[start] * 2"))
-									.addChild(new SelectorNode(false)
-										.addChild(new OscSendNode("/show/start", 0, 1)
-																.setDecorator(new GuardDecorator(new ExpressionCondition("[start] == 1"))))
-										.addChild(new ParallelNode("Error: try again using emergency procedure")
-											.addChild(new SoundCueNode("error.mp3"))
-											.addChild(new OscSendNode("/show/startagain", 0, 1))
-											)
-										)
-									.addChild(new ConstantNode(State.SUCCESS).setDecorator(new WhileDecorator(new NotCondition(new KeyCondition('S')))))
-									.addChild(new ParallelNode("Stop the show")
-										.addChild(new SoundCueNode("stop.mp3"))
-										.addChild(new OscSendNode("/curtain/on", "0", 1, 1))
-										.addChild(new OscSendNode("/lights/on", "0", 0, 1))
-										)
-									.addChild(new BlackboardSetNode("end", "1"))
-									)
-								);
 }
