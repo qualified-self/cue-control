@@ -158,6 +158,9 @@ State rootState = State.RUNNING;
 
 int nSteps = 0;
 
+// OSX
+boolean commandKeyDown = false;
+
 void draw() {
   // Reset background.
   background(0);
@@ -244,8 +247,11 @@ void mouseClicked()
 }
 
 void keyPressed() {
+  if (key == CODED && keyCode == 157)
+    commandKeyDown = true;
+    
   // Special case: input information for new node.
-  if (isEditing()) {
+  else if (isEditing()) {
     switch (key)
     {
       case ENTER: case RETURN:
@@ -278,7 +284,7 @@ void keyPressed() {
 
   // Otherwise: normal commands.
   else {
-    if (keyEvent.isControlDown())
+    if (keyEvent.isControlDown() || commandKeyDown)
     {
       switch (keyCode)
       {
@@ -305,7 +311,7 @@ void keyPressed() {
         case KeyEvent.VK_C:                  copyNode(); break;
         case KeyEvent.VK_V:                  pasteNode(); break;
 
-        case KeyEvent.VK_ENTER:              addSibling(); break;
+        case KeyEvent.VK_ENTER:              if (keyEvent.isShiftDown()) addChild(); else addSibling(); break;
         case KeyEvent.VK_TAB:                addChild(); break;
 
         case KeyEvent.VK_DELETE:
@@ -346,6 +352,11 @@ void keyPressed() {
   if (key == ESC)
     key = 0;
 
+}
+
+void keyReleased() {
+  if (key == CODED && keyCode == 157)
+    commandKeyDown = false;
 }
 
 void mouseWheel(MouseEvent e) {

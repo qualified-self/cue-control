@@ -3,7 +3,7 @@ class Help {
   final String EDIT = "help_edit.csv";
   final int BUTTON_SIZE = 40;
 
-  final int SIZE    = 24;
+  final int SIZE    = 22;
   final int LEADING = 10;
 
   Table file;
@@ -46,6 +46,9 @@ class Help {
       fill(#ffffff);
       int x = PADDING*2;
       int y = TOOLBAR_HEIGHT+PADDING;
+			textSize(SIZE);
+			text("Use CTRL or CMD in combination with each command.", x, y);
+      y += SIZE + LEADING*2;
       y = _drawTable("FILE", null, null, file, x, y);
       y += SIZE + LEADING;
       y = _drawTable("EDIT",
@@ -73,8 +76,8 @@ class Help {
     textSize(SIZE);
     for (TableRow row : table.rows()) {
       text(row.getString("key"),         x, y);
-      text(row.getString("action"),      x+150, y);
-      text(row.getString("description"), x+350, y);
+      text(row.getString("action"),      x+250, y);
+      text(row.getString("description"), x+450, y);
       y += SIZE + LEADING;
     }
 
