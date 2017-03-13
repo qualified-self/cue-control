@@ -25,9 +25,16 @@ class SetBBRampTask extends SetBBTask {
   void update_amplitude(String v) {
     this.amplitude = new Expression(v);
   }
+  
+  private String start_timer = null;
 
   void run() {
     if (!should_run()) return;
+    
+    if (variableName.equals("ramp2")) {
+    	int testing = 0;
+    	testing +=1;
+    }
 
     String dur_val = evaluate_value(this.duration).toString();
     String amp_val = evaluate_value(this.amplitude).toString();
@@ -36,13 +43,29 @@ class SetBBRampTask extends SetBBTask {
     
     String rootTimer = "$" + ((ZenStates)p).canvas.root.get_formated_blackboard_title() + "_timer";
     
-    if (is_up) ne = new Expression(amp_val+"*(("+rootTimer+"/"+dur_val+") % 1)");
-    else       ne = new Expression("math.abs("+amp_val+"-("+amp_val+"*(("+rootTimer+"/"+dur_val+") % 1)))");
+    //if this is the first time, need to save when execution started
+    if (first_time) {
+    	ne = new Expression(rootTimer);
+    	start_timer = evaluate_value(ne).toString();
+    }
+    	
+    //if (is_up) ne = new Expression(amp_val+"*(("+rootTimer+"/"+dur_val+") % 1)");
+    //else       ne = new Expression("math.abs("+amp_val+"-("+amp_val+"*(("+rootTimer+"/"+dur_val+") % 1)))");
+    if (is_up) ne = new Expression(amp_val+"*((("+rootTimer+"-"+start_timer+")/"+dur_val+") % 1)");
+    else       ne = new Expression("math.abs("+amp_val+"-("+amp_val+"*((("+rootTimer+"-"+start_timer+")/"+dur_val+") % 1)))");
 
     Blackboard board = ZenStates.instance().board();
     this.status = Status.RUNNING;
-    board.put(variableName, evaluate_value(ne));
-    this.status = Status.DONE;
+    
+    Object result = evaluate_value(ne);
+    
+    board.put(variableName, result);
+    //this.status = Status.DONE;
+  }
+  
+  void stop() {
+	  super.stop();
+	  start_timer = null;
   }
 
   //UI config

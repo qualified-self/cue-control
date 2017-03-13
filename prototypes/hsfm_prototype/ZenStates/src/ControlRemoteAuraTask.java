@@ -10,6 +10,7 @@ import processing.core.PApplet;
 public class ControlRemoteAuraTask extends RemoteOSCTask {
 
   Object  intensity;
+  Object  pan;
 
   //contructor loading the file
   public ControlRemoteAuraTask (PApplet p, ControlP5 cp5, String id) {
@@ -17,6 +18,7 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
 
     this.message = "/aura/control";
     this.intensity = new Expression("0.0");
+    this.pan      = new Expression("0.5");
 
     update_content();
 
@@ -28,12 +30,18 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
   }
 
   void update_content () {
-    this.content  = new Object[] {this.intensity};
+    this.content  = new Object[] {this.intensity, this.pan};
   }
 
   void update_intensity(String inten) {
     this.intensity = new Expression(inten);
     update_content();
+  }
+  
+
+  void update_pan(String pn) {
+    this.pan = new Expression(pn);
+    update_content ();
   }
 
 
@@ -51,7 +59,7 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
     Group g = cp5.addGroup(g_name)
     //.setPosition(x, y) //change that?
     .setHeight(12)
-    .setBackgroundHeight(50)
+    .setBackgroundHeight(135)
     .setColorBackground(p.color(255, 50)) //color of the task
     .setBackgroundColor(p.color(255, 25)) //color of task when openned
     .setLabel("Control haptics")
@@ -74,8 +82,20 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
       .onReleaseOutside(cb_enter)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
     ;
+    
+    cp5.addTextfield(g_name+ "/pan")
+    .setPosition(localx, localy+localoffset)
+    .setSize(w, 15)
+    .setGroup(g)
+    .setAutoClear(false)
+    .setLabel("pan")
+    .setText(this.pan+"")
+    .onChange(cb_enter)
+    .onReleaseOutside(cb_enter)
+    .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
+    ;
 
-    create_gui_toggle(localx, localy+localoffset, w, g, cb_enter);
+    create_gui_toggle(localx, localy+(2*localoffset), w, g, cb_enter);
 
     return g;
   }
@@ -99,6 +119,16 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
                 }
                 update_intensity(nv);
                 //System.out.println(s + " " + nv);
+            }
+            
+            if (s.equals(get_gui_id() + "/pan")) {
+                String nv = theEvent.getController().getValueLabel().getText();
+                if (nv.trim().equals("")) {
+                  nv="0.0";
+                  ((Textfield)cp5.get(get_gui_id()+ "/pan")).setText(nv);
+                }
+                update_pan(nv);
+
             }
 
             check_repeat_toggle(s, theEvent);
@@ -126,6 +156,10 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
       nv="0.0";
       ((Textfield)cp5.get(get_gui_id()+ "/intensity")).setText(nv);
     }
+    
+    nv = ((Textfield)cp5.get(g_name+"/pan")).getText();
+    update_pan(nv);
+
     update_intensity(nv);
   }
 

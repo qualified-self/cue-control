@@ -17,14 +17,21 @@ class MainCanvas {
 	transient private ControlP5 cp5;
 	transient private Button close_preview;
 
+	private boolean is_running;
 
 	//contructor
 	public MainCanvas (ZenStates p, ControlP5 cp5) {
 		this.p = p;
 		this.cp5 = cp5;
+		is_running = false;
+		
 		init_buttons();
 
 		setup();
+	}
+	
+	boolean is_running () {
+		return is_running;
 	}
 
 	void build(ZenStates p, ControlP5 cp5) {
@@ -111,11 +118,13 @@ class MainCanvas {
 
 	//runs the root (not the current exhibited sm)
 	void run() {
+		is_running = true;
 		root.run();
 	}
 
 	//stops the root (not the current exhibited sm)
 	void stop() {
+		is_running = false;
 		root.end.run();
 		root.stop();
 		Blackboard board = ZenStates.instance().board();
@@ -288,6 +297,10 @@ class MainCanvas {
 	void button_save() {
 		if (p.is_loading) return;
 		p.println("b_save pressed");
+		save();
+	}
+	
+	void save() {
 		p.serializer.save();
 		root.save();
 	}
@@ -295,6 +308,10 @@ class MainCanvas {
 	void button_load() {
 		if (p.is_loading) return;
 		p.println("b_load pressed");
+		load();
+	}
+	
+	void load() {
 		stop();
 		p.serializer.load();
 	}

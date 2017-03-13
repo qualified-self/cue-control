@@ -7,14 +7,14 @@ import processing.core.PApplet;
 //implementing a task for OSC messages
 public class StopRemoteDMXTask extends RemoteOSCTask {
 
-  Object  universe;
+  Object  channel;
 
   //contructor loading the file
   public StopRemoteDMXTask (PApplet p, ControlP5 cp5, String id) {
     super(p, cp5, id);
 
     this.message = "/dmx/stop";
-    this.universe = new Expression("0");
+    this.channel = new Expression("0");
 
     update_content();
   }
@@ -24,11 +24,11 @@ public class StopRemoteDMXTask extends RemoteOSCTask {
   }
 
   void update_content () {
-    this.content  = new Object[] {this.universe};
+    this.content  = new Object[] {this.channel};
   }
 
-  void update_universe (String uni) {
-    this.universe = new Expression(uni);
+  void update_channel (String uni) {
+    this.channel = new Expression(uni);
     update_content();
   }
 
@@ -59,13 +59,13 @@ public class StopRemoteDMXTask extends RemoteOSCTask {
     int localx = 10, localy = 15, localoffset = 40;
     int w = g.getWidth()-10;
 
-    cp5.addTextfield(g_name+ "/universe")
+    cp5.addTextfield(g_name+ "/channel")
       .setPosition(localx, localy)
       .setSize(w, 15)
       .setGroup(g)
       .setAutoClear(false)
-      .setLabel("universe")
-      .setText(this.universe.toString())
+      .setLabel("channel")
+      .setText(this.channel.toString())
       .align(ControlP5.CENTER, ControlP5.CENTER,ControlP5.CENTER, ControlP5.CENTER)
       .onChange(cb_enter)
       .onReleaseOutside(cb_enter)
@@ -86,13 +86,13 @@ public class StopRemoteDMXTask extends RemoteOSCTask {
 
             String s = theEvent.getController().getName();
 
-            if (s.equals(get_gui_id() + "/universe")) {
+            if (s.equals(get_gui_id() + "/channel")) {
                 String nv = theEvent.getController().getValueLabel().getText();
                 if (nv.trim().equals("")) {
                   nv="0";
-                  ((Textfield)cp5.get(get_gui_id()+ "/universe")).setText(nv);
+                  ((Textfield)cp5.get(get_gui_id()+ "/channel")).setText(nv);
                 }
-                update_universe(nv);
+                update_channel(nv);
                 //System.out.println(s + " " + nv);
             }
 
@@ -108,8 +108,8 @@ public class StopRemoteDMXTask extends RemoteOSCTask {
     //if this group is not open, returns...
     if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
 
-    nv = ((Textfield)cp5.get(g_name+"/universe")).getText();
-    update_universe(nv);
+    nv = ((Textfield)cp5.get(g_name+"/channel")).getText();
+    update_channel(nv);
   }
 
 

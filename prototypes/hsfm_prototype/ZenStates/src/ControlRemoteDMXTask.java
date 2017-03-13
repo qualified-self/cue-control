@@ -9,7 +9,7 @@ import processing.core.PApplet;
 //implementing a task for OSC messages
 public class ControlRemoteDMXTask extends RemoteOSCTask {
 
-  Object universe;
+  Object channel;
   Object intensity;
   Object rate;
   Object duration;
@@ -19,7 +19,7 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
     super(p, cp5, id);
 
     this.message   = "/dmx/control";
-    this.universe  = new Expression("0");
+    this.channel  = new Expression("0");
     this.intensity = new Expression("0");
     this.rate      = new Expression("0");
     this.duration  = new Expression("0");
@@ -34,11 +34,11 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
   }
 
   void update_content () {
-    this.content  = new Object[] {this.universe, this.intensity, this.rate, this.duration};
+    this.content  = new Object[] {this.channel, this.intensity, this.rate, this.duration};
   }
 
-  void update_universe (String u) {
-    this.universe = new Expression(u);
+  void update_channel (String u) {
+    this.channel = new Expression(u);
     update_content();
   }
 
@@ -84,13 +84,13 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
     int localx = 10, localy = 15, localoffset = 40;
     int w = g.getWidth()-10;
 
-    cp5.addTextfield(g_name+ "/universe")
+    cp5.addTextfield(g_name+ "/channel")
       .setPosition(localx, localy)
       .setSize(w, 15)
       .setGroup(g)
       .setAutoClear(false)
-      .setLabel("universe")
-      .setText(this.universe.toString())
+      .setLabel("channel")
+      .setText(this.channel.toString())
       .align(ControlP5.CENTER, ControlP5.CENTER,ControlP5.CENTER, ControlP5.CENTER)
       .onChange(cb_enter)
       .onReleaseOutside(cb_enter)
@@ -150,13 +150,13 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
 
             String s = theEvent.getController().getName();
 
-            if (s.equals(get_gui_id() + "/universe")) {
+            if (s.equals(get_gui_id() + "/channel")) {
                 String nv = theEvent.getController().getValueLabel().getText();
                 if (nv.trim().equals("")) {
                   nv="0";
-                  ((Textfield)cp5.get(get_gui_id()+ "/universe")).setText(nv);
+                  ((Textfield)cp5.get(get_gui_id()+ "/channel")).setText(nv);
                 }
-                update_universe(nv);
+                update_channel(nv);
             }
 
             if (s.equals(get_gui_id() + "/intensity")) {
@@ -198,8 +198,8 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
     //if this group is not open, returns...
     if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
 
-    nv = ((Textfield)cp5.get(g_name+"/universe")).getText();
-    update_universe(nv);
+    nv = ((Textfield)cp5.get(g_name+"/channel")).getText();
+    update_channel(nv);
     nv = ((Textfield)cp5.get(g_name+"/intensity")).getText();
     update_intensity(nv);
     nv = ((Textfield)cp5.get(g_name+"/rate")).getText();

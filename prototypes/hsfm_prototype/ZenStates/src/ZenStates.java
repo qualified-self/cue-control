@@ -183,13 +183,14 @@ public class ZenStates extends PApplet {
 	public boolean cmg_or_ctrl_pressed = false;
 	
 	public void keyPressed(){
-		println("keyCode: " + keyCode + " key: " +key);
+		//if (debug)
+			println("keyCode: " + keyCode + " key: " +key);
 		
 		//if is loading an open patch, do not draw anything
 		if (is_loading) return;
 		
 		//updating cmg_or_ctrl_pressed if contrll or command keys were pressed
-		if (keyCode == 27 || keyCode == 157)
+		if (keyCode == 17 || keyCode == 27 || keyCode == 157)
 			cmg_or_ctrl_pressed = true;
 		
 		//if control or command key are not pressed, ignore
@@ -197,15 +198,26 @@ public class ZenStates extends PApplet {
 		
 		
 		switch(keyCode) {
-		case 61:
+		case 61: //+
 			//create_state();
 			canvas.process_plus_key_pressed();
 			break;
-		case 45:
+		case 45: //-
 			//remove_state();
 			canvas.process_minus_key_pressed();
 			break;
+		case 32: //spacebar
+			if (canvas.is_running()) canvas.button_stop();
+			else					 canvas.button_play();
+			break;
+			
+		case 83: //s
+			canvas.button_save();
+			break;
 
+		case 76: //l
+			canvas.button_load();
+			break;
 		}
 		//println(keyCode);
 	}
@@ -228,7 +240,7 @@ public class ZenStates extends PApplet {
 		keyReleased = true;
 		
 		//updating cmg_or_ctrl_pressed if contrll or command keys were pressed
-		if (keyCode == 27 || keyCode == 157)
+		if (keyCode == 17 || keyCode == 27 || keyCode == 157)
 			cmg_or_ctrl_pressed = false;
 	}
 
