@@ -8,11 +8,16 @@ class SetBBTask extends Task {
 
 	Object value;
 	String variableName;
+	float timer;
+	float timerMilestone;
+	
 
 	public SetBBTask (PApplet p, ControlP5 cp5, String taskname, Object value) {
 		super(p, cp5, taskname);
 		this.variableName = taskname;
 		this.value = value;
+		this.timerMilestone = 0;
+		this.timer          = 0;
 	}
 
 	/*
@@ -30,6 +35,27 @@ class SetBBTask extends Task {
 	SetBBTask clone_it() {
 		return new SetBBTask(this.p, this.cp5, this.name, this.value);
 	}
+	
+	//updates the stateTimer variable related to this state machine
+	void update_timer() {
+		this.timer = ((float)p.millis()/1000f)-timerMilestone;
+	}
+	
+		//resets the timer variable related to this setBBTask
+	void reset_timer() {
+		this.timerMilestone = (float)p.millis()/1000f;
+		this.timer          = 0;
+	}
+	
+	//special "should run" modifed for blackboard variables involving timers
+	boolean should_run() {
+		if (first_time) reset_timer();
+		boolean should_run = super.should_run();
+		//if (should_run) update_timer();
+		update_timer();
+		return should_run;
+	}
+
 
 	void run() {
 		if (!should_run()) return;

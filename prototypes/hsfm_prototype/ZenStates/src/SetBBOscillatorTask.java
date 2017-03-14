@@ -32,9 +32,10 @@ class SetBBOscillatorTask extends SetBBTask {
     String freq_val = (evaluate_value(this.frequency)).toString();
     String amp_val  = (evaluate_value(this.amplitude)).toString();
     
-    String rootTimer = "$" + ((ZenStates)p).canvas.root.get_formated_blackboard_title() + "_timer";
+    //String rootTimer = "$" + ((ZenStates)p).canvas.root.get_formated_blackboard_title() + "_timer";
 
-    Expression ne = new Expression(amp_val+"*math.sin("+rootTimer+"*"+freq_val+")");
+    //Expression ne = new Expression(amp_val+"*math.sin("+rootTimer+"*"+freq_val+")");
+    Expression ne = new Expression(amp_val+"*math.sin("+timer+"*"+freq_val+")");
 
     Blackboard board = ZenStates.instance().board();
     this.status = Status.RUNNING;

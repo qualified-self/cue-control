@@ -59,8 +59,8 @@ class OSCTask extends Task {
 
     oscP5.send(msg, broadcast);
 
-    //if (debug)
-    System.out.println("sending OSC message to: " + broadcast.toString() + ". content: " + msg.toString());
+    if (((ZenStates)p).debug)
+    	System.out.println("sending OSC message to: " + broadcast.toString() + ". content: " + msg.toString());
     this.status = Status.DONE;
   }
 
