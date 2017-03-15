@@ -10,6 +10,7 @@ import processing.core.PApplet;
 public class ControlRemoteSoundTask extends RemoteOSCTask {
 
   String filename;
+  int sample_choice;
   Object  volume;
   Object  pan;
 
@@ -21,6 +22,7 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
     this.filename = "example.wav";
     this.volume   = new Expression("0.0");
     this.pan      = new Expression("0.5");
+    this.sample_choice = 0;
 
     update_content();
     //this.content  = new Object[] {this.filename, this.volume, this.pan};
@@ -31,10 +33,17 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
   ControlRemoteSoundTask clone_it () {
     return new ControlRemoteSoundTask(this.p, this.cp5, this.name);
   }
-
+  
+  /*
   void update_name(String name) {
     this.filename = name;
     update_content();
+  }
+  */
+  
+  void update_sample(int new_sample) {
+	  sample_choice = new_sample;
+	  update_content();
   }
 
   void update_volume(String vol) {
@@ -48,7 +57,8 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
   }
 
   void update_content () {
-    this.content  = new Object[] {this.filename, this.volume, this.pan};
+    //this.content  = new Object[] {this.filename, this.volume, this.pan};
+    this.content  = new Object[] {this.sample_choice, this.volume, this.pan};
   }
 
 
@@ -78,6 +88,7 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
     int localx = 10, localy = 15, localoffset = 40;
     int w = g.getWidth()-10;
 
+    /*
     cp5.addTextfield(g_name+ "/filename")
       .setPosition(localx, localy)
       .setSize(w, 15)
@@ -90,9 +101,10 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
       .onReleaseOutside(cb_enter)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
     ;
+    */
 
     cp5.addTextfield(g_name+ "/volume")
-      .setPosition(localx, localy+localoffset)
+      .setPosition(localx, localy)
       .setSize(w, 15)
       .setGroup(g)
       .setAutoClear(false)
@@ -104,7 +116,7 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
       ;
 
       cp5.addTextfield(g_name+ "/pan")
-        .setPosition(localx, localy+(2*localoffset))
+        .setPosition(localx, localy+(1*localoffset))
         .setSize(w, 15)
         .setGroup(g)
         .setAutoClear(false)
@@ -115,7 +127,26 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
         .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE);
         ;
 
-    create_gui_toggle(localx, localy+(3*localoffset), w, g, cb_enter);
+    create_gui_toggle(localx, localy+(2*localoffset), w, g, cb_enter);
+    
+    cp5.addDropdownList(g_name+ "/sample")
+    .setPosition(localx, localy+(3*localoffset))
+    .setSize(w, 150)
+    .setGroup(g)
+    .setLabel("sample")
+    .align(ControlP5.CENTER, ControlP5.CENTER,ControlP5.CENTER, ControlP5.CENTER)
+    .setItemHeight(20)
+    .setBarHeight(15)
+    .close()
+    .onChange(cb_enter)
+    //.onReleaseOutside(cb_enter)
+    .addItem("Sample 1", 0)
+    .addItem("Sample 2", 1)
+    .addItem("Sample 3", 2)
+    .addItem("Sample 4", 3)
+    .setDefaultValue(0)
+    .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
+    ;
 
     return g;
   }
@@ -130,6 +161,7 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
 
             String s = theEvent.getController().getName();
 
+            /*
             if (s.equals(get_gui_id() + "/filename")) {
                 String nv = theEvent.getController().getValueLabel().getText();
 
@@ -141,7 +173,10 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
 
                 update_name(nv);
                 System.out.println(s + " " + nv);
-            }
+            }*/
+            
+            if (s.equals(get_gui_id() + "/sample")) 
+            	update_sample((int)theEvent.getController().getValue());
 
             if (s.equals(get_gui_id() + "/volume")) {
                 String nv = theEvent.getController().getValueLabel().getText();
@@ -175,8 +210,8 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
     //if this group is not open, returns...
     if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
 
-    nv = ((Textfield)cp5.get(g_name+"/filename")).getText();
-    update_name(nv);
+    //nv = ((Textfield)cp5.get(g_name+"/filename")).getText();
+    //update_name(nv);
     nv = ((Textfield)cp5.get(g_name+"/volume")).getText();
     update_volume(nv);
     nv = ((Textfield)cp5.get(g_name+"/pan")).getText();

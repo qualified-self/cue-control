@@ -10,6 +10,7 @@ import processing.core.PApplet;
 public class StartRemoteSoundTask extends RemoteOSCTask {
 
   String filename;
+  int sample_choice;
 
   //contructor loading the file
   public StartRemoteSoundTask (PApplet p, ControlP5 cp5, String id) {
@@ -17,6 +18,7 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
 
     this.message = "/speaker/start";
     this.filename = "example.wav";
+    this.sample_choice = 0;
 
     update_content();
     //this.content = new Object[] {filename};
@@ -28,13 +30,21 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
     return new StartRemoteSoundTask(this.p, this.cp5, this.name);
   }
 
+  /*
   void update_name(String name) {
     this.filename = name;
     update_content();
   }
+  */
+  
+  void update_sample(int new_sample) {
+	  sample_choice = new_sample;
+	  update_content();
+  }
 
   void update_content () {
-    this.content = new Object[] {filename};
+    //this.content = new Object[] {filename};
+	  this.content = new Object[] {sample_choice};
   }
 
   //UI config
@@ -63,6 +73,28 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
     int localx = 10, localy = 15, localoffset = 40;
     int w = g.getWidth()-10;
 
+    create_gui_toggle(localx, localy, w, g, cb_enter);
+
+    cp5.addDropdownList(g_name+ "/sample")
+    .setPosition(localx, localy+localoffset)
+    .setSize(w, 150)
+    .setGroup(g)
+    .setLabel("sample")
+    .align(ControlP5.CENTER, ControlP5.CENTER,ControlP5.CENTER, ControlP5.CENTER)
+    .setItemHeight(20)
+    .setBarHeight(15)
+    .close()
+    .onChange(cb_enter)
+    //.onReleaseOutside(cb_enter)
+    .addItem("Sample 1", 0)
+    .addItem("Sample 2", 1)
+    .addItem("Sample 3", 2)
+    .addItem("Sample 4", 3)
+    .setDefaultValue(0)
+    .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
+    ;
+    
+    /*
     cp5.addTextfield(g_name+ "/filename")
       .setPosition(localx, localy)
       .setSize(w, 15)
@@ -75,8 +107,8 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
       .onReleaseOutside(cb_enter)
       .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
     ;
+    */
 
-    create_gui_toggle(localx, localy+localoffset, w, g, cb_enter);
 
     return g;
   }
@@ -90,7 +122,11 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
             if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
 
             String s = theEvent.getController().getName();
+            
+            if (s.equals(get_gui_id() + "/sample")) 
+            	update_sample((int)theEvent.getController().getValue());
 
+            /*
             if (s.equals(get_gui_id() + "/filename")) {
                 String newFilename = theEvent.getController().getValueLabel().getText();
 
@@ -103,6 +139,7 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
                 update_name(newFilename);
                 System.out.println(s + " - " + newFilename);
             }
+            */
 
             check_repeat_toggle(s, theEvent);
           }
@@ -116,8 +153,10 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
     //if this group is not open, returns...
     if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
 
+    /*
     nv = ((Textfield)cp5.get(g_name+"/filename")).getText();
     update_name(nv);
+    */
 
   }
   
