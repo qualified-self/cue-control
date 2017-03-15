@@ -6,6 +6,9 @@
  ************************************************/
 
 import controlP5.*;
+import netP5.NetAddress;
+import oscP5.OscMessage;
+
 import java.util.Vector;
 
 class MainCanvas {
@@ -125,10 +128,18 @@ class MainCanvas {
 	//stops the root (not the current exhibited sm)
 	void stop() {
 		is_running = false;
-		root.end.run();
+		stop_server();
 		root.stop();
 		Blackboard board = ZenStates.instance().board();
 		board.reset();
+	}
+	
+	//sends a osc message to stop all media in the server
+	void stop_server() {
+		OscMessage om = new OscMessage("/stop");
+		NetAddress na = new NetAddress(p.SERVER_IP, p.SERVER_PORT);
+		p.oscP5().send(om, na);
+		p.println("stopping every media in the server");
 	}
 
 	void push_root(StateMachine new_sm) {

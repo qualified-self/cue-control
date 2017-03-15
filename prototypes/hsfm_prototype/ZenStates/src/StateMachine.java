@@ -120,14 +120,21 @@ public class StateMachine extends Task {
 	void run () {
 		if (!should_run())
 			return;
+		
+		//debug
+		//if(name.contains("END"))
+		//p.println("im executing " + title);
 
 		this.status = Status.RUNNING;
 
 		update_actual(begin);
 
 		reset_state_timer();
+		
 		actual.run();
-		System.out.println("running the State_Machine " + this.name);
+		
+		if (debug)
+			System.out.println("running the State_Machine " + this.title + ". actual is " + actual.get_name());
 	}
 
 	//stops all tasks associated to this node
@@ -145,7 +152,7 @@ public class StateMachine extends Task {
 		begin.stop();
 
 		end.reset_first_time();
-		end.run();
+		//end.run();
 		end.stop();
 
 		//updating the actual

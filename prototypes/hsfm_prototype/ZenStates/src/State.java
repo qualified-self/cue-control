@@ -106,11 +106,8 @@ public class State implements Serializable {
 
 	//run all tasks associated to this node
 	void run () {
-		for (Task t : tasks) {
+		for (Task t : tasks) 
 			t.run();
-			if (get_name().equals("END_ROOT"))
-				p.println("executing" + t);
-		}
 
 		this.status = Status.RUNNING;
 
