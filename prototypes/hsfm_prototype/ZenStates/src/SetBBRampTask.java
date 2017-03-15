@@ -36,8 +36,8 @@ class SetBBRampTask extends SetBBTask {
     Expression ne;
     
     //String rootTimer = "$" + ((ZenStates)p).canvas.root.get_formated_blackboard_title() + "_timer";
-    //p.print(variableName + " timer: " + timer);
-	//p.println(" - is executing for the first time?" + first_time);
+    p.print(variableName + " timer: " + timer);
+	p.println(" - is executing for the first time? " + first_time);
     	
     //if (is_up) ne = new Expression(amp_val+"*(("+rootTimer+"/"+dur_val+") % 1)");
     //else       ne = new Expression("math.abs("+amp_val+"-("+amp_val+"*(("+rootTimer+"/"+dur_val+") % 1)))");
@@ -52,6 +52,7 @@ class SetBBRampTask extends SetBBTask {
     board.put(variableName, result);
     
 	this.status = Status.DONE;
+	
     //if (is_up && timer >= (Float.parseFloat(amp_val))-0.1)
     //	this.status = Status.DONE;
     //if (!is_up && timer >= 0.1)

@@ -111,7 +111,7 @@ class SetBBRandomTask extends SetBBTask {
                   return;
                 }
                 update_variable_name(text);
-                System.out.println(s + " " + text);
+                //System.out.println(s + " " + text);
             }
 
             if (s.equals(get_gui_id() + "/delay")) {
