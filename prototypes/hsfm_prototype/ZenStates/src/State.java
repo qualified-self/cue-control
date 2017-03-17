@@ -57,8 +57,10 @@ public class State implements Serializable {
 		this.y = (int)p.random(10, p.height-size);
 		this.movement_status = MovementStatus.FREE;
 		this.debug = ZenStates.instance().debug();
+		this.id    = UUID.randomUUID().toString();
 		
-		init_id_and_gui();
+		init_gui();
+		hide_gui();
 
 		this.is_actual = false;
 	}
@@ -76,6 +78,7 @@ public class State implements Serializable {
 	void build (PApplet p, ControlP5 cp5) {
 		this.p = p;
 		this.cp5 = cp5;
+		//this.id    = UUID.randomUUID().toString();
 		
 		//builds the tasks
 		for (Connection c : connections)
@@ -102,11 +105,14 @@ public class State implements Serializable {
 		return this.id;
 	}
 	
-	void init_id_and_gui () {
-		this.id    = UUID.randomUUID().toString();
-
-		init_gui();
-		hide_gui();
+	void set_id(String newid) {
+		this.id = id;
+	}
+	
+	
+	void reinit_id () {
+		//updates the id
+		this.id = UUID.randomUUID().toString();
 	}
 	
 	State clone_it () {
@@ -349,6 +355,25 @@ public class State implements Serializable {
 		}
 
 		this.reload_connections_gui();
+	}
+	
+	void update_all_connections_to_a_state (State dest, String newid) {
+		//iterating over connections backwards
+		for (int i = connections.size()-1; i >=0 ; i--) {
+			Connection c = connections.get(i);
+			if (c.get_next_state()==dest) 
+				c.update_id_next_state(newid);
+				//all connections are automatically realoaded inside the last method. no need to do it again.
+		}
+	}
+	
+	void update_all_connections_from_this_state () {
+		//iterating over connections backwards
+		for (int i = connections.size()-1; i >=0 ; i--) {
+			Connection c = connections.get(i);
+			c.update_parent(this.get_id());
+			//all connections are automatically realoaded inside the last method. no need to do it again.
+		}
 	}
 
 	void reload_connections_gui() {
@@ -748,7 +773,6 @@ public class State implements Serializable {
 		this.pie.set_position(x,y);
 		this.pie.set_inner_circle_diam((float)size);
 		
-	    
 	    //this.animation = new CircleEffectUI((ZenStates)p, this, x, y);
 	    //this.animation.set_position(x,y);
 	    
@@ -1344,6 +1368,7 @@ public class State implements Serializable {
 
 		ZenStates.instance().canvas().root.remove_all_gui_connections_to_a_state(this);
 	}
+	
 
 	void remove_all_gui_connections_to_a_state (State dest) {
 		//iterating over connections backwards
@@ -1353,6 +1378,23 @@ public class State implements Serializable {
 				c.remove_gui_items();
 		}
 	}
+	
+	void remove_all_gui_items () {
+		//iterating over connections backwards
+		for (int i = connections.size()-1; i >=0 ; i--) {
+			Connection c = connections.get(i);
+			c.remove_gui_items();
+		}
+		
+		cp5.remove(this.id+"/label");
+		cp5.remove(this.id+"/acc");
+	
+		//this.pie = new MultiLevelPieMenu(p);
+		
+		
+		
+	}
+
 
 	void init_gui_connections_involving_this_state() {
 		//initing the connections originated in this state

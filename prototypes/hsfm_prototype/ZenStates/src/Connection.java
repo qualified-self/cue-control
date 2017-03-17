@@ -76,10 +76,33 @@ public class Connection implements Serializable {
 		this.expression = exp;
 	}
 
-	//updates an expression
+	//updates the priority
 	void update_priority(int p) {
 		this.priority = p;
 	}
+	
+	//updates the parent
+	void update_parent(String newid) {
+		//remove_gui_items();
+		this.parent.set_id(newid);
+		//init_gui_items();
+	}
+	
+	//updates the next state
+	void update_id_next_state (String newid) {
+		//remove_gui_items();
+		this.next_state.set_id(newid);
+		//init_gui_items();
+	}
+	
+	/*
+	//updates the next state
+	void update_next_state (State dest) {
+		remove_gui_items();
+		this.next_state = dest;
+		init_gui_items();
+	}
+	*/
 
 	//returns the next state
 	State get_next_state() {
@@ -96,6 +119,7 @@ public class Connection implements Serializable {
 	}
 
 	String get_name() {
+		//p.println("connection " + parent.get_id() + "_TO_" + next_state.get_id() + "   expr: " + this.expression.toString());
 		return parent.get_id() + "_TO_" + next_state.get_id();
 	}
 
@@ -282,8 +306,19 @@ public class Connection implements Serializable {
 	CallbackListener generate_callback_textfield_change() {
 		return new CallbackListener() {
 			public void controlEvent(CallbackEvent theEvent) {
+				if (((ZenStates)p).is_loading) return;
+				
 				//@TODO implement the update
-				Textfield    t = get_textfield_gui();
+				//Textfield    t = get_textfield_gui();
+				Textfield    t = (Textfield) theEvent.getController();
+				
+				if (t==null) {
+					String a = "t é nulo!";
+					p.println(a);
+				}
+				if (get_expression()==null)
+					p.println("expressão é nula!");
+					
 
 				//if the name is empty, resets
 				if (t.getText().trim().equalsIgnoreCase("")) t.setText(get_expression().toString());

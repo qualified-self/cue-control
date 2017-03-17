@@ -79,8 +79,8 @@ public class StateMachine extends Task {
 		boolean there_is_file = ((ZenStates)p).serializer.check_if_file_exists_in_sketchpath(title);
 		
 		if (there_is_file) {
-			((ZenStates)p).is_loading = true;
-			((ZenStates)p).cp5.setAutoDraw(false);
+			//((ZenStates)p).is_loading = true;
+			//((ZenStates)p).cp5.setAutoDraw(false);
 			//load newtile from file
 			StateMachine loaded = ((ZenStates)p).serializer.loadSubStateMachine(title);
 			//next step is to copy all parameters of loaded to this state machine
@@ -127,13 +127,26 @@ public class StateMachine extends Task {
 	
 	
 	//loads the ui of internal elements
-	void reinit_id_and_load_gui_internal_elements () {		
-		this.begin.init_id_and_gui();
-		this.end.init_id_and_gui();
-		
+	void reinit_id_and_load_gui_internal_elements () {
+		this.begin.remove_all_gui_items();
+		this.end.remove_all_gui_items();
 		for (State s : states) 
-			s.init_id_and_gui();
-	
+			s.remove_all_gui_items();
+		
+		this.begin.reinit_id();
+		this.end.reinit_id();
+		for (State s : states) 
+			s.reinit_id();
+		
+		this.begin.init_gui();
+		this.end.init_gui();
+		for (State s : states) 
+			s.init_gui();
+		
+		this.begin.hide_gui();
+		this.end.hide_gui();
+		for (State s : states) 
+			s.hide_gui();
 	}
 	
 	
@@ -376,8 +389,8 @@ public class StateMachine extends Task {
 
 			//ControlP5 cp5 = HFSMPrototype.instance().cp5();
 			//removes its ui components
-			//cp5.remove(s.get_name());
 			cp5.remove(s.get_id()+"/label");
+			cp5.remove(s.get_id()+"/acc");
 			//remove the state fmor the list
 			this.states.removeElement(s);
 		} else
@@ -398,7 +411,8 @@ public class StateMachine extends Task {
 	}
 
 	void remove_all_connections_to_a_state (State dest) {
-		System.out.println("removing all connections to " + dest.toString());
+		if (debug)
+			System.out.println("removing all connections to " + dest.toString());
 
 		//removing all connection to a state in the begin and in the end
 		this.begin.remove_all_connections_to_a_state(dest);
@@ -408,6 +422,21 @@ public class StateMachine extends Task {
 		for (State s : states)
 			s.remove_all_connections_to_a_state(dest);
 	}
+	
+	void update_all_connections_to_a_state (State dest, String newid) {
+		if (debug)
+			System.out.println("updating all connections to " + dest.toString());
+		
+		//updating all connection to a state in the begin and in the end
+		this.begin.update_all_connections_to_a_state(dest, newid);
+		this.end.update_all_connections_to_a_state(dest, newid);
+
+		//iterates over all states
+		for (State s : states)
+			s.update_all_connections_to_a_state(dest, newid);
+	}
+	
+	
 
 	/*
 

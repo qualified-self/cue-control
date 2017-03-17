@@ -112,6 +112,10 @@ class MainCanvas {
 		//root.remove_state(p.mouseX, p.mouseY);
 		sm_stack.lastElement().remove_state(p.mouseX, p.mouseY);
 	}
+	
+	StateMachine get_actual_statemachine () {
+		return sm_stack.lastElement();
+	}
 
 	//clears the root (not the current exhibited sm)
 	void clear() {
@@ -150,6 +154,14 @@ class MainCanvas {
 		//shows the new state machine
 		this.sm_stack.lastElement().show();
 		this.close_preview.show();
+	}
+	
+	void show() {
+		sm_stack.lastElement().show();
+	}
+	
+	void hide() {
+		sm_stack.lastElement().hide();
 	}
 
 	void pop_root() {

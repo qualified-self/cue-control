@@ -112,11 +112,15 @@ public class Serializer {
 		
 		StateMachine result = null;
 
-		try {	
+		try {
+			//p.is_loading = true;
+			//p.canvas.hide();
+			//p.cp5.setAutoDraw(false);
+			
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 			result = (StateMachine) ois.readObject();
 			result.build(p, p.cp5);
-			p.print("loading any new substatemachine");
+			p.println("loading any new substatemachine");
 			result.check_if_any_substatemachine_needs_to_be_reloaded_from_file();
 			ois.close();
 			
@@ -126,7 +130,12 @@ public class Serializer {
 			//p.board  = new Blackboard(p);
 			//p.canvas = new MainCanvas(p, p.cp5);
 		}
-
+		
+		//p.board.reset();
+		//p.cp5.setAutoDraw(true);
+		//p.is_loading = false;
+		//p.canvas.show();
+		p.println("done loading subpatch!");
 		return result;
 	}
 	
@@ -138,7 +147,7 @@ public class Serializer {
 		
 		try {	
 			p.is_loading = true;
-			p.canvas.root.hide();
+			p.canvas.hide();
 			p.cp5.setAutoDraw(false);
 
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
@@ -169,7 +178,7 @@ public class Serializer {
 		p.board.reset();
 		p.cp5.setAutoDraw(true);
 		p.is_loading = false;
-
+		p.canvas.show();
 		p.println("done loading!");
 	}
 	
