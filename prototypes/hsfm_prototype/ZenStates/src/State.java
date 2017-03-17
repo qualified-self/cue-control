@@ -113,6 +113,7 @@ public class State implements Serializable {
 	void reinit_id () {
 		//updates the id
 		this.id = UUID.randomUUID().toString();
+		reset_group_id_gui_of_all_tasks();
 	}
 	
 	State clone_it () {
@@ -784,6 +785,8 @@ public class State implements Serializable {
 		init_accordion_gui();
 		//init_tasks_gui();
 		
+		add_all_tasks_to_gui();
+		
 		for (Connection c:connections) 
 			c.init_gui_items();
 	}
@@ -917,6 +920,7 @@ public class State implements Serializable {
 		//accordion = cp5.addAccordion("acc_"+this.name)
 		accordion = cp5.addAccordion(this.id+"/acc")
 				.setWidth(110)
+				.setVisible(true)
 				//.hide()
 				;
 	}
@@ -926,6 +930,9 @@ public class State implements Serializable {
 
 		//creates a new group
 		Group g = t.load_gui_elements(this);
+		
+		//sets it visible
+		g.setVisible(true);
 
 		//adds this group to the accordion
 		accordion.addItem(g);
@@ -1340,11 +1347,19 @@ public class State implements Serializable {
 		for (Task t : tasks)
 			remove_task_in_accordion_gui(t);
 	}
+	
+	//resets the group i all tasks to the gui (used whenever the state name needs to change)
+	void reset_group_id_gui_of_all_tasks () {
+		//iterates of all tasks related to this state
+		for (Task t : tasks) 
+			t.reset_group_id();
+		
+	}
 
 	//adds all tasks to the gui (used whenever the state name needs to change)
 	void add_all_tasks_to_gui () {
 		//iterates of all tasks related to this state
-		for (Task t : tasks)
+		for (Task t : tasks) 
 			add_task_in_accordion_gui(t);
 	}
 
@@ -1385,6 +1400,8 @@ public class State implements Serializable {
 			Connection c = connections.get(i);
 			c.remove_gui_items();
 		}
+		
+		this.remove_all_tasks_from_gui();
 		
 		cp5.remove(this.id+"/label");
 		cp5.remove(this.id+"/acc");

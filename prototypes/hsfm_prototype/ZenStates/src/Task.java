@@ -45,6 +45,10 @@ public abstract class Task implements Serializable {
   void set_name(String newname) {
     this.name = newname;
   }
+  
+  void reset_group_id() {
+	  this.group_gui_id = UUID.randomUUID().toString();
+  }
 
   String get_name() {
     return this.name;
