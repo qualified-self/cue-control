@@ -57,10 +57,8 @@ public class State implements Serializable {
 		this.y = (int)p.random(10, p.height-size);
 		this.movement_status = MovementStatus.FREE;
 		this.debug = ZenStates.instance().debug();
-		this.id    = UUID.randomUUID().toString();
-
-		init_gui();
-		hide_gui();
+		
+		init_id_and_gui();
 
 		this.is_actual = false;
 	}
@@ -104,10 +102,23 @@ public class State implements Serializable {
 		return this.id;
 	}
 	
+	void init_id_and_gui () {
+		this.id    = UUID.randomUUID().toString();
+
+		init_gui();
+		hide_gui();
+	}
+	
 	State clone_it () {
 		State clone = null;
 		
 		return clone;
+	}
+	
+	void check_if_any_substatemachine_needs_to_be_reloaded_from_file () {
+		for (Task t : tasks) 
+			if (t instanceof StateMachine)
+				((StateMachine)t).reload_from_file();
 	}
 
 	//run all tasks associated to this node
@@ -766,7 +777,8 @@ public class State implements Serializable {
 
 	void show_gui() {
 		//if the PApplet wasn't loaded yet
-		if (label==null||accordion==null)return;
+		if (label==null||accordion==null)
+			return;
 		label.show();
 		accordion.show();
 		

@@ -116,6 +116,8 @@ public class Serializer {
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 			result = (StateMachine) ois.readObject();
 			result.build(p, p.cp5);
+			p.print("loading any new substatemachine");
+			result.check_if_any_substatemachine_needs_to_be_reloaded_from_file();
 			ois.close();
 			
 		} catch (Exception e) {
@@ -147,6 +149,9 @@ public class Serializer {
 			//p.board    = (Blackboard) ois.readObject();
 			//p.canvas   = (MainCanvas) ois.readObject();
 			p.canvas.setup((StateMachine) ois.readObject());
+			
+			p.print("loading any new substatemachine");
+			p.canvas.root.check_if_any_substatemachine_needs_to_be_reloaded_from_file();
 			
 			//lastSaveFile = file;
 			update_last_saved(file);

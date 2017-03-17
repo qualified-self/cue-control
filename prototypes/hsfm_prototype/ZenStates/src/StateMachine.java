@@ -1,6 +1,8 @@
 
 
 import processing.core.PApplet;
+
+import java.util.UUID;
 import java.util.Vector;
 
 import controlP5.*;
@@ -62,29 +64,33 @@ public class StateMachine extends Task {
   }
 	 */
 	
-	void check_if_needs_to_reload_from_file () {
+	void check_if_any_substatemachine_needs_to_be_reloaded_from_file () {
+		this.begin.check_if_any_substatemachine_needs_to_be_reloaded_from_file();
+		this.end.check_if_any_substatemachine_needs_to_be_reloaded_from_file();
+		
+		for (State s : states) 
+			s.check_if_any_substatemachine_needs_to_be_reloaded_from_file();
+		
+
+	}
+	
+	void reload_from_file () {
 		//checks if there is a file with the same name
 		boolean there_is_file = ((ZenStates)p).serializer.check_if_file_exists_in_sketchpath(title);
 		
-		/*
 		if (there_is_file) {
 			((ZenStates)p).is_loading = true;
 			((ZenStates)p).cp5.setAutoDraw(false);
 			//load newtile from file
 			StateMachine loaded = ((ZenStates)p).serializer.loadSubStateMachine(title);
 			//next step is to copy all parameters of loaded to this state machine
-			mirror(loaded);
-			
-			((ZenStates)p).is_loading = false;
-			((ZenStates)p).cp5.setAutoDraw(true);
-		}*/
+			mirror(loaded);			
+		}
 	}
 
 	void build (PApplet p, ControlP5 cp5) {
 		this.p = p;
 		this.cp5 = cp5;
-		
-		check_if_needs_to_reload_from_file();
 
 		this.begin.build(p, cp5);
 		this.end.build(p, cp5);
@@ -107,12 +113,29 @@ public class StateMachine extends Task {
 	
 	//makes the current statemachine to mirror another statemachine sm
 	void mirror (StateMachine sm) {
+		//state machine variables
 		this.title    = sm.title;
 		this.begin    = sm.begin;
 		this.end      = sm.end;
 		this.states   = sm.states;
 		this.brandnew = false;
+		//task variables
+		this.repeat   = sm.repeat;
+		
+		reinit_id_and_load_gui_internal_elements();	
 	}
+	
+	
+	//loads the ui of internal elements
+	void reinit_id_and_load_gui_internal_elements () {		
+		this.begin.init_id_and_gui();
+		this.end.init_id_and_gui();
+		
+		for (State s : states) 
+			s.init_id_and_gui();
+	
+	}
+	
 	
 	StateMachine getReferenceForThisStateMachine() {
 		return this;

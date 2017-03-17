@@ -27,9 +27,10 @@ public abstract class Task implements Serializable {
     this.repeat = true;
     this.status = Status.INACTIVE;
     this.group_gui_id = UUID.randomUUID().toString();
-    first_time = true;
+    this.first_time = true;
 
-    System.out.println("task " + this.toString() + " created!");
+    if (((ZenStates)p).debug)
+    	System.out.println("task " + this.toString() + " created!");
   }
   /*
   public Task (PApplet p, String taskname) {
