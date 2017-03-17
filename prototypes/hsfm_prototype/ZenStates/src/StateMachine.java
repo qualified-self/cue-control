@@ -61,10 +61,30 @@ public class StateMachine extends Task {
     if (debug)  println("State_Machine " + this.name + " is inited!");
   }
 	 */
+	
+	void check_if_needs_to_reload_from_file () {
+		//checks if there is a file with the same name
+		boolean there_is_file = ((ZenStates)p).serializer.check_if_file_exists_in_sketchpath(title);
+		
+		/*
+		if (there_is_file) {
+			((ZenStates)p).is_loading = true;
+			((ZenStates)p).cp5.setAutoDraw(false);
+			//load newtile from file
+			StateMachine loaded = ((ZenStates)p).serializer.loadSubStateMachine(title);
+			//next step is to copy all parameters of loaded to this state machine
+			mirror(loaded);
+			
+			((ZenStates)p).is_loading = false;
+			((ZenStates)p).cp5.setAutoDraw(true);
+		}*/
+	}
 
 	void build (PApplet p, ControlP5 cp5) {
 		this.p = p;
 		this.cp5 = cp5;
+		
+		check_if_needs_to_reload_from_file();
 
 		this.begin.build(p, cp5);
 		this.end.build(p, cp5);

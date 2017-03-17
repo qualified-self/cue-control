@@ -129,7 +129,9 @@ public abstract class Task implements Serializable {
       if (first_time) first_time = false;
       //if it's not the first time, do not execute anything
       else result = false;
-    }
+    } else
+    	//if this is the first time, go on
+        if (first_time) first_time = false;
 
     return result;
   }

@@ -828,6 +828,17 @@ public class State implements Serializable {
 			}
 		};
 	}
+	
+	/*
+	CallbackListener generate_callback_double_press() {
+		return new CallbackListener() {
+			public void controlEvent(CallbackEvent theEvent) {
+				
+				p.println("double clicked on "  + name);
+			}
+		};
+	}
+	*/
 
 
 	//inits the label with the name of the state
@@ -855,6 +866,7 @@ public class State implements Serializable {
 				.setLabel("")
 				.onChange(cb_enter)
 				.onReleaseOutside(cb_enter)
+				//.onDoublePress(generate_callback_double_press())
 				//.onDrag(cb)
 				;
 	}
@@ -899,8 +911,8 @@ public class State implements Serializable {
 	void draw_status() {
 		p.noStroke();
 
-		if(is_actual)
-			//if (status==Status.RUNNING)
+		if (is_actual)
+		//if (status==Status.RUNNING)
 			//if (status==Status.RUNNING | (status==Status.DONE & is_actual))
 			p.fill (0, green+75, 0);
 		else if (status==Status.DONE)

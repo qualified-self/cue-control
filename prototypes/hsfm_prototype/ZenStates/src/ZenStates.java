@@ -18,6 +18,8 @@ import javax.script.*;
 import controlP5.*;
 import ddf.minim.*;
 
+import java.awt.event.KeyEvent;
+
 
 public class ZenStates extends PApplet {
 
@@ -46,7 +48,7 @@ public class ZenStates extends PApplet {
 	
 	public void settings() {
 	  fullScreen();
-	  //size(1024,700);
+	  //size(1300, 800);
 	}
 	
 	public void setup() {
@@ -178,20 +180,44 @@ public class ZenStates extends PApplet {
 	///////////////////////////////////////
 	// ui related methods
 	
+	public boolean cmg_or_ctrl_pressed = false;
+	
 	public void keyPressed(){
+		//if (debug)
+			println("keyCode: " + keyCode + " key: " +key);
+		
 		//if is loading an open patch, do not draw anything
 		if (is_loading) return;
-
-		switch(key) {
-		case '+':
+		
+		//updating cmg_or_ctrl_pressed if contrll or command keys were pressed
+		if (keyCode == 17 || keyCode == 27 || keyCode == 157)
+			cmg_or_ctrl_pressed = true;
+		
+		//if control or command key are not pressed, ignore
+		if (!cmg_or_ctrl_pressed) return;
+		
+		
+		switch(keyCode) {
+		case 61: //+
 			//create_state();
 			canvas.process_plus_key_pressed();
 			break;
-		case '-':
+		case 45: //-
 			//remove_state();
 			canvas.process_minus_key_pressed();
 			break;
+		case 32: //spacebar
+			if (canvas.is_running()) canvas.button_stop();
+			else					 canvas.button_play();
+			break;
+			
+		case 83: //s
+			canvas.button_save();
+			break;
 
+		case 76: //l
+			canvas.button_load();
+			break;
 		}
 		//println(keyCode);
 	}
@@ -212,6 +238,10 @@ public class ZenStates extends PApplet {
 
 	public void keyReleased() {
 		keyReleased = true;
+		
+		//updating cmg_or_ctrl_pressed if contrll or command keys were pressed
+		if (keyCode == 17 || keyCode == 27 || keyCode == 157)
+			cmg_or_ctrl_pressed = false;
 	}
 
 	public void mouseReleased() {

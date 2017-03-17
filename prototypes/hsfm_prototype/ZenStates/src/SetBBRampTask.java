@@ -25,24 +25,43 @@ class SetBBRampTask extends SetBBTask {
   void update_amplitude(String v) {
     this.amplitude = new Expression(v);
   }
-
-  void run() {
+  
+  
+  void run() { 
     if (!should_run()) return;
-
+    
     String dur_val = evaluate_value(this.duration).toString();
     String amp_val = evaluate_value(this.amplitude).toString();
 
     Expression ne;
     
-    String rootTimer = "$" + ((ZenStates)p).canvas.root.get_formated_blackboard_title() + "_timer";
-    
-    if (is_up) ne = new Expression(amp_val+"*(("+rootTimer+"/"+dur_val+") % 1)");
-    else       ne = new Expression("math.abs("+amp_val+"-("+amp_val+"*(("+rootTimer+"/"+dur_val+") % 1)))");
+    //String rootTimer = "$" + ((ZenStates)p).canvas.root.get_formated_blackboard_title() + "_timer";
+    //p.print(variableName + " timer: " + timer);
+	//p.println(" - is executing for the first time?" + first_time);
+    	
+    //if (is_up) ne = new Expression(amp_val+"*(("+rootTimer+"/"+dur_val+") % 1)");
+    //else       ne = new Expression("math.abs("+amp_val+"-("+amp_val+"*(("+rootTimer+"/"+dur_val+") % 1)))");
+    if (is_up) ne = new Expression(amp_val+"*math.abs(("+timer+"/"+dur_val+") % 1)");
+    else       ne = new Expression("math.abs("+amp_val+"-("+amp_val+"*(("+timer+"/"+dur_val+") % 1)))");
 
     Blackboard board = ZenStates.instance().board();
     this.status = Status.RUNNING;
-    board.put(variableName, evaluate_value(ne));
-    this.status = Status.DONE;
+    
+    Object result = evaluate_value(ne);
+    
+    board.put(variableName, result);
+    
+	this.status = Status.DONE;
+    //if (is_up && timer >= (Float.parseFloat(amp_val))-0.1)
+    //	this.status = Status.DONE;
+    //if (!is_up && timer >= 0.1)
+    //	this.status = Status.DONE;
+    
+  }
+  
+  void stop() {
+	  super.stop();
+	  //this.reset_timer();
   }
 
   //UI config
@@ -145,7 +164,7 @@ class SetBBRampTask extends SetBBTask {
                   return;
                 }
                 update_variable_name(text);
-                System.out.println(s + " " + text);
+                //System.out.println(s + " " + text);
             }
 
             if (s.equals(get_gui_id() + "/type")) {
