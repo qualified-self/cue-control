@@ -20,9 +20,21 @@ public class StartRemoteDMXTask extends RemoteOSCTask {
 
     //this.build(p, cp5);
   }
+  
+//contructor loading the file
+  public StartRemoteDMXTask (PApplet p, ControlP5 cp5, String id, String message, Object channel) {
+    super(p, cp5, id);
+
+    this.message = message;
+    this.channel = channel;
+
+    update_content();
+
+    //this.build(p, cp5);
+  }
 
   StartRemoteDMXTask clone_it () {
-    return new StartRemoteDMXTask(this.p, this.cp5, this.name);
+    return new StartRemoteDMXTask(this.p, this.cp5, this.name, this.message, this.channel);
   }
 
   void update_content () {

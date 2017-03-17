@@ -100,7 +100,9 @@ public class StateMachine extends Task {
 
 	//so far not using this method
 	StateMachine clone_it() {
-		return null;
+		StateMachine duplicate = new StateMachine(p, cp5, title);
+		//cl
+		return duplicate;
 	}
 	
 	//makes the current statemachine to mirror another statemachine sm
@@ -598,8 +600,7 @@ public class StateMachine extends Task {
 				if (!((Group)cp5.get(get_gui_id())).isOpen()) return;
 
 				String s = theEvent.getController().getName();
-				System.out.println(s + " was entered");
-				
+				//System.out.println(s + " was entered");
 				
 
 				if (s.equals(get_gui_id() + "/name")) {

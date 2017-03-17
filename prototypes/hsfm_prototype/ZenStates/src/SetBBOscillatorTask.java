@@ -27,6 +27,11 @@ class SetBBOscillatorTask extends SetBBTask {
   }
 
   void run() {
+	
+	String a = "a";
+	a = "a";
+	p.println("running " + this.variableName);
+	
     if (!should_run()) return;
 
     String freq_val = (evaluate_value(this.frequency)).toString();

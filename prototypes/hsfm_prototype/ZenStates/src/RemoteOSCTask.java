@@ -47,7 +47,6 @@ public abstract class RemoteOSCTask extends Task {
 		this.cp5 = cp5;
 		this.broadcast = new NetAddress(ip, port);
 		this.oscP5 = ZenStates.instance().oscP5();
-
 	}
 
 	void run () {
@@ -61,8 +60,9 @@ public abstract class RemoteOSCTask extends Task {
 
 		oscP5.send(msg, broadcast);
 
-		//if (debug)
-		System.out.println("sending OSC message to: " + broadcast.toString() + ". content: " + msg.toString());
+		if (((ZenStates)p).debug)
+			System.out.println("sending OSC message to: " + broadcast.toString() + ". content: " + msg.toString());
+		
 		this.status = Status.DONE;
 	}
 

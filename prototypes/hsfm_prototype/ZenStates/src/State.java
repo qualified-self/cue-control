@@ -103,6 +103,12 @@ public class State implements Serializable {
 	String get_id() {
 		return this.id;
 	}
+	
+	State clone_it () {
+		State clone = null;
+		
+		return clone;
+	}
 
 	//run all tasks associated to this node
 	void run () {

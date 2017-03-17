@@ -19,15 +19,27 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
     this.message = "/speaker/start";
     this.filename = "example.wav";
     this.sample_choice = 0;
-
+    //adding the sample_choice inside the address
+    this.message = this.message + "/" + this.sample_choice;
+    
     update_content();
-    //this.content = new Object[] {filename};
+  }
+  
+  //contructor loading the file
+  public StartRemoteSoundTask (PApplet p, ControlP5 cp5, String id, String message, String filename, int sample_choice) {
+    super(p, cp5, id);
 
-    //this.build(p, cp5);
+    this.message = message;
+    this.filename = filename;
+    this.sample_choice = sample_choice;
+    //adding the sample_choice inside the address
+    this.message = this.message + "/" + this.sample_choice;
+    
+    update_content();
   }
 
   StartRemoteSoundTask clone_it () {
-    return new StartRemoteSoundTask(this.p, this.cp5, this.name);
+    return new StartRemoteSoundTask(this.p, this.cp5, this.name, this.message, this.filename, this.sample_choice);
   }
 
   /*
@@ -37,13 +49,21 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
   }
   */
   
+  //adding the sample_choice inside the address
+  void combine_message_and_sample() {
+	  String temp = message.substring(0, message.length()-1);
+	  this.message = temp + this.sample_choice;
+  }
+  
+  //updates the sample_choice and the message content accordingly
   void update_sample(int new_sample) {
 	  sample_choice = new_sample;
+	  combine_message_and_sample();
 	  update_content();
   }
 
   void update_content () {
-    //this.content = new Object[] {filename};
+	  //this.content = new Object[] {filename};
 	  this.content = new Object[] {sample_choice};
   }
 
@@ -62,7 +82,7 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
     Group g = cp5.addGroup(g_name)
     //.setPosition(x, y) //change that?
     .setHeight(12)
-    .setBackgroundHeight(50)
+    .setBackgroundHeight(150)
     .setColorBackground(p.color(255, 50)) //color of the task
     .setBackgroundColor(p.color(255, 25)) //color of task when openned
     .setLabel("Start audio")
@@ -90,7 +110,7 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
     .addItem("Sample 2", 1)
     .addItem("Sample 3", 2)
     .addItem("Sample 4", 3)
-    .setDefaultValue(0)
+    .setDefaultValue(this.sample_choice)
     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
     ;
     

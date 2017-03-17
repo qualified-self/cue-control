@@ -60,9 +60,6 @@ class SetBBTask extends Task {
 	void run() {
 		if (!should_run()) return;
 		
-		if(variableName.equals("change"))
-			System.out.println("ae!");
-
 		Blackboard board = ZenStates.instance().board();
 		this.status = Status.RUNNING;
 		board.put(variableName, evaluate_value(value));

@@ -19,18 +19,29 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
     super(p, cp5, id);
 
     this.message   = "/dmx/control";
-    this.channel  = new Expression("0");
+    this.channel  = new Expression("1");
     this.intensity = new Expression("0");
-    this.rate      = new Expression("0");
     this.duration  = new Expression("0");
+    this.rate      = new Expression("0");
 
     update_content();
+  }
 
-    //this.build(p, cp5);
+  //contructor loading the file
+  public ControlRemoteDMXTask (PApplet p, ControlP5 cp5, String id, String m, Object c, Object i, Object d, Object r) {
+	  super(p, cp5, id);
+	  
+	  this.message   = m;
+	  this.channel   = c;
+	  this.intensity = i;
+	  this.duration  = d;
+	  this.rate      = r;
+	  
+	  update_content();
   }
 
   ControlRemoteDMXTask clone_it () {
-    return new ControlRemoteDMXTask(this.p, this.cp5, this.name);
+    return new ControlRemoteDMXTask(this.p, this.cp5, this.name, this.message, this.channel, this.intensity, this.duration, this.rate);
   }
 
   void update_content () {

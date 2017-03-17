@@ -14,13 +14,23 @@ public class StopRemoteDMXTask extends RemoteOSCTask {
     super(p, cp5, id);
 
     this.message = "/dmx/stop";
-    this.channel = new Expression("0");
+    this.channel = new Expression("1");
 
     update_content();
   }
 
+  //contructor loading the file
+  public StopRemoteDMXTask (PApplet p, ControlP5 cp5, String id, String m, Object c) {
+	  super(p, cp5, id);
+	  
+	  this.message = m;
+	  this.channel = c;
+	  
+	  update_content();
+  }
+
   StopRemoteDMXTask clone_it () {
-    return new StopRemoteDMXTask(this.p, this.cp5, this.name);
+    return new StopRemoteDMXTask(this.p, this.cp5, this.name, this.message, this.channel);
   }
 
   void update_content () {

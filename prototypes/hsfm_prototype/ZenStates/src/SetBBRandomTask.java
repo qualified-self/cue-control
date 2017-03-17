@@ -33,7 +33,8 @@ class SetBBRandomTask extends SetBBTask {
 
     //p.println("exp: " + ne.toString() + "   reached_delay? " + reached_delay);
     //p.println("reached_delay " + reached_delay);
-
+    this.status = Status.RUNNING;
+    
     if(reached_delay) super.run();
   }
 

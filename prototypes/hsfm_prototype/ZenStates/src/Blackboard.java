@@ -12,6 +12,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.io.Serializable;
 import processing.core.PApplet;
 import java.util.regex.*;
+
+import javax.script.ScriptException;
+
 import java.util.*;
 import java.util.Collection;
 import java.math.BigDecimal;
@@ -105,6 +108,16 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
       if (containsKey(varName))
       {
         String value = get(varName).toString();
+        
+        //if the result is another blackboard variable, try to get its value 
+        if (!value.equals(varName) && value.contains("$"))
+			try {
+				value = (new Expression(value).eval(this)).toString();
+			} catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        
         expr = matcher.replaceFirst(value);
         matcher = pattern.matcher(expr);
       }

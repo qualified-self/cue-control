@@ -14,7 +14,7 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
   Object  volume;
   Object  pan;
 
-  //contructor loading the file
+  //constructor loading the file
   public ControlRemoteSoundTask (PApplet p, ControlP5 cp5, String id) {
     super(p, cp5, id);
 
@@ -23,15 +23,29 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
     this.volume   = new Expression("0.0");
     this.pan      = new Expression("0.5");
     this.sample_choice = 0;
+    //adding the sample_choice inside the address
+    this.message = this.message + "/" + this.sample_choice;
 
     update_content();
-    //this.content  = new Object[] {this.filename, this.volume, this.pan};
+  }
 
-    //this.build(p, cp5);
+  //constructor loading the file
+  public ControlRemoteSoundTask (PApplet p, ControlP5 cp5, String id, String m, String f, Object v, Object pan, int s) {
+	  super(p, cp5, id);
+	  
+	  this.message  = m;
+	  this.filename = f;
+	  this.volume   = v;
+	  this.pan      = pan;
+	  this.sample_choice = s;
+	  //adding the sample_choice inside the address
+	  this.message = this.message + "/" + this.sample_choice;
+	  
+	  update_content();
   }
 
   ControlRemoteSoundTask clone_it () {
-    return new ControlRemoteSoundTask(this.p, this.cp5, this.name);
+    return new ControlRemoteSoundTask(this.p, this.cp5, this.name, this.message, this.filename, this.volume, this.pan, this.sample_choice);
   }
   
   /*
@@ -41,8 +55,16 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
   }
   */
   
+  //adding the sample_choice inside the address
+  void combine_message_and_sample() {
+	  String temp = message.substring(0, message.length()-1);
+	  this.message = temp + this.sample_choice;
+  }
+  
+  //updates the sample_choice and the message content accordingly
   void update_sample(int new_sample) {
 	  sample_choice = new_sample;
+	  combine_message_and_sample();
 	  update_content();
   }
 
@@ -58,7 +80,8 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
 
   void update_content () {
     //this.content  = new Object[] {this.filename, this.volume, this.pan};
-    this.content  = new Object[] {this.sample_choice, this.volume, this.pan};
+    //this.content  = new Object[] {this.sample_choice, this.volume, this.pan};
+	  this.content  = new Object[] {this.volume, this.pan};
   }
 
 
@@ -77,7 +100,7 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
     Group g = cp5.addGroup(g_name)
     //.setPosition(x, y) //change that?
     .setHeight(12)
-    .setBackgroundHeight(180)
+    .setBackgroundHeight(230)
     .setColorBackground(p.color(255, 50)) //color of the task
     .setBackgroundColor(p.color(255, 25)) //color of task when openned
     .setLabel("Control audio")
@@ -144,7 +167,7 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
     .addItem("Sample 2", 1)
     .addItem("Sample 3", 2)
     .addItem("Sample 4", 3)
-    .setDefaultValue(0)
+    .setDefaultValue(this.sample_choice)
     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
     ;
 
