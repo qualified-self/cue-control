@@ -128,6 +128,9 @@ public class Connection implements Serializable {
 	 ********************************************/
 	//@TODO PROBLEM TAKING TIME TO LOAD IS IN THE FOLLOWING METHOD!!!
 	void init_gui_items() {
+		
+		//if this is a transition to self, do not add any gui items
+		if (parent==next_state) return;
 
 		//String gui_name = parent.get_name() + "_" + next_state.get_name();
 		String gui_name = get_name();
@@ -169,6 +172,7 @@ public class Connection implements Serializable {
 
 				;
 
+		/*
 		//if this is a transition to self, impossible to change the expression. the goal is to avoid deadends
 		if (parent==next_state) {
 			d.setUserInteraction(false);
@@ -185,6 +189,15 @@ public class Connection implements Serializable {
 			t.onReleaseOutside(generate_callback_textfield_change());
 			t.onChange(generate_callback_textfield_change());
 		}
+		*/
+		
+		
+		t.onEnter(generate_callback_textfield_enter()); //highlight colors
+		t.onLeave(generate_callback_textfield_leave()); //colors back to normal
+		//t.onReleaseOutside(generate_callback_textfield_released_outside());
+		t.onReleaseOutside(generate_callback_textfield_change());
+		t.onChange(generate_callback_textfield_change());
+	
 
 	}
 
@@ -263,6 +276,10 @@ public class Connection implements Serializable {
 	boolean is_mouse_over () {
 		DropdownList d = get_dropdown_gui();
 		Textfield    t = get_textfield_gui();
+		
+		//if it's a transition to self, and there are no dropdownlist or textfields
+		if (d==null | t==null) return false; 
+		
 		return t.isMouseOver() || d.isMouseOver();
 	}
 

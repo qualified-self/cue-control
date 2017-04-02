@@ -1067,10 +1067,9 @@ public class State implements Serializable {
 		for (int i = 0; i < connections.size(); i++) {
 			Connection c = connections.get(i);
 			c.update_priority(i+1);
-			if (c.get_next_state().get_name() == this.get_name())
-				draw_connection_to_self(c);
-
-			else
+			//if (c.get_next_state().get_name() == this.get_name())
+			//	draw_connection_to_self(c);
+			//else
 				draw_connection(c);
 		}
 	}
