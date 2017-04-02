@@ -13,7 +13,9 @@ public class StateMachine extends Task {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	State begin, end, actual;
+	State begin;
+	//State end;
+	State actual;
 	Vector<State> states;
 	String title; //this should be the name. the super name should be an id instead.
 
@@ -31,7 +33,7 @@ public class StateMachine extends Task {
 		//begin   = new State(p, cp5, "BEGIN_" + name);
 		//end     = new State(p, cp5, "END_"+name);
 		begin   = new State(p, cp5, "BEGIN");
-		end     = new State(p, cp5, "END");
+		//end     = new State(p, cp5, "END");
 		states  = new Vector<State>();
 		debug = ZenStates.instance().debug();
 		
@@ -66,7 +68,7 @@ public class StateMachine extends Task {
 	
 	void check_if_any_substatemachine_needs_to_be_reloaded_from_file () {
 		this.begin.check_if_any_substatemachine_needs_to_be_reloaded_from_file();
-		this.end.check_if_any_substatemachine_needs_to_be_reloaded_from_file();
+		//this.end.check_if_any_substatemachine_needs_to_be_reloaded_from_file();
 		
 		for (State s : states) 
 			s.check_if_any_substatemachine_needs_to_be_reloaded_from_file();
@@ -93,7 +95,7 @@ public class StateMachine extends Task {
 		this.cp5 = cp5;
 
 		this.begin.build(p, cp5);
-		this.end.build(p, cp5);
+		//this.end.build(p, cp5);
 
 		for (State s : states)
 			s.build(p, cp5);
@@ -116,7 +118,7 @@ public class StateMachine extends Task {
 		//state machine variables
 		this.title    = sm.title;
 		this.begin    = sm.begin;
-		this.end      = sm.end;
+		//this.end      = sm.end;
 		this.states   = sm.states;
 		this.brandnew = false;
 		//task variables
@@ -129,22 +131,22 @@ public class StateMachine extends Task {
 	//loads the ui of internal elements
 	void reinit_id_and_load_gui_internal_elements () {
 		this.begin.remove_all_gui_items();
-		this.end.remove_all_gui_items();
+		//this.end.remove_all_gui_items();
 		for (State s : states) 
 			s.remove_all_gui_items();
 		
 		this.begin.reinit_id();
-		this.end.reinit_id();
+		//this.end.reinit_id();
 		for (State s : states) 
 			s.reinit_id();
 		
 		this.begin.init_gui();
-		this.end.init_gui();
+		//this.end.init_gui();
 		for (State s : states) 
 			s.init_gui();
 		
 		this.begin.hide_gui();
-		this.end.hide_gui();
+		//this.end.hide_gui();
 		for (State s : states) 
 			s.hide_gui();
 	}
@@ -189,9 +191,8 @@ public class StateMachine extends Task {
 		begin.reset_first_time();
 		begin.stop();
 
-		end.reset_first_time();
-		//end.run();
-		end.stop();
+		//end.reset_first_time();
+		//end.stop();
 
 		//updating the actual
 		//actual = begin;
@@ -218,11 +219,7 @@ public class StateMachine extends Task {
 
 		//stop begin and end
 		begin.clear();
-		end.clear();
-		//ControlP5 cp5 = HFSMPrototype.instance().cp5();
-		//removes its ui components
-		//cp5.remove(begin.get_name());
-		//cp5.remove(end.get_name());
+		//end.clear();
 	}
 
 	//stops all tasks associated to this node
@@ -233,7 +230,7 @@ public class StateMachine extends Task {
 
 		//stop begin and end
 		begin.interrupt();
-		end.interrupt();
+		//end.interrupt();
 
 		//updating the actual
 		//actual = begin;
@@ -278,6 +275,7 @@ public class StateMachine extends Task {
 		//updating the status of the actual
 		actual.update_status();
 
+		/*
 		//if this state finished. test this condition, maybe you need to overload the comparison!
 		if (actual==end) {
 			//p.println("reached an end!");
@@ -286,6 +284,7 @@ public class StateMachine extends Task {
 			if (debug)
 				System.out.println("State_Machine " + this.name +  " has reached its end and has successfully executed!");
 		}
+		*/
 
 		//if there are no states associated to this State_Machine
 		if (states.size()==0 & begin.get_number_of_connections()==0) {
@@ -348,7 +347,7 @@ public class StateMachine extends Task {
 
 		//save substatemachines inside begin and end
 		begin.save();
-		end.save();
+		//end.save();
 	}
 	
 	boolean is_brandnew() {
@@ -416,7 +415,7 @@ public class StateMachine extends Task {
 
 		//removing all connection to a state in the begin and in the end
 		this.begin.remove_all_connections_to_a_state(dest);
-		this.end.remove_all_connections_to_a_state(dest);
+		//this.end.remove_all_connections_to_a_state(dest);
 
 		//iterates over all states
 		for (State s : states)
@@ -429,7 +428,7 @@ public class StateMachine extends Task {
 		
 		//updating all connection to a state in the begin and in the end
 		this.begin.update_all_connections_to_a_state(dest, newid);
-		this.end.update_all_connections_to_a_state(dest, newid);
+		//this.end.update_all_connections_to_a_state(dest, newid);
 
 		//iterates over all states
 		for (State s : states)
@@ -467,7 +466,7 @@ public class StateMachine extends Task {
 		State result = null;
 
 		if (this.begin.get_id().equalsIgnoreCase(id)) result=this.begin;
-		if (this.end.get_id().equalsIgnoreCase(id))   result=this.end;
+		//if (this.end.get_id().equalsIgnoreCase(id))   result=this.end;
 
 		//iterates over all states
 		for (State s : states)
@@ -494,6 +493,7 @@ public class StateMachine extends Task {
 		System.out.println("Task " + t.name + " removed from the initialization of State_Machine " + this.name);
 	}
 
+	/*
 	//add a task t to the initialization of this State_Machine
 	void add_finalization_task (Task t) {
 		end.add_task(t);
@@ -505,6 +505,7 @@ public class StateMachine extends Task {
 		end.remove_task(t);
 		System.out.println("Task " + t.name + " removed from the finalization of State_Machine " + this.name);
 	}
+	*/
 
 	//formats the title for the blackboard
 	String get_formated_blackboard_title () {
@@ -569,8 +570,8 @@ public class StateMachine extends Task {
 		for (State s : states)
 			s.draw();
 		//drawing the end state
-		end.draw();
-		end.draw_end();
+		//end.draw();
+		//end.draw_end();
 
 		//drawing all pie menus  in a layer
 		//draw_pie_menus();
@@ -587,7 +588,7 @@ public class StateMachine extends Task {
 		for (State s : states)
 			s.draw();
 		//drawing the end state
-		end.draw_pie();
+		//end.draw_pie();
 	}
 
 	void update_gui () {
@@ -599,14 +600,14 @@ public class StateMachine extends Task {
 		begin.hide_gui();
 		for (State s : states)
 			s.hide_gui();
-		end.hide_gui();
+		//end.hide_gui();
 	}
 
 	void show() {
 		begin.show_gui();
 		for (State s : states)
 			s.show_gui();
-		end.show_gui();
+		//end.show_gui();
 	}
 
 	//returns a state that intersect test_x, test_y positions
@@ -617,7 +618,7 @@ public class StateMachine extends Task {
 
 		//testing the begin & end states
 		if (this.begin.intersects_gui(test_x, test_y))  return this.begin;
-		if (this.end.intersects_gui(test_x, test_y))    return this.end;
+		//if (this.end.intersects_gui(test_x, test_y))    return this.end;
 
 		//iterates over the remaining states
 		for (State s : states)
@@ -636,7 +637,7 @@ public class StateMachine extends Task {
 	void reset_all_names_gui() {
 		//resets the begin and the end states
 		this.begin.reset_name();
-		this.end.reset_name();
+		//this.end.reset_name();
 
 		//iterates over the remaining states
 		for (State s : states)
@@ -822,8 +823,8 @@ public class StateMachine extends Task {
 			connect_state_if_demanded_by_user(this.begin);
 
 		//updates the begin state
-		if (this.end.verify_if_user_released_mouse_while_temporary_connecting())
-			connect_state_if_demanded_by_user(this.end);
+		//if (this.end.verify_if_user_released_mouse_while_temporary_connecting())
+		//	connect_state_if_demanded_by_user(this.end);
 
 		//iterates over the remaining states
 		for (State s : states)
@@ -841,7 +842,7 @@ public class StateMachine extends Task {
 
 		//removing all connection to a state in the begin and in the end
 		this.begin.remove_all_gui_connections_to_a_state(dest);
-		this.end.remove_all_gui_connections_to_a_state(dest);
+		//this.end.remove_all_gui_connections_to_a_state(dest);
 
 		//iterates over all states
 		for (State s : states)
@@ -852,7 +853,7 @@ public class StateMachine extends Task {
 
 		//removing all connection to a state in the begin and in the end
 		this.begin.init_all_gui_connections_to_a_state(dest);
-		this.end.init_all_gui_connections_to_a_state(dest);
+		//this.end.init_all_gui_connections_to_a_state(dest);
 
 		//iterates over all states
 		for (State s : states)

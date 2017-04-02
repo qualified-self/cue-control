@@ -155,7 +155,7 @@ public class Connection implements Serializable {
 				.onChange(generate_callback_dropdown())
 				;
 
-		init_dropdown_list(parent.get_number_of_connections());
+		init_dropdown_list(parent.get_number_of_connections()-1);
 
 		String text = this.expression.toString();
 
