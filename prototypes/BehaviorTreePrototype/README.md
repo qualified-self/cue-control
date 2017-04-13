@@ -4,6 +4,14 @@ You can download the code [here](http://github.com/qualified-self/cue-control/re
 
 For MacOS you need to download the [source code](https://github.com/qualified-self/cue-control/files/815707/BehaviorTreePrototype.src.zip ) and run it using [Processing](http://processing.org)
 
+## Dependencies
+
+You need to install the following libraries from within the Processing environment:
+ * Minim
+ * OscP5
+ 
+## Tutorial
+
 The best way to learn about how to use the software is to watch the [video tutorials](http://www.youtube.com/playlist?list=PLO0YogNIPwXwxoIrQ3SRttTjMuancSiFb) (9 episodes, approx 1h total duration).
 
 # Cheatsheet
