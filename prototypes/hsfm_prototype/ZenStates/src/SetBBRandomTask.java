@@ -42,14 +42,21 @@ class SetBBRandomTask extends SetBBTask {
     //String rootTimer = "$" + ((ZenStates)p).canvas.root.get_formated_blackboard_title() + "_timer";
     
     //Expression ne = new Expression("("+rootTimer+"%"+delay_val+")>("+delay_val+"-0.05)");
-    Expression ne = new Expression("("+timer+"%"+delay_val+")>("+delay_val+"-0.05)");
-    boolean reached_delay = (boolean)(evaluate_value(ne));
+    
+    boolean reached_delay = true;
+    
+    if (!delay_val.equals("0")) {
+    	Expression ne = new Expression("("+timer+"%"+delay_val+")>("+delay_val+"-0.05)");
+    	reached_delay = (boolean)(evaluate_value(ne));
+    }
 
     //p.println("exp: " + ne.toString() + "   reached_delay? " + reached_delay);
     //p.println("reached_delay " + reached_delay);
     this.status = Status.RUNNING;
     
     if(reached_delay) super.run();
+    
+    this.status = Status.DONE;
   }
 
 
