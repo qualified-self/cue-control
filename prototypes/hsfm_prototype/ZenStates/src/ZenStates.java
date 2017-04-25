@@ -38,7 +38,7 @@ public class ZenStates extends PApplet {
 
 	boolean debug 			= false;
 	boolean keyReleased   	= false;
-	boolean mouseReleased 	= false;
+	boolean mouseRightButtonReleased 	= false;
 	boolean is_loading 		= false;
 
 		
@@ -102,7 +102,7 @@ public class ZenStates extends PApplet {
 		board.draw();
 
 		if (keyReleased)     keyReleased = false;
-		if (mouseReleased) mouseReleased = false;
+		if (mouseRightButtonReleased) mouseRightButtonReleased = false;
 
 		serializer.autosave();
 	}
@@ -223,20 +223,35 @@ public class ZenStates extends PApplet {
 	public void mousePressed() {
 		//if is loading an open patch, do not draw anything
 		if (is_loading) return;
-		//if the key is not pressed, i'm not interested
-		if (!keyPressed) return;
-
-		switch(keyCode) {
-		//in case the key it's shift
-		case 16:
-			canvas.process_shift_key();
-			break;
-		//if alt key was pressed
-		case 18:
-			canvas.process_copy();
-			break;
+		
+		if (mouseButton == RIGHT) 
+			canvas.process_right_mouse_button();
+			//canvas.process_shift_key();
+		
+		if (mouseButton == LEFT) {			
+			//if the key is not pressed, i'm not interested
+			if (!keyPressed) return;
+		
+			switch(keyCode) {
+			//in case the key it's shift
+			case 16:
+				canvas.process_shift_key();
+				break;
+			//if alt key was pressed
+			case 18:
+				canvas.process_copy();
+				break;
+			}
+			
 		}
 	}
+	
+	
+	public void mouseDragged () {
+		if (mouseButton == RIGHT) 
+			canvas.start_dragging_connection();
+	}
+	
 
 	public void keyReleased() {
 		keyReleased = true;
@@ -247,7 +262,8 @@ public class ZenStates extends PApplet {
 	}
 
 	public void mouseReleased() {
-		mouseReleased = true;
+		if (mouseButton == RIGHT) 
+			mouseRightButtonReleased = true;
 	}
 
 	//checks if the user released the key minus

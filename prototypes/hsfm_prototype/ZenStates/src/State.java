@@ -713,13 +713,17 @@ public class State implements Serializable {
 
 	//aux variable to handle the state moving on the screen
 	//boolean moving = false;
+	
+	boolean should_start_dragging() {
+		return this.intersects_gui(p.mouseX, p.mouseY) && !is_dragging_someone && this.movement_status==MovementStatus.FREE;
+	}
 
 	//updates the coords of the state in the screen in case mouse drags it
 	void update_cordinates_gui() {
 		//if mouse if moving
-		if (p.mousePressed) {
+		if (p.mousePressed && p.mouseButton == p.LEFT) {
 			//if intersects for the first time
-			if (this.intersects_gui(p.mouseX, p.mouseY) && !is_dragging_someone && this.movement_status==MovementStatus.FREE) {
+			if (should_start_dragging()) {
 				//set move equals true
 				//moving= true;
 				//movement_status = MovementStatus.MOVING;
@@ -1114,7 +1118,7 @@ public class State implements Serializable {
 	}
 
 	boolean verify_if_user_released_mouse_while_temporary_connecting () {
-		return (there_is_a_temporary_connection_on_gui() && ZenStates.instance().mouseReleased);
+		return (there_is_a_temporary_connection_on_gui() && ZenStates.instance().mouseRightButtonReleased);
 	}
 
 	void draw_temp_connection() {
@@ -1219,6 +1223,13 @@ public class State implements Serializable {
 	//close the attached pie
 	void hide_pie() {
 		pie.hide();
+	}
+	
+	void show_or_hide_pie() {
+		if (pie.is_showing())
+			pie.hide();
+		else
+			pie.show();
 	}
 
 	//gets what option of the pie has been selected. returns -1 if none is selected
@@ -1398,14 +1409,16 @@ public class State implements Serializable {
 	}
 
 	void freeze_movement_and_trigger_connection() {
-		System.out.println("freezing " + this.name);
+		if (debug)
+			System.out.println("freezing " + this.name);
 		this.movement_status = MovementStatus.FREEZED;
 		label.setFocus(false);
 	}
 
 	void unfreeze_movement_and_untrigger_connection() {
 		if(this.movement_status == MovementStatus.FREEZED) {
-			System.out.println("unfreezing " + this.name);
+			if (debug)
+				System.out.println("unfreezing " + this.name);
 			this.movement_status = MovementStatus.FREE;
 		}
 	}

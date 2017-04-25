@@ -245,4 +245,8 @@ class PieMenu {
   boolean is_fading_away() {
     return down;
   }
+  
+  boolean is_hidden_or_fading () {
+	  return !is_showing() || is_fading_away();
+  }
 }

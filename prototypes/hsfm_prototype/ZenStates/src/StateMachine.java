@@ -426,6 +426,14 @@ public class StateMachine extends Task {
 			cp5.remove(s.get_id()+"/acc");
 			//remove the state fmor the list
 			this.states.removeElement(s);
+			
+			//if you're removing this state
+			if (s == actual) {
+				//stops
+				((ZenStates)p).canvas.button_stop();
+				p.println("You're removing the state that is currently executing. Halting the state machine.");
+			}
+			
 		} else
 			System.out.println("Unable to remove state " + s.get_name() + " from State_Machine " + this.name);
 	}

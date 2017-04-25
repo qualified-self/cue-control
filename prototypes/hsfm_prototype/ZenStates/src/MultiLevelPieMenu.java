@@ -83,7 +83,7 @@ class MultiLevelPieMenu {
     main.draw();
 
     //if is showing, try to update the second layer
-    if (is_showing())
+    if (!is_hidden_or_fading())
       update_second_layer_selection();
   }
 
@@ -93,11 +93,15 @@ class MultiLevelPieMenu {
   }
 
   boolean is_showing() {
-    return main.is_showing();
+	  return main.is_showing();
   }
 
   boolean is_fading_away() {
-    return main.is_fading_away();
+	  return main.is_fading_away();
+  }
+  
+  boolean is_hidden_or_fading() {
+	  return main.is_hidden_or_fading();
   }
 
   void update_second_layer_selection () {

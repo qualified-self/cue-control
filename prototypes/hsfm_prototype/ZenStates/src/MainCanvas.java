@@ -228,6 +228,16 @@ class MainCanvas {
 			remove_state();
 	}
 	
+	void process_right_mouse_button() {
+		//looks for someone to intersect
+		State result = sm_stack.lastElement().intersects_gui(p.mouseX, p.mouseY);
+
+		//if intersected someone
+		if (result!=null)
+			//shows the pie
+			result.show_or_hide_pie();
+	}
+	
 
 	public void process_copy() {
 		p.println("copying!");
@@ -249,13 +259,18 @@ class MainCanvas {
 
 	//processes ui in case the shfit key was pressed
 	void process_shift_key() {
+		start_dragging_connection();
+	}
+	
+	void start_dragging_connection () {
 		//verifies if the mouse intersects a state
-		//State result = root.intersects_gui(p.mouseX, p.mouseY);
 		State result = sm_stack.lastElement().intersects_gui(p.mouseX, p.mouseY);
-
-		//if it does not, creates a new state
+		
+		//if it does not...
 		if (result!=null) {
-			System.out.println("mouse was pressed while holding shift key in state " + result.get_name());
+			//close pie menu
+			result.hide_pie();
+			//starts dragging
 			result.freeze_movement_and_trigger_connection();
 		}
 	}
