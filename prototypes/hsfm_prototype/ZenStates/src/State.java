@@ -61,8 +61,11 @@ public class State implements Serializable {
 		
 		init_gui();
 		hide_gui();
+		
+		this.connect_anything_else_to_self();
 
 		this.is_actual = false;
+		
 	}
 
 	//constructor
@@ -116,9 +119,22 @@ public class State implements Serializable {
 		reset_group_id_gui_of_all_tasks();
 	}
 	
+	
+	
 	State clone_it () {
-		State clone = null;
+		//cloning the simple attributes of this state
+		State clone = new State(p, cp5, name);
 		
+		//cloning all tasks
+		for (Task t : tasks) 
+			clone.add_task(t.clone_it());
+		
+		//cloning all connections from this state
+		//for (Connection c : connections) 
+		//	clone.a
+		
+		//cloning all connections to this state	
+			
 		return clone;
 	}
 	
@@ -456,9 +472,9 @@ public class State implements Serializable {
 			this.connections.removeElement(c);
 
 			//if there is only one connection left and it is a trnsition to self
-			if (this.connections.size()==1 && this.connections.get(0).get_next_state()==this)
+			//if (this.connections.size()==1 && this.connections.get(0).get_next_state()==this)
 				//removes everything
-				this.disconnect(this.connections.get(0));
+			//	this.disconnect(this.connections.get(0));
 
 			//updates priorities of connections
 			this.update_all_priorities();
@@ -699,8 +715,9 @@ public class State implements Serializable {
 			if (this.intersects_gui(p.mouseX, p.mouseY) && !is_dragging_someone && this.movement_status==MovementStatus.FREE) {
 				//set move equals true
 				//moving= true;
-				movement_status = MovementStatus.MOVING;
-				is_dragging_someone = true;
+				//movement_status = MovementStatus.MOVING;
+				//is_dragging_someone = true;
+				this.start_gui_dragging();
 			}
 
 			//if is moving, updates the value
@@ -711,10 +728,21 @@ public class State implements Serializable {
 			//if this state was moving before
 			if (movement_status==MovementStatus.MOVING) {
 				//stops moving
-				movement_status = MovementStatus.FREE;
-				is_dragging_someone = false;
+				//movement_status = MovementStatus.FREE;
+				//is_dragging_someone = false;
+				this.stop_gui_dragging();
 			}
 		}
+	}
+	
+	void start_gui_dragging() {
+		movement_status = MovementStatus.MOVING;
+		is_dragging_someone = true;
+	}
+	
+	void stop_gui_dragging() {
+		movement_status = MovementStatus.FREE;
+		is_dragging_someone = false;
 	}
 
 	void remove_all_connections () {

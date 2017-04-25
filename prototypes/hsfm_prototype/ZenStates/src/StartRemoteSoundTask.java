@@ -26,7 +26,7 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
   }
   
   //contructor loading the file
-  public StartRemoteSoundTask (PApplet p, ControlP5 cp5, String id, String message, String filename, int sample_choice) {
+  public StartRemoteSoundTask (PApplet p, ControlP5 cp5, String id, String message, String filename, int sample_choice, boolean repeat) {
     super(p, cp5, id);
 
     this.message = message;
@@ -34,12 +34,13 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
     this.sample_choice = sample_choice;
     //adding the sample_choice inside the address
     this.message = this.message + "/" + this.sample_choice;
+    this.repeat = repeat;
     
     update_content();
   }
 
   StartRemoteSoundTask clone_it () {
-    return new StartRemoteSoundTask(this.p, this.cp5, this.name, this.message, this.filename, this.sample_choice);
+    return new StartRemoteSoundTask(this.p, this.cp5, this.name, this.message, this.filename, this.sample_choice, this.repeat);
   }
 
   /*
@@ -110,7 +111,7 @@ public class StartRemoteSoundTask extends RemoteOSCTask {
     .addItem("Sample 2", 1)
     .addItem("Sample 3", 2)
     .addItem("Sample 4", 3)
-    .setDefaultValue(this.sample_choice)
+    //.setIndex(this.sample_choice)
     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
     ;
     

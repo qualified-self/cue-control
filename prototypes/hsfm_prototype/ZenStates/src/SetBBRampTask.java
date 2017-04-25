@@ -17,6 +17,23 @@ class SetBBRampTask extends SetBBTask {
     update_duration("1");
     update_amplitude("1");
   }
+  
+  //clone function
+  SetBBRampTask clone_it() {
+	  SetBBRampTask clone = new SetBBRampTask(this.p, this.cp5);
+	  
+	  clone.variableName	= this.variableName;
+	  clone.duration 		= this.duration;
+	  clone.amplitude 		= this.amplitude;
+	  clone.is_up 			= this.is_up;
+	  clone.value 			= this.value;
+	  clone.timerMilestone 	= this.timerMilestone;
+	  clone.timer          	= this.timer;
+	  clone.repeat			= this.repeat;
+	  
+	  return clone;
+  }
+  
 
   void update_duration(String v) {
     this.duration = new Expression(v);

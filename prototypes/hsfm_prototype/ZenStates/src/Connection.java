@@ -202,6 +202,9 @@ public class Connection implements Serializable {
 	}
 
 	void remove_gui_items() {
+		//if this is a transition to self, do not add any gui items
+		if (parent==next_state) return;
+		
 		//ControlP5 cp5 = get_controlP5_gui();
 		//String gui_name = parent.get_name() + "_" + next_state.get_name();
 		String gui_name = get_name();
@@ -217,12 +220,18 @@ public class Connection implements Serializable {
 	}
 
 	void hide() {
+		//if this is a transition to self, do not add any gui items
+		if (parent==next_state) return;
+		
 		String gui_name = get_name();
 		cp5.get(gui_name+"/priority").hide();
 		cp5.get(gui_name+"/condition").hide();
 	}
 
 	void show() {
+		//if this is a transition to self, do not add any gui items
+		if (parent==next_state) return;
+		
 		String gui_name = get_name();
 		cp5.get(gui_name+"/priority").show();
 		cp5.get(gui_name+"/condition").show();

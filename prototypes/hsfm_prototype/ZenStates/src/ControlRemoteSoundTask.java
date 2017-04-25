@@ -30,7 +30,7 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
   }
 
   //constructor loading the file
-  public ControlRemoteSoundTask (PApplet p, ControlP5 cp5, String id, String m, String f, Object v, Object pan, int s) {
+  public ControlRemoteSoundTask (PApplet p, ControlP5 cp5, String id, String m, String f, Object v, Object pan, int s, boolean repeat) {
 	  super(p, cp5, id);
 	  
 	  this.message  = m;
@@ -40,12 +40,13 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
 	  this.sample_choice = s;
 	  //adding the sample_choice inside the address
 	  this.message = this.message + "/" + this.sample_choice;
+	  this.repeat = repeat;
 	  
 	  update_content();
   }
 
   ControlRemoteSoundTask clone_it () {
-    return new ControlRemoteSoundTask(this.p, this.cp5, this.name, this.message, this.filename, this.volume, this.pan, this.sample_choice);
+    return new ControlRemoteSoundTask(this.p, this.cp5, this.name, this.message, this.filename, this.volume, this.pan, this.sample_choice, this.repeat);
   }
   
   /*

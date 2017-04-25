@@ -15,6 +15,21 @@ class SetBBOscillatorTask extends SetBBTask {
     update_amplitude("1");
     //update_content();
   }
+  
+  //clone function
+  SetBBOscillatorTask clone_it() {
+	  SetBBOscillatorTask clone = new SetBBOscillatorTask(this.p, this.cp5);
+	  
+	  clone.variableName	= this.variableName;
+	  clone.frequency 		= this.frequency;
+	  clone.amplitude 		= this.amplitude;
+	  clone.value 			= this.value;
+	  clone.timerMilestone 	= this.timerMilestone;
+	  clone.timer          	= this.timer;
+	  clone.repeat			= this.repeat;
+	  
+	  return clone;
+  }
 
   void update_frequency(String v) {
     this.frequency = new Expression(v);

@@ -19,6 +19,12 @@ class SetBBTask extends Task {
 		this.timerMilestone = 0;
 		this.timer          = 0;
 	}
+	
+	public SetBBTask (PApplet p, ControlP5 cp5, String taskname, Object value, boolean repeat) {
+		this(p, cp5, taskname, value);
+		this.repeat 		= repeat;
+	}
+	
 
 	/*
   public SetBBTask (PApplet p, String taskname, Object value) {
@@ -33,7 +39,8 @@ class SetBBTask extends Task {
 	}
 
 	SetBBTask clone_it() {
-		return new SetBBTask(this.p, this.cp5, this.name, this.value);
+		//if (this instanceof )
+		return new SetBBTask(this.p, this.cp5, this.name, this.value, this.repeat);
 	}
 	
 	//updates the stateTimer variable related to this state machine

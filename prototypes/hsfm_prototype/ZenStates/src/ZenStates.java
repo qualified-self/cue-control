@@ -27,19 +27,19 @@ public class ZenStates extends PApplet {
 	Blackboard board;
 	Serializer serializer = new Serializer(this);
 			
-	OscP5 		oscP5; ////my osc variables
-	ControlP5 	cp5;//my controlP5 variable for gui
-	Minim       minim;//my minim variable
+	OscP5 		oscP5; 	//my osc variables
+	ControlP5 	cp5;	//my controlP5 variable for gui
+	Minim       minim;	//my minim variable
 
 	//system's default port for receiveing osc messages
 	String SERVER_IP;
 	int    SERVER_PORT;
 	int    OSC_RECV_PORT;
 
-	boolean debug = false;
-	boolean keyReleased = false;
-	boolean mouseReleased = false;
-	boolean is_loading = false;
+	boolean debug 			= false;
+	boolean keyReleased   	= false;
+	boolean mouseReleased 	= false;
+	boolean is_loading 		= false;
 
 		
 	public static void main(String[] args) {
@@ -47,8 +47,8 @@ public class ZenStates extends PApplet {
     }
 	
 	public void settings() {
-	  fullScreen();
-	  //size(1300, 800);
+	  //fullScreen();
+	  size(800, 600);
 	}
 	
 	public void setup() {
@@ -181,22 +181,22 @@ public class ZenStates extends PApplet {
 	// ui related methods
 	
 	public boolean cmg_or_ctrl_pressed = false;
+	public boolean should_copy 		   = false;
 	
 	public void keyPressed(){
 		//if (debug)
-			println("keyCode: " + keyCode + " key: " +key);
+		println("keyCode: " + keyCode + " key: " +key);
 		
 		//if is loading an open patch, do not draw anything
 		if (is_loading) return;
-		
+			
 		//updating cmg_or_ctrl_pressed if contrll or command keys were pressed
 		if (keyCode == 17 || keyCode == 27 || keyCode == 157)
 			cmg_or_ctrl_pressed = true;
 		
 		//if control or command key are not pressed, ignore
 		if (!cmg_or_ctrl_pressed) return;
-		
-		
+			
 		switch(keyCode) {
 		case 61: //+
 			//create_state();
@@ -209,12 +209,10 @@ public class ZenStates extends PApplet {
 		case 32: //spacebar
 			if (canvas.is_running()) canvas.button_stop();
 			else					 canvas.button_play();
-			break;
-			
+			break;	
 		case 83: //s
 			canvas.button_save();
 			break;
-
 		case 76: //l
 			canvas.button_load();
 			break;
@@ -232,6 +230,10 @@ public class ZenStates extends PApplet {
 		//in case the key it's shift
 		case 16:
 			canvas.process_shift_key();
+			break;
+		//if alt key was pressed
+		case 18:
+			canvas.process_copy();
 			break;
 		}
 	}

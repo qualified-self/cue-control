@@ -32,6 +32,16 @@ public class ScriptingTask extends Task {
 		load_scripts ();
 		set_context();
 	}
+	
+	public ScriptingTask(PApplet p, ControlP5 cp5, String taskname, boolean repeat) {
+		this(p, cp5, taskname);
+		this.repeat = repeat;
+	}
+	
+	Task clone_it() {
+		return new ScriptingTask(p, cp5, name, this.repeat);
+	}
+
 
 	@Override
 	void run() {
@@ -96,11 +106,6 @@ public class ScriptingTask extends Task {
 
 	@Override
 	void update_status() {
-	}
-
-	@Override
-	Task clone_it() {
-		return new ScriptingTask(p, cp5, name);
 	}
 	
 	void update_name(String newname) {

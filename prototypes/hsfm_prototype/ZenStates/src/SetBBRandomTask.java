@@ -15,6 +15,20 @@ class SetBBRandomTask extends SetBBTask {
     update_delay("0");
   }
 
+  
+  SetBBRandomTask clone_it() {
+	  SetBBRandomTask clone = new SetBBRandomTask(this.p, this.cp5);
+	  
+	  clone.variableName	= this.variableName;
+	  clone.delay 			= this.delay;
+	  clone.value 			= this.value;
+	  clone.timerMilestone 	= this.timerMilestone;
+	  clone.timer          	= this.timer;
+	  clone.repeat			= this.repeat;
+	  
+	  return clone;
+  }
+
   void update_delay(String v) {
     this.delay = new Expression(v);
     //update_content();

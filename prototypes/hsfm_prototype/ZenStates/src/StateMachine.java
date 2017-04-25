@@ -810,7 +810,7 @@ public class StateMachine extends Task {
 		if (intersected!=null) {
 			//connects
 			s.connect(new Expression ("true"), intersected);
-			s.connect_anything_else_to_self();
+			//s.connect_anything_else_to_self();
 			brandnew = false; //this statemachine is no longer brandnew
 		}
 	}

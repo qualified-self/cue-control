@@ -24,18 +24,19 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
   }
 
   //contructor loading the file
-  public ControlRemoteAuraTask (PApplet p, ControlP5 cp5, String id, String m, Object i, Object pan) {
+  public ControlRemoteAuraTask (PApplet p, ControlP5 cp5, String id, String m, Object i, Object pan, boolean repeat) {
 	  super(p, cp5, id);
 	  
 	  this.message 	 = m;
 	  this.intensity = i;
 	  this.pan       = pan;
+	  this.repeat    = repeat; 
 	  
 	  update_content();
   }
 
   ControlRemoteAuraTask clone_it () {
-    return new ControlRemoteAuraTask(this.p, this.cp5, this.name, this.message, this.intensity, this.pan);
+    return new ControlRemoteAuraTask(this.p, this.cp5, this.name, this.message, this.intensity, this.pan, this.repeat);
   }
 
   void update_content () {

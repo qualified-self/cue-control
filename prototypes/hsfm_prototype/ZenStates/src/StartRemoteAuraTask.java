@@ -18,17 +18,18 @@ public class StartRemoteAuraTask extends RemoteOSCTask {
   }
   
 //contructor loading the file
-  public StartRemoteAuraTask (PApplet p, ControlP5 cp5, String id, String message, Object [] content) {
+  public StartRemoteAuraTask (PApplet p, ControlP5 cp5, String id, String message, Object [] content, boolean r) {
 	super(p, cp5, id);
 	
     this.content = content;
     this.message = message;
+    this.repeat  = r;
 
     //this.build(p, cp5);
   }
 
   StartRemoteAuraTask clone_it () {
-    return new StartRemoteAuraTask(this.p, this.cp5, this.name, this.message, this.content);
+    return new StartRemoteAuraTask(this.p, this.cp5, this.name, this.message, this.content, this.repeat);
   }
 
 

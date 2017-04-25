@@ -102,8 +102,13 @@ class MainCanvas {
 		System.out.println("creates a state");
 		State newState = new State(p, cp5, "NEW_STATE_" + ((int)p.random(0, 10)), p.mouseX, p.mouseY);
 		//root.add_state(newState);
+		this.add_state(newState);
+	}
+	
+	void add_state(State newState) {
 		newState.show_gui();
 		sm_stack.lastElement().add_state(newState);
+		newState.connect_anything_else_to_self();
 	}
 
 	//gets the state where the mouse is hoving and removes it form the root state machine
@@ -221,6 +226,25 @@ class MainCanvas {
 		//otherwise, removes the state
 		else
 			remove_state();
+	}
+	
+
+	public void process_copy() {
+		p.println("copying!");
+		
+		//verifies if the mouse intersects a state
+		State result = sm_stack.lastElement().intersects_gui(p.mouseX, p.mouseY);
+		
+		//if it intersects no one, return
+		if (result==null) return;
+		
+		//clonning the intersected state
+		State newState = result.clone_it();
+		//adding the new tstae to the state machine
+		add_state(newState);
+		//sets the new state to drag
+		newState.start_gui_dragging();
+		
 	}
 
 	//processes ui in case the shfit key was pressed

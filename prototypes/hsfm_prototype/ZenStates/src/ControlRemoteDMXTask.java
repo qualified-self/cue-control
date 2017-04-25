@@ -28,7 +28,7 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
   }
 
   //contructor loading the file
-  public ControlRemoteDMXTask (PApplet p, ControlP5 cp5, String id, String m, Object c, Object i, Object d, Object r) {
+  public ControlRemoteDMXTask (PApplet p, ControlP5 cp5, String id, String m, Object c, Object i, Object d, Object r, boolean repeat) {
 	  super(p, cp5, id);
 	  
 	  this.message   = m;
@@ -36,12 +36,13 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
 	  this.intensity = i;
 	  this.duration  = d;
 	  this.rate      = r;
+	  this.repeat	 = repeat;
 	  
 	  update_content();
   }
 
   ControlRemoteDMXTask clone_it () {
-    return new ControlRemoteDMXTask(this.p, this.cp5, this.name, this.message, this.channel, this.intensity, this.duration, this.rate);
+    return new ControlRemoteDMXTask(this.p, this.cp5, this.name, this.message, this.channel, this.intensity, this.duration, this.rate, this.repeat);
   }
 
   void update_content () {

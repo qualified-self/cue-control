@@ -32,6 +32,12 @@ class OSCTask extends Task {
     //this.update_message(content);
     this.build(p, cp5);
   }
+  
+  //contructor loading the file
+  public OSCTask (PApplet p, ControlP5 cp5, String id, String message, int port, String ip, Object[] content, boolean repeat) {
+    this(p, cp5, id, message, port, ip, content);
+    this.repeat = repeat;
+  }
 
   void build(PApplet p, ControlP5 cp5) {
     this.p = p;
@@ -43,7 +49,7 @@ class OSCTask extends Task {
 
   //method that returns if this OSC Task is curerntly initialized
   OSCTask clone_it() {
-    return new OSCTask(this.p, this.cp5, this.name, this.message, this.port, this.ip, this.content);
+    return new OSCTask(this.p, this.cp5, this.name, this.message, this.port, this.ip, this.content, this.repeat);
   }
 
   void run () {
