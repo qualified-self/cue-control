@@ -47,6 +47,13 @@ public class StateMachine extends Task {
 		if (debug)
 			System.out.println("State_Machine " + this.name + " is inited!");
 	}
+	
+	//contructor
+	public StateMachine (PApplet p, ControlP5 cp5, String name, boolean repeat) {
+		this(p, cp5, name);
+		this.repeat = repeat;
+	}
+
 
 	/*
   //contructor
@@ -105,11 +112,38 @@ public class StateMachine extends Task {
 
 		//load_gui_elements();
 	}
-
-	//so far not using this method
+	
+	StateMachine clone_state_machine_saved_in_file(String title) {
+		return ((ZenStates)p).serializer.loadSubStateMachine(title);
+	}
+	
+	StateMachine clone_state_machine_not_saved_in_file(String title) {
+		StateMachine duplicate = null;
+		
+		//clone the state machine
+		duplicate = new StateMachine(p, cp5, title, this.repeat);
+		
+		//mpving the begin state
+		duplicate.begin= this.begin.clone_it();
+		
+		//clone the states
+		for (State s: states)
+			duplicate.add_state(s.clone_it());
+		
+		duplicate.hide();
+		
+		return duplicate;
+	}
+	
 	StateMachine clone_it() {
-		StateMachine duplicate = new StateMachine(p, cp5, title);
-		//cl
+		StateMachine duplicate = null;
+		
+		//if there is a file with this name, load it from file!
+		if (((ZenStates)p).serializer.existsSubStateMachineInFile(title))
+			duplicate = clone_state_machine_saved_in_file(title);
+		else 
+			duplicate = clone_state_machine_not_saved_in_file(title);
+		
 		return duplicate;
 	}
 	

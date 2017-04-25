@@ -103,9 +103,22 @@ public class Serializer {
 	}
 	
 	
-	public StateMachine loadSubStateMachine (String filename) {
-		
+	public File loadsSubStateMachineFile(String filename) {
 		File file = new File(p.sketchPath()+"/data/patches/"+filename);
+		
+		return file;
+	}
+	
+	public boolean existsSubStateMachineInFile(String filename) {
+		//if there the file exists, returns true. otherwise, returns false
+		return (loadsSubStateMachineFile(filename).exists()) ? true : false;
+	}
+	
+	
+	public StateMachine loadSubStateMachine (String filename) {
+
+		//loading the file
+		File file = loadsSubStateMachineFile(filename);
 		
 		//if the file does not exist, return null!
 		if (!file.exists()) return null;

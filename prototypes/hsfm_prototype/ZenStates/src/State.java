@@ -125,15 +125,22 @@ public class State implements Serializable {
 		//cloning the simple attributes of this state
 		State clone = new State(p, cp5, name);
 		
+		//moving to the same position as this one
+		clone.set_position_gui(this.x, this.y);
+		
 		//cloning all tasks
 		for (Task t : tasks) 
 			clone.add_task(t.clone_it());
 		
 		//cloning all connections from this state
-		//for (Connection c : connections) 
-		//	clone.a
+		for (Connection c : connections)
+			//if it's not a transition to self
+			if (c.get_next_state() != this) 
+				//clone it
+				clone.connect(c.get_expression(), c.get_next_state());
 		
 		//cloning all connections to this state	
+		//@TODO
 			
 		return clone;
 	}
