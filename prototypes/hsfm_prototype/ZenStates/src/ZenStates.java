@@ -36,6 +36,7 @@ public class ZenStates extends PApplet {
 	int    SERVER_PORT;
 	int    OSC_RECV_PORT;
 	int    STATE_CIRCLE_SIZE;
+	int    FONT_SIZE;
 
 	boolean debug 			= false;
 	boolean keyReleased   	= false;
@@ -63,8 +64,8 @@ public class ZenStates extends PApplet {
 
 		setup_expression_loading_bug();
 
-		textSize(cp5.getFont().getSize());
 		textFont(cp5.getFont().getFont());
+		textSize(FONT_SIZE);
 		
 		//testing autodraw
 		//cp5.setAutoDraw(false);
@@ -130,6 +131,7 @@ public class ZenStates extends PApplet {
 	//function for setting up controlp5
 	void setup_control_p5 () {
 		cp5 = new ControlP5(this);
+		cp5.setFont(cp5.getFont().getFont(), FONT_SIZE);
 	}
 
 	//sets the minim up
@@ -171,12 +173,14 @@ public class ZenStates extends PApplet {
 	    println("INCOMING OSC PORT: " + params.get(2));
 	    //println("FULLSCREEN: " + params.get(3));
 	    println("STATE CIRCLE SIZE: " + params.get(3));
+	    println("FONT SIZE: " + params.get(4));
 	  }
 	
 	  SERVER_IP    		= params.get(0);
 	  SERVER_PORT   	= Integer.parseInt(params.get(1));
 	  OSC_RECV_PORT		= Integer.parseInt(params.get(2));
 	  STATE_CIRCLE_SIZE = Integer.parseInt(params.get(3));
+	  FONT_SIZE = Integer.parseInt(params.get(4));
 	  
 	}
 	
@@ -289,6 +293,7 @@ public class ZenStates extends PApplet {
 	public String get_remote_ip() { return SERVER_IP;}
 	public int get_remote_port() { return SERVER_PORT; }
 	public int get_state_circle_size() { return STATE_CIRCLE_SIZE; }
+	public int get_font_size() { return FONT_SIZE; }
 
 	private static ZenStates inst;
 

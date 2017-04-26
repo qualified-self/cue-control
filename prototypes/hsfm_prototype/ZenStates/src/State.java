@@ -819,8 +819,8 @@ public class State implements Serializable {
 	    
 		//ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
-		p.textSize(cp5.getFont().getSize());
 		p.textFont(cp5.getFont().getFont());
+		p.textSize(cp5.getFont().getSize());
 		init_state_name_gui();
 		init_accordion_gui();
 		//init_tasks_gui();
