@@ -8,3 +8,5 @@ localhost
 12000
 #set the port that will listen to incoming OSC messages
 8001
+#state circle size
+100

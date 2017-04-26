@@ -32,7 +32,7 @@ public class State implements Serializable {
 	//variables used for the gui
 	public int          x;
 	public int          y;
-	private final int   size = 50;
+	private final int   size;// = 50;
 	private final float arrow_scale_offset = 1.25f;
 	private String      id;
 	//accordion that stores the tasks
@@ -49,6 +49,7 @@ public class State implements Serializable {
 	public State(PApplet p, ControlP5 cp5, String name) {
 		this.p = p;
 		this.cp5 = cp5;
+		this.size = ((ZenStates)p).get_state_circle_size();
 		this.name   = name.toUpperCase();
 		this.status = Status.INACTIVE;
 		this.tasks  = new Vector<Task>();

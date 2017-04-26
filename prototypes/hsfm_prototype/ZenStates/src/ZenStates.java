@@ -35,6 +35,7 @@ public class ZenStates extends PApplet {
 	String SERVER_IP;
 	int    SERVER_PORT;
 	int    OSC_RECV_PORT;
+	int    STATE_CIRCLE_SIZE;
 
 	boolean debug 			= false;
 	boolean keyReleased   	= false;
@@ -168,12 +169,14 @@ public class ZenStates extends PApplet {
 	    println("SERVER IP: " + params.get(0));
 	    println("SERVER PORT: " + params.get(1));
 	    println("INCOMING OSC PORT: " + params.get(2));
-	    println("FULLSCREEN: " + params.get(3));
+	    //println("FULLSCREEN: " + params.get(3));
+	    println("STATE CIRCLE SIZE: " + params.get(3));
 	  }
 	
-	  SERVER_IP     = params.get(0);
-	  SERVER_PORT   = Integer.parseInt(params.get(1));
-	  OSC_RECV_PORT = Integer.parseInt(params.get(2));
+	  SERVER_IP    		= params.get(0);
+	  SERVER_PORT   	= Integer.parseInt(params.get(1));
+	  OSC_RECV_PORT		= Integer.parseInt(params.get(2));
+	  STATE_CIRCLE_SIZE = Integer.parseInt(params.get(3));
 	  
 	}
 	
@@ -285,6 +288,7 @@ public class ZenStates extends PApplet {
 	public boolean debug() { return debug; }
 	public String get_remote_ip() { return SERVER_IP;}
 	public int get_remote_port() { return SERVER_PORT; }
+	public int get_state_circle_size() { return STATE_CIRCLE_SIZE; }
 
 	private static ZenStates inst;
 
