@@ -51,7 +51,7 @@ public class StartRemoteDMXTask extends RemoteOSCTask {
 
   //UI config
   Group load_gui_elements(State s) {
-
+	  /*
     CallbackListener cb_enter = generate_callback_enter();
     //CallbackListener cb_leave = generate_callback_leave();
 
@@ -81,6 +81,18 @@ public class StartRemoteDMXTask extends RemoteOSCTask {
 
     int localx = 10, localy = (int)(font_size), localoffset = 3*font_size;
     int w = g.getWidth()-(localx*2);
+    */
+	  
+	  Group g					= super.load_gui_elements(s);
+	  CallbackListener cb_enter = generate_callback_enter();
+	  String g_name			  	= this.get_gui_id();
+	  int w 					= g.getWidth()-(localx*2);
+	  
+	  textlabel 	 			= "Start DMX";
+	  backgroundheight 			= (int)(font_size* 7.5);
+	    
+	  g.setBackgroundHeight(backgroundheight);
+	  g.setLabel(textlabel);
 
     cp5.addTextfield(g_name+ "/channel")
       .setPosition(localx, localy)

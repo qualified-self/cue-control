@@ -201,6 +201,7 @@ public class ScriptingTask extends Task {
 
 	@Override
 	Group load_gui_elements(State s) {
+		/*
 		// TODO Auto-generated method stub
 		CallbackListener cb_enter = generate_callback_enter();
 		CallbackListener cb_pressed = generate_callback_open_file();
@@ -229,6 +230,21 @@ public class ScriptingTask extends Task {
 
 		int localx = 10, localy = (int)(font_size), localoffset = 3*font_size;
 		int w = g.getWidth()-(localx*2);
+		
+		*/
+		
+		  Group g					= super.load_gui_elements(s);
+		  CallbackListener cb_enter = generate_callback_enter();
+		  CallbackListener cb_pressed = generate_callback_open_file();
+		  String g_name			  	= this.get_gui_id();
+		  int w 					= g.getWidth()-(localx*2);
+		  
+		  textlabel 	 			= "Scripting";
+		  backgroundheight 			= (int)(font_size* 10.5);
+		    
+		  g.setBackgroundHeight(backgroundheight);
+		  g.setLabel(textlabel);
+
 
 		cp5.addTextfield(g_name+ "/filename")
 		.setPosition(localx, localy)

@@ -15,7 +15,17 @@ public abstract class Task implements Serializable {
   protected String group_gui_id;
   protected boolean repeat;
   protected boolean first_time;
-  //protected State  parent;
+  
+  
+  //UI variables
+  String textlabel;
+  int font_size;//			= (int)(((ZenStates)p).get_font_size());
+  int backgroundheight;// 	= (int)(font_size* 12.5);
+  int localoffset;// 		= 3*font_size;
+  int localx;// 			= 10;
+  int localy;// 			= (int)(font_size);
+  
+  //transient variables
   transient protected PApplet  p;
   transient protected ControlP5 cp5;
 
@@ -28,7 +38,7 @@ public abstract class Task implements Serializable {
     this.status = Status.INACTIVE;
     this.group_gui_id = UUID.randomUUID().toString();
     this.first_time = true;
-
+    
     if (((ZenStates)p).debug)
     	System.out.println("task " + this.toString() + " created!");
   }
@@ -183,10 +193,39 @@ public abstract class Task implements Serializable {
        .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
        ;
   }
+  
+  Group load_gui_elements(State s) {
+
+		setup_ui_variables();
+		
+	    String g_name = this.get_gui_id();
+
+	    //String textlabel = "Control aura";
+	    //int backgroundheight = (int)(font_size* 10.5);
+
+	    Group g = cp5.addGroup(g_name)
+	    .setHeight(font_size)
+	    .setWidth((10*((ZenStates)p).FONT_SIZE))
+	    //.setBackgroundHeight(backgroundheight)
+	    .setColorBackground(p.color(255, 50)) //color of the task
+	    .setBackgroundColor(p.color(255, 25)) //color of task when openned
+	    //.setLabel(textlabel)
+	    ;
+
+	    g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+	    
+	    return g;
+  }
+  
+  void setup_ui_variables() {
+	  font_size			= (int)(((ZenStates)p).get_font_size());
+	  localoffset 		= 3*font_size;
+	  localx 			= 10;
+	  localy 			= (int)(font_size);
+  }
 
   //abstract CallbackListener generate_callback_leave(){}
   abstract CallbackListener generate_callback_enter();
-  abstract Group load_gui_elements(State s);
   abstract void reset_gui_fields();
   //abstract void draw_gui();
 }

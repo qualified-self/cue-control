@@ -58,6 +58,7 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
   //UI config
   Group load_gui_elements(State s) {
 
+	 /*
     CallbackListener cb_enter = generate_callback_enter();
     //CallbackListener cb_leave = generate_callback_leave();
 
@@ -80,9 +81,19 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
     ;
 
     g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
+    */
+	  
+	  Group g					= super.load_gui_elements(s);
+	  CallbackListener cb_enter = generate_callback_enter();
+	  String g_name			  	= this.get_gui_id();
+	  int w 					= g.getWidth()-(localx*2);
+	  
+	  textlabel 	 			= "Control aura";
+	  backgroundheight 			= (int)(font_size* 10.5);
+	    
+	  g.setBackgroundHeight(backgroundheight);
+	  g.setLabel(textlabel);
 
-    int localx = 10, localy = (int)(font_size), localoffset = 3*font_size;
-    int w = g.getWidth()-(localx*2);
 
     cp5.addTextfield(g_name+ "/intensity")
       .setPosition(localx, localy)

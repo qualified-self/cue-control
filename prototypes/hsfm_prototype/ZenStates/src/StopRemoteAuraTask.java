@@ -33,6 +33,7 @@ public class StopRemoteAuraTask extends RemoteOSCTask {
   //UI config
   Group load_gui_elements(State s) {
 
+	 /*
     CallbackListener cb_enter = generate_callback_enter();
     //CallbackListener cb_leave = generate_callback_leave();
 
@@ -62,6 +63,18 @@ public class StopRemoteAuraTask extends RemoteOSCTask {
 
     int localx = 10, localy = 15, localoffset = 40;
     int w = g.getWidth()-(localx*2);
+    */
+	  
+	  Group g					= super.load_gui_elements(s);
+	  CallbackListener cb_enter = generate_callback_enter();
+	  String g_name			  	= this.get_gui_id();
+	  int w 					= g.getWidth()-(localx*2);
+	  
+	  textlabel 	 			= "Stop aura";
+	  backgroundheight 			= (int)(font_size* 5);
+	    
+	  g.setBackgroundHeight(backgroundheight);
+	  g.setLabel(textlabel);
 
     create_gui_toggle(localx, localy, w, g, cb_enter);
 

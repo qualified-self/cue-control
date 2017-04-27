@@ -88,7 +88,7 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
 
   //UI config
   Group load_gui_elements(State s) {
-
+	 /*
     CallbackListener cb_enter = generate_callback_enter();
     //CallbackListener cb_leave = generate_callback_leave();
 
@@ -102,36 +102,31 @@ public class ControlRemoteSoundTask extends RemoteOSCTask {
     int backgroundheight = (int)(font_size* 12.5);
 
     //ControlP5 cp5 = HFSMPrototype.instance().cp5();
-
-    Group g = cp5.addGroup(g_name)
-    	    //.setPosition(x, y) //change that?
-    	    .setHeight(font_size)
-    	    .setWidth((10*((ZenStates)p).FONT_SIZE))
-    	    .setBackgroundHeight(backgroundheight)
-    	    .setColorBackground(p.color(255, 50)) //color of the task
-    	    .setBackgroundColor(p.color(255, 25)) //color of task when openned
-    	    .setLabel(textlabel)
-    	    ;
-
-    g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-
-    int localx = 10, localy = (int)(font_size), localoffset = 3*font_size;
-    int w = g.getWidth()-(localx*2);
-
-    /*
-    cp5.addTextfield(g_name+ "/filename")
-      .setPosition(localx, localy)
-      .setSize(w, 15)
-      .setGroup(g)
-      .setAutoClear(false)
-      .setLabel("filename")
-      .setText(this.filename)
-      .align(ControlP5.CENTER, ControlP5.CENTER,ControlP5.CENTER, ControlP5.CENTER)
-      .onChange(cb_enter)
-      .onReleaseOutside(cb_enter)
-      .getCaptionLabel().align(ControlP5.CENTER, ControlP5.BOTTOM_OUTSIDE)
-    ;
+	  
+	  Group g = cp5.addGroup(g_name)
+			  //.setPosition(x, y) //change that?
+			  .setHeight(font_size)
+			  .setWidth((10*((ZenStates)p).FONT_SIZE))
+			  .setBackgroundHeight(backgroundheight)
+			  .setColorBackground(p.color(255, 50)) //color of the task
+			  .setBackgroundColor(p.color(255, 25)) //color of task when openned
+			  .setLabel(textlabel)
+			  ;
+	  
+	  g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
     */
+	 
+	  Group g					= super.load_gui_elements(s);
+	  CallbackListener cb_enter = generate_callback_enter();
+	  String g_name			  	= this.get_gui_id();
+	  int w 					= g.getWidth()-(localx*2);
+	  
+	  textlabel 	 			= "Control audio";
+	  backgroundheight 			= (int)(font_size* 12.5);
+	    
+	  g.setBackgroundHeight(backgroundheight);
+	  g.setLabel(textlabel);
+
 
     cp5.addTextfield(g_name+ "/volume")
       .setPosition(localx, localy)

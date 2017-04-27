@@ -72,7 +72,7 @@ public class StopRemoteSoundTask extends RemoteOSCTask {
 
   //UI config
   Group load_gui_elements(State s) {
-
+	  /*
     CallbackListener cb_enter = generate_callback_enter();
     //CallbackListener cb_leave = generate_callback_leave();
 
@@ -98,6 +98,7 @@ public class StopRemoteSoundTask extends RemoteOSCTask {
 
     int localx = 10, localy = (int)(font_size), localoffset = 3*font_size;
     int w = g.getWidth()-(localx*2);
+    */
 
     /*
     cp5.addTextfield(g_name+ "/filename")
@@ -116,6 +117,17 @@ public class StopRemoteSoundTask extends RemoteOSCTask {
     create_gui_toggle(localx, localy+localoffset, w, g, cb_enter);
     */
     
+	  Group g					= super.load_gui_elements(s);
+	  CallbackListener cb_enter = generate_callback_enter();
+	  String g_name			  	= this.get_gui_id();
+	  int w 					= g.getWidth()-(localx*2);
+	  
+	  textlabel 	 			= "Stop audio";
+	  backgroundheight 			= (int)(font_size* 7);
+	  
+	  g.setBackgroundHeight(backgroundheight);
+	  g.setLabel(textlabel);
+	  
     create_gui_toggle(localx, localy, w, g, cb_enter);
 
     cp5.addDropdownList(g_name+ "/sample")
