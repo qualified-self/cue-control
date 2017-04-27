@@ -60,6 +60,7 @@ class StateMachinePreview extends Canvas {
 		p.rectMode(p.CORNER);
 	}
 	
+	
 	public void open() {
 		animation.open();
 	}

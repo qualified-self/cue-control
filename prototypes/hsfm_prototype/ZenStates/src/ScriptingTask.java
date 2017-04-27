@@ -209,23 +209,29 @@ public class ScriptingTask extends Task {
 		int c2 = p.color(255, 25);
 
 		String g_name = this.get_gui_id();
+		
+	    String textlabel = "Scripting";
+	    int font_size 	 = (int)(((ZenStates)p).get_font_size());
+	    int textwidth 	 = (int)((ZenStates)p).textWidth(textlabel);
+	    int backgroundheight = (int)(font_size* 10.5);
 
-		Group g = cp5.addGroup(g_name)
-				.setColorBackground(c1) //color of the task
-				.setBackgroundColor(c2) //color of task when openned
-				.setBackgroundHeight(150)
-				.setLabel("Scripting")
-				.setHeight(12)
-				;
+	    Group g = cp5.addGroup(g_name)
+	    	    //.setPosition(x, y) //change that?
+	    	    .setHeight(font_size)
+	    	    .setBackgroundHeight(backgroundheight)
+	    	    .setColorBackground(p.color(255, 50)) //color of the task
+	    	    .setBackgroundColor(p.color(255, 25)) //color of task when openned
+	    	    .setLabel(textlabel)
+	    	    ;
 
 		g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 
-		int localx = 10, localy = 15, localoffset = 40;
-		int w = g.getWidth()-10;
+		int localx = 10, localy = (int)(font_size), localoffset = 3*font_size;
+	    int w = g.getWidth()-10;
 
 		cp5.addTextfield(g_name+ "/filename")
 		.setPosition(localx, localy)
-		.setSize(w, 15)
+		.setSize(w, (int)(font_size*1.25))
 		.setGroup(g)
 		.setAutoClear(false)
 		.setLabel("filename")
@@ -237,7 +243,7 @@ public class ScriptingTask extends Task {
 		
 		cp5.addButton(g_name+"/open_file")
 		.setPosition(localx, localy+(1*localoffset))
-		.setSize(w, 15)
+		.setSize(w, (int)(font_size*1.25))
 		.setValue(0)
 		.setLabel("open file")
 		.onPress(cb_pressed)

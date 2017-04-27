@@ -24,8 +24,8 @@ import oscP5.*;
 
 /// Blackboard class.
 public class Blackboard extends ConcurrentHashMap<String, Object> implements Serializable {
-  int mywidth = 60;
-  int myheight = 20;
+  int mywidth;// = 60;
+  int myheight;// = 20;
   int x;
   int y;
   boolean debug = false;
@@ -36,9 +36,11 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
   public Blackboard (PApplet p) {
     //this.x = width-(mywidth*3)-20;
     //this.x = width-(mywidth*3)-20;
-    //this.y = 20;
+	this.mywidth  = 6 * ((ZenStates)p).get_font_size(); 
+	this.myheight = 2 * ((ZenStates)p).get_font_size(); 
+	
     this.build(p);
-    init_global_variables();
+    //init_global_variables();
   }
 
   void set_debug (boolean b) {
@@ -49,7 +51,9 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
     System.out.println("@TODO [BLACKBOARD] verify what sorts of things needs to be initialize when loaded from file");
     this.p = p;
     init_global_variables();
-    set_gui_position(p.width-(mywidth*3)-2, 20);
+    //set_gui_position(p.width-(mywidth*3)-2, 20);
+    this.x = ((ZenStates)p).width-(int)(mywidth*2.8);//-myheight;
+  	this.y = myheight;
   }
 
   void init_global_variables() {
@@ -134,10 +138,12 @@ public class Blackboard extends ConcurrentHashMap<String, Object> implements Ser
 
   /////////////////
   // gui methods
+  /*
   void set_gui_position (int newx, int newy) {
     this.x = newx;
     this.y = newy;
   }
+  */
 
   //draws both the header and the items
   void draw() {

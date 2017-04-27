@@ -277,12 +277,12 @@ class MainCanvas {
 
 
 	void init_buttons() {
-		int w = 40;
-		int h = 40;
+		int w = 4* p.FONT_SIZE;
+		int h = w;
 		int offset = 5;
 		//int x = 20; //p.width/2;
 		int x = (p.width/2)-2*(w+offset);
-		int y = p.height-80;
+		int y = p.height-(h)-(h/4);
 
 
 		int back = p.color(255, 255, 255, 50);

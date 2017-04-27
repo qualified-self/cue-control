@@ -77,19 +77,25 @@ public class StopRemoteSoundTask extends RemoteOSCTask {
     //CallbackListener cb_leave = generate_callback_leave();
 
     String g_name = this.get_gui_id();
+    
+    String textlabel = "Stop audio";
+    int font_size 	 = (int)(((ZenStates)p).get_font_size());
+    int textwidth 	 = (int)((ZenStates)p).textWidth(textlabel);
+    int backgroundheight = (int)(font_size* 7);
+
 
     Group g = cp5.addGroup(g_name)
-    //.setPosition(x, y) //change that?
-    .setHeight(12)
-    .setBackgroundHeight(230)
-    .setColorBackground(p.color(255, 50)) //color of the task
-    .setBackgroundColor(p.color(255, 25)) //color of task when openned
-    .setLabel("Stop audio")
-    ;
+    	    //.setPosition(x, y) //change that?
+    	    .setHeight(font_size)
+    	    .setBackgroundHeight(backgroundheight)
+    	    .setColorBackground(p.color(255, 50)) //color of the task
+    	    .setBackgroundColor(p.color(255, 25)) //color of task when openned
+    	    .setLabel(textlabel)
+    	    ;
 
     g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 
-    int localx = 10, localy = 15, localoffset = 40;
+    int localx = 10, localy = (int)(font_size), localoffset = 3*font_size;
     int w = g.getWidth()-10;
 
     /*
@@ -117,8 +123,10 @@ public class StopRemoteSoundTask extends RemoteOSCTask {
     .setGroup(g)
     .setLabel("sample")
     .align(ControlP5.CENTER, ControlP5.CENTER,ControlP5.CENTER, ControlP5.CENTER)
-    .setItemHeight(20)
-    .setBarHeight(15)
+    //.setItemHeight(20)
+    //.setBarHeight(15)
+    .setItemHeight((int)(font_size*1.25))
+    .setBarHeight((int)(font_size*1.25))
     .close()
     .onChange(cb_enter)
     //.onReleaseOutside(cb_enter)

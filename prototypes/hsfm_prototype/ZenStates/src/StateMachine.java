@@ -794,27 +794,35 @@ public class StateMachine extends Task {
 		//String g_name = s.get_name() + " " + this.get_name();
 		//this.set_gui_id(g_name);
 		String g_name = get_gui_id();
+		
+	    String textlabel = "State Machine";
+	    int font_size 	 = (int)(((ZenStates)p).get_font_size());
+	    int textwidth 	 = (int)((ZenStates)p).textWidth(textlabel);
+	    //this background is more complex to define because it has a constant value in the middle (the state machine preview)
+	    //int backgroundheight = (int)(font_size* 17);
+	    int backgroundheight = (int)(font_size* 10.5)+75;
+
 
 		int c1 = p.color(255, 50);
 		int c2 = p.color(255, 25);
 
 		Group g = cp5.addGroup(g_name)
-				.setHeight(12)
-				.setBackgroundHeight(220)
-				//.setWidth(100)
-				.setColorBackground(c1) //color of the task
-				.setBackgroundColor(c2) //color of task when openned
-				.setLabel("State Machine")
-				;
-
+			    //.setPosition(x, y) //change that?
+			    .setHeight(font_size)
+			    .setBackgroundHeight(backgroundheight)
+			    .setColorBackground(p.color(255, 50)) //color of the task
+			    .setBackgroundColor(p.color(255, 25)) //color of task when openned
+			    .setLabel(textlabel)
+			    ;
+		
 		g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 
-		int localx = 10, localy = 15, localoffset = 40;
-		int w = g.getWidth()-10;
+		int localx = 10, localy = (int)(font_size), localoffset = 3*font_size;
+	    int w = g.getWidth()-10;
 
 		cp5.addTextfield(g_name+"/name")
 		.setPosition(localx, localy)
-		.setSize(w, 15)
+		.setSize(w, (int)(font_size*1.25))
 		.setGroup(g)
 		.setAutoClear(false)
 		.setLabel("name")
@@ -828,15 +836,15 @@ public class StateMachine extends Task {
 		g.addCanvas((controlP5.Canvas)smp);
 
 		cp5.addButton(g_name+"/open_preview")
-		.setPosition(localx, localy+(3*localoffset))
-		.setSize(w, 15)
+		.setPosition(localx, localy+75+localoffset)
+		.setSize(w, (int)(font_size*1.25))
 		.setValue(0)
 		.setLabel("open preview")
 		.onPress(cb_pressed)
 		.setGroup(g)
 		;
 
-		create_gui_toggle(localx, localy+(4*localoffset), w, g, cb_enter);
+		create_gui_toggle(localx, localy+75+(2*localoffset), w, g, cb_enter);
 
 		return g;
 	}

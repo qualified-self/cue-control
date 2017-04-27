@@ -174,26 +174,30 @@ class OSCTask extends Task {
 
     //this.set_gui_id(s.get_name() + " " + this.get_name());
     String g_name = this.get_gui_id();
+    
+    String textlabel = "OSC message";
+    int font_size 	 = (int)(((ZenStates)p).get_font_size());
+    int textwidth 	 = (int)((ZenStates)p).textWidth(textlabel);
+    int backgroundheight = (int)(font_size* 16.5);
 
-    //creates the group
     Group g = cp5.addGroup(g_name)
-      .setColorBackground(c1) //color of the task
-      .setBackgroundColor(c2) //color of task when openned
-      .setBackgroundHeight(220)
-      //.setLabel(this.get_prefix() + "   " + this.get_name())
-      .setLabel("OSC message")
-      .setHeight(12)
-      ;
-
-    int w = g.getWidth()-10;
+    	    //.setPosition(x, y) //change that?
+    	    .setHeight(font_size)
+    	    .setBackgroundHeight(backgroundheight)
+    	    .setColorBackground(p.color(255, 50)) //color of the task
+    	    .setBackgroundColor(p.color(255, 25)) //color of task when openned
+    	    .setLabel(textlabel)
+    	    ;
+    
 
     g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 
-    int localx = 10, localy = 15, localoffset = 40;
+    int localx = 10, localy = (int)(font_size), localoffset = 3*font_size;
+    int w = g.getWidth()-10;
 
     cp5.addTextfield(g_name+"/ip")
       .setPosition(localx, localy)
-      .setSize(w, 15)
+      .setSize(w, (int)(font_size*1.25))
       .setGroup(g)
       .setAutoClear(false)
       .setLabel("ip address")
@@ -221,10 +225,10 @@ class OSCTask extends Task {
     
 	cp5.addTextfield(g_name+"/port")
 	  .setPosition(localx, localy+localoffset)
-	  .setSize(w, 15)
+	  .setSize(w, (int)(font_size*1.25))
 	  .setGroup(g)
 	  .setAutoClear(false)
-	  .setLabel("ip address")
+	  .setLabel("port")
 	  .setText(Integer.toString(port))
 	  .onChange(cb_enter)
 	  .onReleaseOutside(cb_enter)
@@ -234,7 +238,7 @@ class OSCTask extends Task {
 
     cp5.addTextfield(g_name+"/message")
       .setPosition(localx, localy+(2*localoffset))
-      .setSize(w, 15)
+      .setSize(w, (int)(font_size*1.25))
       .setGroup(g)
       .setAutoClear(false)
       .setLabel("message")
@@ -246,7 +250,7 @@ class OSCTask extends Task {
 
     cp5.addTextfield(g_name+"/parameters")
       .setPosition(localx, localy+(3*localoffset))
-      .setSize(w, 15)
+      .setSize(w, (int)(font_size*1.25))
       .setAutoClear(false)
       .setGroup(g)
       .setLabel("parameters")

@@ -78,27 +78,32 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
 
     //this.set_gui_id(s.get_name() + " " + this.get_name());
     String g_name = this.get_gui_id();
+    
+    String textlabel = "Control DMX";
+    int font_size 	 = (int)(((ZenStates)p).get_font_size());
+    int textwidth 	 = (int)((ZenStates)p).textWidth(textlabel);
+    int backgroundheight = (int)(font_size* 16.5);
 
     //ControlP5 cp5 = HFSMPrototype.instance().cp5();
 
     Group g = cp5.addGroup(g_name)
-    //.setPosition(x, y) //change that?
-    .setHeight(12)
-    .setBackgroundHeight(220)
-    .setColorBackground(p.color(255, 50)) //color of the task
-    .setBackgroundColor(p.color(255, 25)) //color of task when openned
-    .setLabel("Control DMX")
-    ;
+    	    //.setPosition(x, y) //change that?
+    	    .setHeight(font_size)
+    	    .setBackgroundHeight(backgroundheight)
+    	    .setColorBackground(p.color(255, 50)) //color of the task
+    	    .setBackgroundColor(p.color(255, 25)) //color of task when openned
+    	    .setLabel(textlabel)
+    	    ;
 
 
     g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 
-    int localx = 10, localy = 15, localoffset = 40;
+    int localx = 10, localy = (int)(font_size), localoffset = 3*font_size;
     int w = g.getWidth()-10;
 
     cp5.addTextfield(g_name+ "/channel")
       .setPosition(localx, localy)
-      .setSize(w, 15)
+      .setSize(w, (int)(font_size*1.25))
       .setGroup(g)
       .setAutoClear(false)
       .setLabel("channel")
@@ -111,7 +116,7 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
 
     cp5.addTextfield(g_name+ "/intensity")
       .setPosition(localx, localy+(1*localoffset))
-      .setSize(w, 15)
+      .setSize(w, (int)(font_size*1.25))
       .setGroup(g)
       .setAutoClear(false)
       .setLabel("intensity")
@@ -124,7 +129,7 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
 
     cp5.addTextfield(g_name+ "/rate")
       .setPosition(localx, localy+(2*localoffset))
-      .setSize(w, 15)
+      .setSize(w, (int)(font_size*1.25))
       .setGroup(g)
       .setAutoClear(false)
       .setLabel("rate")
@@ -137,7 +142,7 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
 
     cp5.addTextfield(g_name+ "/duration")
       .setPosition(localx, localy+(3*localoffset))
-      .setSize(w, 15)
+      .setSize(w, (int)(font_size*1.25))
       .setGroup(g)
       .setAutoClear(false)
       .setLabel("duration")

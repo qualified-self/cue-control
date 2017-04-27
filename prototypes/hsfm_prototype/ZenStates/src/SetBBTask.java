@@ -101,23 +101,29 @@ class SetBBTask extends Task {
 
 		//this.set_gui_id(s.get_name() + " " + this.get_name());
 		String g_name = this.get_gui_id();
+		
+	    String textlabel = "Blackboard variable";
+	    int font_size 	 = (int)(((ZenStates)p).get_font_size());
+	    int textwidth 	 = (int)((ZenStates)p).textWidth(textlabel);
+	    int backgroundheight = (int)(font_size* 10.5);
 
-		Group g = cp5.addGroup(g_name)
-				.setColorBackground(c1) //color of the task
-				.setBackgroundColor(c2) //color of task when openned
-				.setBackgroundHeight(150)
-				.setLabel("Blackboard variable")
-				.setHeight(12)
-				;
+	    Group g = cp5.addGroup(g_name)
+	    	    //.setPosition(x, y) //change that?
+	    	    .setHeight(font_size)
+	    	    .setBackgroundHeight(backgroundheight)
+	    	    .setColorBackground(p.color(255, 50)) //color of the task
+	    	    .setBackgroundColor(p.color(255, 25)) //color of task when openned
+	    	    .setLabel(textlabel)
+	    	    ;
 
 		g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 
-		int localx = 10, localy = 15, localoffset = 40;
-		int w = g.getWidth()-10;
+		 int localx = 10, localy = (int)(font_size), localoffset = 3*font_size;
+	    int w = g.getWidth()-10;
 
 		cp5.addTextfield(g_name+ "/name")
 		.setPosition(localx, localy)
-		.setSize(w, 15)
+		.setSize(w, (int)(font_size*1.25))
 		.setGroup(g)
 		.setAutoClear(false)
 		.setLabel("name")
@@ -129,7 +135,7 @@ class SetBBTask extends Task {
 
 		cp5.addTextfield(g_name+ "/value")
 		.setPosition(localx, localy+localoffset)
-		.setSize(w, 15)
+		.setSize(w, (int)(font_size*1.25))
 		.setGroup(g)
 		.setAutoClear(false)
 		.setLabel("value")

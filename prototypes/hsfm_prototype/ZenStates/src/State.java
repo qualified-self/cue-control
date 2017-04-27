@@ -934,6 +934,8 @@ public class State implements Serializable {
 		int c1 = p.color(255, 255, 255, 255);
 		int c2 = p.color(0, 0, 0, 1);
 
+		//p.textAlign(p.CENTER, p.CENTER);
+		
 		label = cp5.addTextfield(this.id+"/label")
 				.setText(this.name)
 				.setVisible(true)
@@ -941,8 +943,10 @@ public class State implements Serializable {
 				.setColorValue(c1)
 				.setColorBackground(c2)
 				.setColorForeground(c2)
-				//.align(ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER)
-				.setWidth((int)(p.textWidth(this.name)*1.25))
+				.align(ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER)
+				//.setWidth((int)(p.textWidth(this.name)*1.25))
+				.setWidth((int)(p.textWidth(this.name)))
+				//.setWidth((int)(p.textWidth(this.name)*1.5))
 				.setFocus(false)
 				.setAutoClear(false)
 				.setLabel("")
@@ -1048,11 +1052,13 @@ public class State implements Serializable {
 		label.align(ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER, ControlP5.CENTER);
 		float textwidth = p.textWidth(name);
 		textwidth = textwidth/2;
-		label.setPosition(x-textwidth-(textwidth/5), y-7);
+		//label.setPosition(x-textwidth-(textwidth/5), y-7);
+		label.setPosition(x-textwidth, y-7);
 
 
 		//moving the tasks
-		accordion.setPosition(x-(accordion.getWidth()/2), y+(size/2)+(size/4));
+		//accordion.setPosition(x-(accordion.getWidth()/2), y+(size/2)+(size/4));
+		accordion.setPosition(x-(accordion.getWidth()/2), y+(size/2)+(size/8));
 	}
 
 	//draws additional info if this is a begin

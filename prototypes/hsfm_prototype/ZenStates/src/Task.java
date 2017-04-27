@@ -168,13 +168,15 @@ public abstract class Task implements Serializable {
   }
 
   void create_gui_toggle (int x, int y, int w, Group g, CallbackListener cb) {
-    // create a toggle
+	 int font_size 	 = (int)(((ZenStates)p).get_font_size());
+	  
+	// create a toggle
     cp5.addToggle(get_gui_id()+"/repeat")
        .setPosition(x, y)
-       .setSize(w, 15)
+       .setSize(w, (int)(font_size*1.25))
        .setGroup(g)
        .setMode(ControlP5.SWITCH)
-       .setLabel("repeat           once")
+       .setLabel("repeat -  once")
        .setValue(this.repeat)
        .onChange(cb)
        .onReleaseOutside(cb)
