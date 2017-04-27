@@ -44,12 +44,25 @@ class StateMachinePreview extends Canvas {
 	//@TODO implement the zoom to open as you did for the pie menu
 	public void draw(PGraphics pg) {
 		p.pushMatrix();
-		p.translate(x+45, y+30);
+		//for 20
+		int fontsize = (int) ((ZenStates)p).get_font_size();
+		//int transx = (int)(4.5*fontsize);
+		int transx = (int)(4.25*fontsize);
+		int transy = (int)(3*fontsize);
+		p.translate(x+transx, y+transy);
+		//for 10
+		//p.translate(x+45, y+30);
+		//p.translate(x+40, y+30);
 		//p.translate(x, y);
 		p.pushMatrix();
 		p.rectMode(p.CENTER);
 		//inverse proportionality
-		float zoom = (0.09f*1024)/p.width;
+		//for 10
+		//float zoom = (0.009f*1024)/p.width;
+		//float zoom = (0.085f*1024)/p.width;
+		//for 20, 
+		//float zoom = (0.18f*1024)/p.width;
+		float zoom = ((0.0083f*fontsize)*1024)/p.width;
 		p.scale(zoom);
 		//drawing the state machine preview
 		draw_state_machine();

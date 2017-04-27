@@ -51,6 +51,7 @@ public class StopRemoteAuraTask extends RemoteOSCTask {
     Group g = cp5.addGroup(g_name)
     	    //.setPosition(x, y) //change that?
     	    .setHeight(font_size)
+    	    .setWidth((10*((ZenStates)p).FONT_SIZE))
     	    .setBackgroundHeight(backgroundheight)
     	    .setColorBackground(p.color(255, 50)) //color of the task
     	    .setBackgroundColor(p.color(255, 25)) //color of task when openned
@@ -60,7 +61,7 @@ public class StopRemoteAuraTask extends RemoteOSCTask {
     g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 
     int localx = 10, localy = 15, localoffset = 40;
-    int w = g.getWidth()-10;
+    int w = g.getWidth()-(localx*2);
 
     create_gui_toggle(localx, localy, w, g, cb_enter);
 

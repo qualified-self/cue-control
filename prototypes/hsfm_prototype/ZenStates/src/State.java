@@ -837,6 +837,8 @@ public class State implements Serializable {
 
 		label.hide();
 		accordion.hide();
+		
+
 	
 		for (Connection c:connections) 
 			c.hide();
@@ -963,7 +965,8 @@ public class State implements Serializable {
 
 		//accordion = cp5.addAccordion("acc_"+this.name)
 		accordion = cp5.addAccordion(this.id+"/acc")
-				.setWidth(110)
+				//.setWidth(150)
+				.setWidth(10*((ZenStates)p).FONT_SIZE)
 				.setVisible(true)
 				//.hide()
 				;

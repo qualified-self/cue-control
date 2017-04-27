@@ -49,8 +49,8 @@ public class ZenStates extends PApplet {
     }
 	
 	public void settings() {
-	  //fullScreen();
-	  size(800, 600);
+	    //fullScreen();
+		size(800, 600);
 	}
 	
 	public void setup() {

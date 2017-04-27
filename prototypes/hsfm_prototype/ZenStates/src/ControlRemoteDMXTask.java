@@ -89,6 +89,7 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
     Group g = cp5.addGroup(g_name)
     	    //.setPosition(x, y) //change that?
     	    .setHeight(font_size)
+    	    .setWidth((10*((ZenStates)p).FONT_SIZE))
     	    .setBackgroundHeight(backgroundheight)
     	    .setColorBackground(p.color(255, 50)) //color of the task
     	    .setBackgroundColor(p.color(255, 25)) //color of task when openned
@@ -99,7 +100,7 @@ public class ControlRemoteDMXTask extends RemoteOSCTask {
     g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
 
     int localx = 10, localy = (int)(font_size), localoffset = 3*font_size;
-    int w = g.getWidth()-10;
+    int w = g.getWidth()-(localx*2);
 
     cp5.addTextfield(g_name+ "/channel")
       .setPosition(localx, localy)

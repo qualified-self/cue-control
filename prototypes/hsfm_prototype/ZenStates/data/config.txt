@@ -9,8 +9,10 @@ localhost
 #set the port that will listen to incoming OSC messages
 8001
 #state circle size
-100
+#100
+75
 #50
 #font size
-#12
-20
+10
+#15
+#20
