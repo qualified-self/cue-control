@@ -55,7 +55,13 @@ Help help;
 boolean playing;
 
 // Are we currently in the process of adding/editing a node.
-boolean editing;
+enum Edit {
+	NO_EDIT,
+	UPDATE,
+	CREATE
+};
+
+Edit editState;
 
 // Vertical offset (for scrolling)  size(displayWidth-BLACKBOARD_WIDTH, displayHeight, P2D);
 
@@ -249,7 +255,7 @@ void mouseClicked()
 void keyPressed() {
   if (key == CODED && keyCode == 157)
     commandKeyDown = true;
-    
+
   // Special case: input information for new node.
   else if (isEditing()) {
     switch (key)
@@ -262,7 +268,7 @@ void keyPressed() {
           autocompleteListCurrentSelected = null;
         }
         break;
-      case ESC:                cancelNode(); break;
+      case ESC:                cancelEdit(); break;
       case BACKSPACE:          placeholderNode.backspace(); break;
       case TAB:                autocompleteNode(); break;
 
@@ -369,7 +375,7 @@ void reset() {
     root.init(board);
   rootState = State.RUNNING;
   setPlayState(false);
-  setEditState(false);
+  setEditState(Edit.NO_EDIT);
 }
 
 void clear() {
@@ -377,15 +383,23 @@ void clear() {
   reset();
 
   setPlayState(false);
-  setEditState(false);
+  setEditState(Edit.NO_EDIT);
 }
 
 boolean isPlaying() {
   return playing;
 }
 
+boolean isUpdating() {
+	return editState == Edit.UPDATE;
+}
+
+boolean isCreating() {
+	return editState == Edit.CREATE;
+}
+
 boolean isEditing() {
-  return editing;
+  return isUpdating() || isCreating();
 }
 
 boolean isFinished() {
@@ -397,8 +411,8 @@ void setPlayState(boolean playing) {
   root.setPlayState(playing);
 }
 
-void setEditState(boolean editing) {
-  this.editing = editing;
+void setEditState(Edit editState) {
+  this.editState = editState;
 }
 
 void togglePlay() {
@@ -424,7 +438,7 @@ boolean _addSibling(BaseNode node, BaseNode newSibling) {
 
 void addSibling() {
   if (_addSibling(selectedNode, placeholderNode)) {
-    setEditState(true);
+    setEditState(Edit.CREATE);
     placeholderNode.reset();
     selectedNode = null;
     autocompleteListCurrentSelected = null;
@@ -433,7 +447,7 @@ void addSibling() {
 
 void addChild() {
   if ( (selectedNode != null && selectedNode instanceof CompositeNode) || root.nChildren() == 0) {
-    setEditState(true);
+    setEditState(Edit.CREATE);
     placeholderNode.reset();
     if (root.nChildren() == 0)
       selectedNode = root;
@@ -446,7 +460,7 @@ void addChild() {
 
 void addDecorator() {
   if (selectedNode != null) {
-    setEditState(true);
+    setEditState(Edit.CREATE);
     placeholderNode.reset();
     selectedNode.setDecorator(placeholderNode);
     selectedNode = null;
@@ -454,29 +468,32 @@ void addDecorator() {
   }
 }
 
-CompositeNode savedCompositeNode;
+BaseNode savedNode;
 void editNode() {
   if (selectedNode != null) {
-    setEditState(true);
-    placeholderNode.reset();
-    placeholderNode.assign(selectedNode.loadDeclaration());
+		if (selectedNode.loadDeclaration() == null)
+			Console.instance().warning("Cannot edit selected node cause it was not declared through the GUI.");
+		else {
+	    setEditState(Edit.UPDATE);
+	    placeholderNode.reset();
+	    placeholderNode.assign(selectedNode.loadDeclaration());
+			savedNode = selectedNode;
 
-		savedCompositeNode = (selectedNode instanceof CompositeNode ? (CompositeNode)selectedNode : null);
+	    if (selectedNode instanceof Decorator) {
+	      ((Decorator)selectedNode).getNode().setDecorator(placeholderNode);
+	//      ((Decorator)selectedNode).setNode(null);
+	    }
+	    else if (selectedNode.hasParent())
+	      selectedNode.getParent().replaceChild(selectedNode, placeholderNode);
+	    else // root
+	      Console.instance().error("Something wrong happened: selected node has no parent.");
 
-    if (selectedNode instanceof Decorator) {
-      ((Decorator)selectedNode).getNode().setDecorator(placeholderNode);
-//      ((Decorator)selectedNode).setNode(null);
-    }
-    else if (selectedNode.hasParent())
-      selectedNode.getParent().replaceChild(selectedNode, placeholderNode);
-    else // root
-      Console.instance().error("Something wrong happened: selected node has no parent.");
+	    if (selectedNode.hasDecorator())
+	      placeholderNode.setDecorator(selectedNode.getDecorator());
 
-    if (selectedNode.hasDecorator())
-      placeholderNode.setDecorator(selectedNode.getDecorator());
-
-    selectedNode = null;
-//    selectedNode = newNode;
+	    selectedNode = null;
+	//    selectedNode = newNode;
+		}
   }
 }
 
@@ -520,18 +537,18 @@ void pasteNode() {
 void submitNode() {
   BaseNode newNode = placeholderNode.submit();
   if (newNode != null) {
-		if (newNode instanceof CompositeNode && savedCompositeNode != null)
-				((CompositeNode)newNode).setChildren(savedCompositeNode.getChildren());
+		if (newNode instanceof CompositeNode && savedNode != null)
+				((CompositeNode)newNode).setChildren(((CompositeNode)savedNode).getChildren());
 
-		savedCompositeNode = null;
-    setEditState(false);
+		savedNode = null;
+    setEditState(Edit.NO_EDIT);
     selectedNode = newNode;
   }
 }
 
-void cancelNode() {
+void cancelEdit() {
   placeholderNode.cancel();
-  setEditState(false);
+  setEditState(Edit.NO_EDIT);
 }
 
 void removeNode() {
