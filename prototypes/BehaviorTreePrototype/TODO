@@ -1,8 +1,15 @@
 High priority:
+[ ] Adapt font size to screen (too big for smaller screens) (or allow it in config.json)
+[ ] Also allow modif of INDENT in config.json?
 [ ] BlackboardRamp problem: try creating a node "blackboard-ramp test 0 1 10.0" (does not work)
 [ ] Text problem: try "text 1000"
+[ ] Text problem: try "text hello"
+[ ] CTRL-arrows on Mac does something else
+[ ] Try: sound 123.mpg (unexisting file) should be allowed but should FAIL at runtime
 [ ] Add auto-save
 [ ] Prevent scrolling too much such that text disappears
+[ ] osc-receive with third argument (float) does not work
+[ ] simple parallels: disable a child (after master one): it still gets executed (even though it's disabled)
 [x] Add copy-cut-paste option
 [x] CTRL-DEL is not working
 [x] Tab in autocomplete should complete common prefixes
