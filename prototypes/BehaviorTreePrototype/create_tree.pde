@@ -47,11 +47,28 @@ BaseNode createTree() {
 
 final int N_FIREFLIES = 100;
 BaseNode createTreeCepheids() {
+	return new SequenceNode()
+		.addChild(new BlackboardSetNode("ecg_prev_bang", "$seconds")) // 1 beat / second
+		.addChild(
+			new SimpleParallelNode()
+				.addChild(createBaseTreeCepheids())
+				.addChild(
+					new SequenceNode()
+						.addChild(new OscReceiveNode("/ecg/bang", "ecg_bang"))
+						.addChild(new BlackboardSetNode("ecg_gap", "$seconds - $ecg_prev_bang"))
+						.addChild(new BlackboardSetNode("ecg_prev_bang", "$seconds"))
+				)
+				.addChild(new OscReceiveNode("/ecg/raw",  "ecg_raw"))
+			);
+}
+
+BaseNode createBaseTreeCepheids() {
   return new SequenceNode()
     .addChild(new SequenceNode("PROLOGUE: install subject; when ready dim lights off and press 'G' to start").setExpanded(false)
       .addChild(new BlackboardSetNode("n_fireflies", 0))
       .addChild(new BlackboardSetNode("period", 10.0))
       .addChild(new BlackboardSetNode("alpha_period", 0.001))
+      .addChild(new BlackboardSetNode("ecg_gap", 1.0)) // 1 beat / second
       .addChild(new OscSendNode("/reset"))
       .addChild(new OscSendNode("/environment/firefly/flash-adjust", "0.005"))
       .addChild(new OscSendNode("/environment/firefly/period", "$period"))
@@ -100,7 +117,7 @@ BaseNode createTreeCepheids() {
           .addChild(new SequenceNode().setDecorator(new WhileDecorator("$crossfade < 1"))
             .addChild(new OscSendNode("/audio/beat/gain", "$crossfade"))
             .addChild(new OscSendNode("/environment/firefly/intensity", "$crossfade"))
-            .addChild(new OscSendNode("/environment/firefly/period", "$ecg_gap / 1000.0 * Math.round($crossfade_divider)"))
+            .addChild(new OscSendNode("/environment/firefly/period", "$ecg_gap * Math.round($crossfade_divider)"))
           )
         )
       )
@@ -153,7 +170,7 @@ BaseNode createTreeCepheids() {
 
       // Move the fireflies towards center + to match user's heartbeat
       .addChild(new SequenceNode("fireflies synchronize with heart").setDecorator(new WhileDecorator("$seconds - $start_time < " + 3*ONE_MINUTE))
-        .addChild(new BlackboardSetNode("period", "(1 - ${alpha_period})*$period + ${alpha_period} * ($ecg_gap / 1000.0)"))
+        .addChild(new BlackboardSetNode("period", "(1 - ${alpha_period})*$period + ${alpha_period} * $ecg_gap"))
         // TODO: crossfade to person's heart
         .addChild(new OscSendNode("/environment/firefly/period", "$period"))
       )
