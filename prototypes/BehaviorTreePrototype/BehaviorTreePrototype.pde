@@ -73,10 +73,19 @@ PlaceholderNode placeholderNode = new PlaceholderNode();
 // Autocomplete list.
 String autocompleteListCurrentSelected;
 
+int oscRecvPort;
+int oscSendPort;
+String oscSendIp;
+
 public OscP5 oscP5() { return oscP5; }
 public Minim minim() { return minim; }
 public Serial serial() { return serial; }
 public NetAddress remoteLocation() { return remoteLocation; }
+public int oscRecvPort() { return oscRecvPort; }
+public int oscSendPort() { return oscSendPort; }
+public String oscSendIp() { return oscSendIp; }
+
+HashMap<Integer, OscP5> allOscP5 = new HashMap<Integer, OscP5>();
 
 void settings() {
 //  size(displayWidth-BLACKBOARD_WIDTH, displayHeight, P2D);
@@ -104,9 +113,9 @@ void setup() {
 		config = null;
 	}
 
-	int oscRecvPort  = configInt   ("osc_recv_port", DEFAULT_OSC_RECV_PORT);
-	int oscSendPort  = configInt   ("osc_send_port", DEFAULT_OSC_SEND_PORT);
-	String oscSendIp = configString("osc_send_ip",   DEFAULT_OSC_SEND_IP);
+	oscRecvPort  = configInt   ("osc_recv_port", DEFAULT_OSC_RECV_PORT);
+	oscSendPort  = configInt   ("osc_send_port", DEFAULT_OSC_SEND_PORT);
+	oscSendIp = configString("osc_send_ip",   DEFAULT_OSC_SEND_IP);
 
 	String serialPort  = configString("serial_port",   DEFAULT_SERIAL_PORT);
 	int serialBaudRate = configInt   ("serial_baud_rate", DEFAULT_SERIAL_BAUD_RATE);
@@ -120,7 +129,8 @@ void setup() {
   factory = new NodeFactory();
 
   // Start oscP5, listening for incoming messages.
-  oscP5 = new OscP5(this, oscRecvPort);
+  oscP5 = addOscP5(oscRecvPort);
+	println("Oscp5: " + oscP5);
 
   // Location to send OSC messages
   remoteLocation = new NetAddress(oscSendIp, oscSendPort);
@@ -700,6 +710,13 @@ void autosave() {
     println("saving!");
     timestamp = second();
   }
+}
+
+OscP5 addOscP5(int oscRecvPort) {
+	if (!allOscP5.containsKey(oscRecvPort))
+		allOscP5.put(oscRecvPort, new OscP5(this, oscRecvPort));
+
+	return allOscP5.get(oscRecvPort);
 }
 
 int configInt(String param, int defaultValue) {

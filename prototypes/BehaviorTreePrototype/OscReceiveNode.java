@@ -1,3 +1,5 @@
+import oscP5.*;
+
 public class OscReceiveNode extends BaseNode
 {
 	String varName;
@@ -13,27 +15,34 @@ public class OscReceiveNode extends BaseNode
 
 	Chrono chrono;
 
+	OscP5 oscP5;
+
 	public OscReceiveNode(String message, String varName)
 	{
-		this(message, varName, State.RUNNING);
+		this(message, varName, BehaviorTreePrototype.instance().oscRecvPort());
 	}
 
-	public OscReceiveNode(String message, String varName, float timeOut)
+	public OscReceiveNode(String message, String varName, int oscRecvPort)
 	{
-		this(message, varName, State.RUNNING, timeOut);
+		this(message, varName, oscRecvPort, State.RUNNING);
 	}
 
-	OscReceiveNode(String message, String varName, State stateOnNoValueReceived)
+	public OscReceiveNode(String message, String varName, int oscRecvPort, float timeOut)
 	{
-		this(message, varName, stateOnNoValueReceived, 0);
+		this(message, varName, oscRecvPort, State.RUNNING, timeOut);
 	}
 
-	OscReceiveNode(String message, String varName, State stateOnNoValueReceived, float timeOut)
+	OscReceiveNode(String message, String varName, int oscRecvPort, State stateOnNoValueReceived)
 	{
-		this("$" + varName + " =" + message, message, varName, stateOnNoValueReceived, timeOut);
+		this(message, varName, oscRecvPort, stateOnNoValueReceived, 0);
 	}
 
-	OscReceiveNode(String description, String message, String varName, State stateOnNoValueReceived, float timeOut)
+	OscReceiveNode(String message, String varName, int oscRecvPort, State stateOnNoValueReceived, float timeOut)
+	{
+		this("$" + varName + " =" + message + " [port=" + oscRecvPort + "]", message, varName, oscRecvPort, stateOnNoValueReceived, timeOut);
+	}
+
+	OscReceiveNode(String description, String message, String varName, int oscRecvPort, State stateOnNoValueReceived, float timeOut)
 	{
 		super(description);
 		this.varName = varName;
@@ -45,12 +54,14 @@ public class OscReceiveNode extends BaseNode
 
 		hasStarted = false;
 
+		oscP5 = BehaviorTreePrototype.instance().addOscP5(oscRecvPort);
+
     build();
 	}
 
   void build() {
     if (message != null)
-		  BehaviorTreePrototype.instance().oscP5().plug(this, "process", message);
+		  oscP5.plug(this, "process", message);
   }
 
 	void process(int value) {

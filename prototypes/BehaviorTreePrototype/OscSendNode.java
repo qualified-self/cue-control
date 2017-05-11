@@ -1,33 +1,47 @@
 import oscP5.*;
+import netP5.*;
 
 class OscSendNode extends CueNode {
 
   String addrPattern;
   Expression argExpression;
 
+  NetAddress remoteLocation;
+
   public OscSendNode(String addrPattern) {
-    this(addrPattern, addrPattern, null, 0, 0);
+    this(addrPattern, BehaviorTreePrototype.instance().oscSendIp(), BehaviorTreePrototype.instance().oscSendPort());
   }
 
   public OscSendNode(String addrPattern, Object arg) {
-    this(addrPattern+" "+arg, addrPattern, arg, 0, 0);
+    this(addrPattern, arg, BehaviorTreePrototype.instance().oscSendIp(), BehaviorTreePrototype.instance().oscSendPort());
   }
 
-  OscSendNode(String addrPattern, float preWait, float postWait) {
-    this(addrPattern, addrPattern, null, preWait, postWait);
+  public OscSendNode(String addrPattern, String oscSendIp, int oscSendPort) {
+    this(addrPattern, null, oscSendIp, oscSendPort);
   }
 
-  OscSendNode(String addrPattern, Object arg, float preWait, float postWait) {
-    this(addrPattern+" "+arg, addrPattern, arg, preWait, postWait);
+  public OscSendNode(String addrPattern, Object arg, String oscSendIp, int oscSendPort) {
+    this(addrPattern, arg, oscSendIp, oscSendPort, 0, 0);
   }
 
-  OscSendNode(String description, String addrPattern, Object arg, float preWait, float postWait) {
+  OscSendNode(String addrPattern, String oscSendIp, int oscSendPort, float preWait, float postWait) {
+    this(addrPattern, null, oscSendIp, oscSendPort, preWait, postWait);
+  }
+
+  OscSendNode(String addrPattern, Object arg, String oscSendIp, int oscSendPort, float preWait, float postWait) {
+    this(addrPattern + " " + arg + " [" + oscSendPort + "@" + oscSendIp + "]", addrPattern, arg, oscSendIp, oscSendPort, preWait, postWait);
+  }
+
+  OscSendNode(String description, String addrPattern, Object arg, String oscSendIp, int oscSendPort, float preWait, float postWait) {
     super(description, preWait, 0, postWait);
     this.addrPattern = addrPattern;
     argExpression = (arg != null ? new Expression(arg) : null);
+
+ 		remoteLocation = new NetAddress(oscSendIp, oscSendPort);
   }
 
   boolean doBeginCue(Blackboard agent) {
+
     OscMessage message = new OscMessage(addrPattern);
     try
     {
@@ -37,9 +51,9 @@ class OscSendNode extends CueNode {
           value = new Float(((Number)value).floatValue());
         message.add(new Object[] { value });
       }
-      BehaviorTreePrototype.instance().oscP5().send(message, BehaviorTreePrototype.instance().remoteLocation());
+      BehaviorTreePrototype.instance().oscP5().send(message, remoteLocation);
     } catch (Exception e) {
-      BehaviorTreePrototype.instance().println("Exception " + e.toString());
+      Console.instance().error("Exception " + e.toString());
       return false; // fails
     }
 
