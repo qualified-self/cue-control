@@ -389,7 +389,9 @@ void reset() {
 }
 
 void clear() {
-  root = new SequenceNode();
+//  root = new SequenceNode();
+  root = (SequenceNode)createTreeCepheids();
+
   reset();
 
   setPlayState(false);
