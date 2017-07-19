@@ -11,7 +11,6 @@ public class RemoteBackgroundTask extends RemoteOSCTask {
 	Object green;
 	Object blue;
 
-	// contructor loading the file
 	public RemoteBackgroundTask(PApplet p, ControlP5 cp5, String id) {
 		super(p, cp5, id);
 
@@ -23,7 +22,6 @@ public class RemoteBackgroundTask extends RemoteOSCTask {
 		update_content();
 	}
 
-	// contructor loading the file
 	public RemoteBackgroundTask(PApplet p, ControlP5 cp5, String id, String m, Object r, Object g, Object b,
 			boolean repeat) {
 		super(p, cp5, id);

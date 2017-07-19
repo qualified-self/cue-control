@@ -656,8 +656,8 @@ public class State implements Serializable {
 	//method that initializes the sinewave
 	void init_sinewave_task () {
 		String taskname = generate_random_name();
-		//RemoteSinewaveTask t = new RemoteSinewaveTask(p, cp5, taskname);
-		//this.add_task(t);
+		RemoteSinewaveTask t = new RemoteSinewaveTask(p, cp5, taskname);
+		this.add_task(t);
 		//println(selected + " " + pie.options[selected]);
 	}
 
