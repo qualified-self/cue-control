@@ -10,9 +10,9 @@ localhost
 8001
 #state circle size
 #100
-75
-#50
+#75
+50
 #font size
-10
+12
 #15
 #20

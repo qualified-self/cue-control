@@ -57,31 +57,6 @@ public class ControlRemoteAuraTask extends RemoteOSCTask {
 
   //UI config
   Group load_gui_elements(State s) {
-
-	 /*
-    CallbackListener cb_enter = generate_callback_enter();
-    //CallbackListener cb_leave = generate_callback_leave();
-
-    //this.set_gui_id(s.get_name() + " " + this.get_name());
-    String g_name = this.get_gui_id();
-
-    String textlabel = "Control aura";
-    int font_size 	 = (int)(((ZenStates)p).get_font_size());
-    int textwidth 	 = (int)((ZenStates)p).textWidth(textlabel);
-    int backgroundheight = (int)(font_size* 10.5);
-
-    Group g = cp5.addGroup(g_name)
-    //.setPosition(x, y) //change that?
-    .setHeight(font_size)
-    .setWidth((10*((ZenStates)p).FONT_SIZE))
-    .setBackgroundHeight(backgroundheight)
-    .setColorBackground(p.color(255, 50)) //color of the task
-    .setBackgroundColor(p.color(255, 25)) //color of task when openned
-    .setLabel(textlabel)
-    ;
-
-    g.getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER);
-    */
 	  
 	  Group g					= super.load_gui_elements(s);
 	  CallbackListener cb_enter = generate_callback_enter();
