@@ -644,6 +644,22 @@ public class State implements Serializable {
 		this.add_task(t);
 		//println(selected + " " + pie.options[selected]);
 	}
+	
+	//method that initializes background color task
+	void init_background_color_task () {
+		String taskname = generate_random_name();
+		RemoteBackgroundTask t = new RemoteBackgroundTask(p, cp5, taskname);
+		this.add_task(t);
+		//println(selected + " " + pie.options[selected]);
+	}
+	
+	//method that initializes the sinewave
+	void init_sinewave_task () {
+		String taskname = generate_random_name();
+		//RemoteSinewaveTask t = new RemoteSinewaveTask(p, cp5, taskname);
+		//this.add_task(t);
+		//println(selected + " " + pie.options[selected]);
+	}
 
 
 	int get_number_of_connections() {
@@ -1327,11 +1343,15 @@ public class State implements Serializable {
 				hide_pie();
 				break;
 			case 52:
-				init_state_machine_task();
+				//this item will be replaced for our study
+				//init_state_machine_task();
+				init_background_color_task();
 				hide_pie();
 				break;
 			case 53:
-				init_scripting_task();
+				//this item will be replaced for our study
+				//init_scripting_task();
+				init_sinewave_task();
 				hide_pie();
 				break;
 			case 50:
