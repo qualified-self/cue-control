@@ -1,8 +1,7 @@
-#Server
+# Server
 This server controls wirelessly (via OSC messages) all media used by the prototypes. These are the steps you need to follow for configuring the server:
 
-##Setting up Audio & Haptics
-
+## Setting up Audio & Haptics
 ![image](photos/aura.jpg)
 
 ![image](photos/sound.jpg)
@@ -11,7 +10,7 @@ This server controls wirelessly (via OSC messages) all media used by the prototy
 
 2. Make sure this audio setup is properly configured in your computer before continuing (by using the sound control options of your operating system);
 
-#Setting up router & DMX
+# Setting up router & DMX
 
 ![image](photos/router.jpg)
 
@@ -27,7 +26,7 @@ This server controls wirelessly (via OSC messages) all media used by the prototy
 
 5. You can test if everything is setup fine by sending messages to [s dmx_intensity], [s dmx_rate], and [s dmx_duration] in Max.
 
-#Setting up the server
+# Setting up the server
 
 ![image](photos/server.jpg)
 
